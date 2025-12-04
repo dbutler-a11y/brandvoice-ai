@@ -23,6 +23,12 @@ export default function AdminLayout({
                   Clients
                 </Link>
                 <Link
+                  href="/admin/crm"
+                  className="text-blue-600 hover:text-blue-800 px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-50"
+                >
+                  CRM
+                </Link>
+                <Link
                   href="/admin/spokespersons"
                   className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100"
                 >

@@ -9,7 +9,8 @@
     "lint": "next lint",
     "db:seed": "npx tsx prisma/seed.ts",
     "db:reset": "npx prisma migrate reset --force",
-    "db:studio": "npx prisma studio"
+    "db:studio": "npx prisma studio",
+    "email:test": "npx tsx scripts/test-email.ts"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
@@ -26,7 +27,8 @@
     "next": "14.2.33",
     "prisma": "^5.22.0",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "resend": "^6.5.2"
   },
   "devDependencies": {
     "@types/node": "^20",

@@ -63,7 +63,7 @@ model Client {
   notes        String?  @db.Text
 
   // Payment tracking fields
-  paymentStatus String   @default("unpaid") // "unpaid", "paid", "refunded"
+  paymentStatus String   @default("unpaid") // "unpaid", "paid", "refunded", "failed"
   paymentAmount Int?     // amount in cents
   paymentDate   DateTime?
   paymentMethod String?  // e.g., "paypal", "venmo", "wave", "cash"
@@ -74,13 +74,18 @@ model Client {
   isSubscription        Boolean   @default(false)
   subscriptionStartDate DateTime?
   subscriptionEndDate   DateTime?
+  paypalSubscriptionId  String?   // PayPal subscription ID for webhook lookups
+
+  // Subscription management
+  failedPaymentCount    Int       @default(0) // Track failed payment attempts
+  needsWinBack          Boolean   @default(false) // Flag for win-back campaigns
 
   // Add-ons tracking
   addOns      String? @db.Text // JSON string: ["custom-avatar", "custom-voice", "promo-pack", "posting", "facebook-ads"]
   addOnsTotal Int?             // Total add-ons price in cents
 
-  // Project status workflow (8 steps)
-  projectStatus       String    @default("discovery") // "discovery", "onboarding", "avatar-creation", "scriptwriting", "video-production", "qa-review", "delivered", "ongoing"
+  // Project status workflow (8 steps + special states)
+  projectStatus       String    @default("discovery") // "discovery", "onboarding", "avatar-creation", "scriptwriting", "video-production", "qa-review", "delivered", "ongoing", "paused", "disputed"
   projectStartDate    DateTime?
   projectDeliveryDate DateTime?
 
@@ -98,6 +103,9 @@ model Client {
   scripts      Script[]
   clientUsers  ClientUser[]
   clientAssets ClientAsset[]
+  orders       Order[]
+  disputes     Dispute[]
+  refunds      Refund[]
 }
 
 // ClientAsset model for storing video/file references
@@ -206,6 +214,8 @@ model Lead {
   // Lead Status & Tracking
   status         LeadStatus @default(NEW)
   score          Int        @default(0) // Lead quality score 0-100
+  scoreBreakdown Json?      // Detailed scoring breakdown
+  lastScoredAt   DateTime?  // Last time score was calculated
   isQualified    Boolean    @default(false)
   qualifiedAt    DateTime?
   convertedAt    DateTime?
@@ -290,8 +300,9 @@ model Order {
   updatedAt       DateTime @updatedAt
 
   // PayPal Info
-  paypalOrderId   String   @unique
-  paypalStatus    String   // COMPLETED, PENDING, etc.
+  paypalOrderId      String   @unique
+  paypalTransactionId String? // For tracking sale/capture transactions
+  paypalStatus       String   // COMPLETED, PENDING, etc.
 
   // Customer Info
   payerEmail      String?
@@ -314,8 +325,15 @@ model Order {
   clientId        String?  // Reference to Client if converted
   notes           String?  @db.Text
 
+  // Relations
+  client          Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  disputes        Dispute[]
+  refunds         Refund[]
+
   @@index([paypalOrderId])
+  @@index([paypalTransactionId])
   @@index([payerEmail])
+  @@index([clientId])
 }
 
 // AI Spokesperson characters available for clients
@@ -373,4 +391,148 @@ model Spokesperson {
   // Ordering
   sortOrder       Int      @default(0)
   featured        Boolean  @default(false)
+}
+
+// Reminder model for follow-ups and task management
+model Reminder {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  dueAt       DateTime
+  completedAt DateTime?
+
+  type        String   // "follow_up", "payment_reminder", "check_in"
+  title       String
+  description String?  @db.Text
+  priority    String   @default("normal") // low, normal, high, urgent
+
+  leadId      String?
+  clientId    String?
+
+  status      String   @default("pending") // pending, completed, snoozed, cancelled
+
+  @@index([dueAt])
+  @@index([status])
+}
+
+// Webhook event logging for external services (PayPal, ElevenLabs, etc.)
+model WebhookLog {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  source      String   // "paypal", "elevenlabs", etc.
+  eventType   String
+  eventId     String?  @unique
+  payload     String   @db.Text
+  status      String   @default("received") // received, processed, failed
+  error       String?  @db.Text
+  processedAt DateTime?
+
+  @@index([source])
+  @@index([eventType])
+  @@index([createdAt])
+}
+
+// PayPal Disputes model for tracking customer disputes and chargebacks
+model Dispute {
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // PayPal dispute identifiers
+  disputeId      String   @unique
+  transactionId  String?  // PayPal transaction/sale ID
+
+  // Associated records
+  orderId        String?
+  clientId       String?
+
+  // Dispute details
+  amount         Int?     // Amount in cents
+  currency       String   @default("USD")
+  reason         String   // e.g., "merchandise_or_service_not_received"
+  status         String   // open, resolved, etc.
+  outcome        String?  // RESOLVED, BUYER_FAVOUR, SELLER_FAVOUR
+  resolutionType String?  // dispute_life_cycle_stage
+
+  // Timestamps
+  resolvedAt     DateTime?
+
+  // Raw PayPal payload for reference
+  disputeDetails String   @db.Text // JSON
+
+  // Relations
+  order          Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  client         Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  @@index([disputeId])
+  @@index([orderId])
+  @@index([clientId])
+  @@index([status])
+}
+
+// PayPal Refunds model for tracking refunded payments
+model Refund {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // PayPal refund identifiers
+  refundId      String   @unique
+  transactionId String?  // PayPal sale/capture ID
+
+  // Associated records
+  orderId       String?
+  clientId      String?
+
+  // Refund details
+  amount        Int?     // Amount in cents
+  currency      String   @default("USD")
+  refundType    String   // full, partial
+  status        String   // completed, pending, failed
+
+  // Timestamps
+  refundedAt    DateTime
+
+  // Raw PayPal payload for reference
+  refundDetails String   @db.Text // JSON
+
+  // Relations
+  order         Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  client        Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  @@index([refundId])
+  @@index([orderId])
+  @@index([clientId])
+  @@index([status])
+}
+
+// Alert model for admin notifications about important events
+model Alert {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Alert classification
+  type      String   // dispute_created, dispute_resolved, payment_refunded, etc.
+  severity  String   // low, medium, high, critical
+  title     String
+  message   String   @db.Text
+
+  // Additional context (JSON)
+  metadata  String?  @db.Text
+
+  // Status tracking
+  isRead    Boolean  @default(false)
+  readAt    DateTime?
+  readBy    String?  // Admin user ID who read the alert
+
+  // Actions taken
+  isResolved   Boolean  @default(false)
+  resolvedAt   DateTime?
+  resolvedBy   String?  // Admin user ID who resolved
+  resolution   String?  @db.Text // Notes about how it was resolved
+
+  @@index([type])
+  @@index([severity])
+  @@index([isRead])
+  @@index([createdAt])
 }
