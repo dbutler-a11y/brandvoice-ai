@@ -53,12 +53,17 @@ export default function HomePage() {
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-              <Link
-                href="#book-call"
-                className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:from-purple-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 w-full sm:w-auto"
-              >
-                Book a Call
-              </Link>
+              {/* Glowing CTA Button */}
+              <div className="relative group w-full sm:w-auto">
+                {/* Animated gradient border */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-pink-500 to-indigo-600 rounded-xl blur-sm opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-gradient-border"></div>
+                <Link
+                  href="#book-call"
+                  className="relative block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:from-purple-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 w-full sm:w-auto text-center"
+                >
+                  Book a Call
+                </Link>
+              </div>
               <Link
                 href="#pricing"
                 className="bg-white text-purple-600 px-8 py-4 rounded-lg font-bold text-lg border-2 border-purple-600 hover:bg-purple-50 transition-all shadow-md hover:shadow-lg w-full sm:w-auto"
@@ -1030,6 +1035,18 @@ export default function HomePage() {
         }
         .animation-delay-2000 {
           animation-delay: 2s;
+        }
+        @keyframes gradient-border {
+          0%, 100% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+        }
+        .animate-gradient-border {
+          background-size: 200% 200%;
+          animation: gradient-border 3s ease infinite;
         }
       `}</style>
     </div>
