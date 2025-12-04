@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+// Force dynamic - don't prerender
+export const dynamic = 'force-dynamic'
+
 // GET /api/refunds - Get all refunds
 export async function GET() {
   try {

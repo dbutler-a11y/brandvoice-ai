@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
+// Force dynamic - don't prerender
+export const dynamic = 'force-dynamic'
+
 // Helper to get date range
 function getDateRange(days: number): Date {
   const date = new Date()

@@ -2,6 +2,9 @@ import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import ClientsTable from './components/ClientsTable'
 
+// Force dynamic rendering - don't try to connect to DB at build time
+export const dynamic = 'force-dynamic'
+
 // Check if using SQLite (local development)
 const isLocalDatabase = process.env.DATABASE_URL?.includes('file:')
 
