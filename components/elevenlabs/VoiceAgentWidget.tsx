@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { Volume2, VolumeX, X, Home, MessageCircle, HelpCircle, Search, Send, ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 
@@ -39,9 +39,42 @@ export default function VoiceAgentWidget({
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Engagement suppression state
+  const [hasInteracted, setHasInteracted] = useState(false);
+  const [showNudge, setShowNudge] = useState(false);
+
   const elevenlabsAgentId = agentId || process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID;
 
+  // Mark user as having interacted (suppresses future nudges)
+  const handleUserInteraction = useCallback(() => {
+    setHasInteracted(true);
+    setShowNudge(false);
+    // Store in sessionStorage so it persists during the session
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('chatWidgetInteracted', 'true');
+    }
+  }, []);
+
+  // Handle expanding the widget
+  const handleExpand = useCallback(() => {
+    handleUserInteraction();
+    setIsExpanded(true);
+  }, [handleUserInteraction]);
+
+  // Handle closing the widget
+  const handleClose = useCallback(() => {
+    setIsExpanded(false);
+  }, []);
+
   useEffect(() => {
+    // Check if user has already interacted this session
+    if (typeof window !== 'undefined') {
+      const interacted = sessionStorage.getItem('chatWidgetInteracted');
+      if (interacted === 'true') {
+        setHasInteracted(true);
+      }
+    }
+
     // Load ElevenLabs Convai widget script
     const script = document.createElement('script');
     script.src = 'https://elevenlabs.io/convai-widget/index.js';
@@ -58,6 +91,28 @@ export default function VoiceAgentWidget({
       }
     };
   }, []);
+
+  // Auto-nudge effect - only shows if user hasn't interacted
+  useEffect(() => {
+    if (hasInteracted || isExpanded) return;
+
+    // Show nudge after 5 seconds of scrolling/being on page
+    const nudgeTimer = setTimeout(() => {
+      if (!hasInteracted && !isExpanded) {
+        setShowNudge(true);
+      }
+    }, 5000);
+
+    // Auto-hide nudge after 8 seconds
+    const hideTimer = setTimeout(() => {
+      setShowNudge(false);
+    }, 13000);
+
+    return () => {
+      clearTimeout(nudgeTimer);
+      clearTimeout(hideTimer);
+    };
+  }, [hasInteracted, isExpanded]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -118,15 +173,15 @@ export default function VoiceAgentWidget({
 
   return (
     <>
-      {/* Collapsed State - Small Avatar Thumbnail */}
+      {/* Collapsed State - Small Avatar Thumbnail - Positioned on LEFT */}
       {!isExpanded && (
-        <div className={`fixed bottom-6 right-6 z-50 ${className}`}>
+        <div className={`fixed bottom-6 left-6 z-50 ${className}`}>
           {/* Pulse ring animation */}
           <div className="absolute inset-0 w-16 h-16 rounded-full bg-purple-400 animate-ping opacity-20"></div>
 
           {/* Avatar thumbnail button */}
           <button
-            onClick={() => setIsExpanded(true)}
+            onClick={handleExpand}
             className="relative w-16 h-16 rounded-full overflow-hidden shadow-xl border-2 border-white hover:scale-110 transition-transform duration-300 group"
           >
             {/* Samira avatar image */}
@@ -140,18 +195,39 @@ export default function VoiceAgentWidget({
 
             {/* Online indicator */}
             <div className="absolute bottom-1 right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-
-            {/* Hover tooltip */}
-            <div className="absolute bottom-full right-0 mb-2 px-3 py-1 bg-gray-900 text-white text-xs rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-              Chat with Samira
-            </div>
           </button>
+
+          {/* Nudge popup - only shows if user hasn't interacted */}
+          {showNudge && !hasInteracted && (
+            <div className="absolute left-full ml-3 bottom-0 animate-fadeIn">
+              <div className="bg-white rounded-lg shadow-lg p-3 w-48 border border-gray-200">
+                <button
+                  onClick={() => setShowNudge(false)}
+                  className="absolute -top-2 -right-2 w-5 h-5 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors"
+                >
+                  <X className="w-3 h-3 text-gray-600" />
+                </button>
+                <p className="text-sm text-gray-700 font-medium">Need help?</p>
+                <p className="text-xs text-gray-500 mt-1">Chat with Samira, our AI assistant</p>
+                <button
+                  onClick={handleExpand}
+                  className="mt-2 w-full py-1.5 bg-purple-600 text-white text-xs rounded-md hover:bg-purple-700 transition-colors"
+                >
+                  Start Chat
+                </button>
+              </div>
+              {/* Arrow pointing to avatar */}
+              <div className="absolute left-0 top-1/2 -translate-x-full -translate-y-1/2">
+                <div className="w-0 h-0 border-t-8 border-b-8 border-r-8 border-transparent border-r-white"></div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
-      {/* Expanded State - Full Widget */}
+      {/* Expanded State - Full Widget - Positioned on LEFT */}
       {isExpanded && (
-        <div className="fixed bottom-6 right-6 z-50 w-[380px] bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 animate-slideUp">
+        <div className="fixed bottom-6 left-6 z-50 w-[380px] bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 animate-slideUp">
           {/* Video/Avatar Section */}
           <div className="relative bg-gradient-to-br from-gray-900 to-gray-800 aspect-video">
             {/* ElevenLabs Widget or Avatar Video */}
@@ -192,7 +268,7 @@ export default function VoiceAgentWidget({
 
             {/* Close Button */}
             <button
-              onClick={() => setIsExpanded(false)}
+              onClick={handleClose}
               className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors"
             >
               <X className="w-4 h-4 text-white" />
@@ -200,7 +276,7 @@ export default function VoiceAgentWidget({
 
             {/* Minimize Button */}
             <button
-              onClick={() => setIsExpanded(false)}
+              onClick={handleClose}
               className="absolute top-4 left-4 w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors"
             >
               <ChevronDown className="w-4 h-4 text-white" />
@@ -396,7 +472,7 @@ export default function VoiceAgentWidget({
         </div>
       )}
 
-      {/* Slide up animation */}
+      {/* Animations */}
       <style jsx>{`
         @keyframes slideUp {
           from {
@@ -410,6 +486,19 @@ export default function VoiceAgentWidget({
         }
         .animate-slideUp {
           animation: slideUp 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateX(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
         }
       `}</style>
     </>
