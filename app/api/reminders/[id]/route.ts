@@ -76,7 +76,7 @@ export async function PATCH(
     }
 
     // Regular update
-    const updateData: any = {}
+    const updateData: Record<string, unknown> = {}
 
     if (body.title !== undefined) updateData.title = body.title
     if (body.description !== undefined) updateData.description = body.description

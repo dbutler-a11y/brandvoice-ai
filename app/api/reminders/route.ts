@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     const today = searchParams.get('today') === 'true'
 
     // Build where clause
-    const where: any = {}
+    const where: Record<string, unknown> = {}
 
     if (status) {
       where.status = status

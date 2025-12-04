@@ -290,7 +290,7 @@ export async function sendBulkEmails(
 /**
  * Example 7: Integration with Next.js API route
  */
-export async function handleWebhookEmailTrigger(webhookData: any) {
+export async function handleWebhookEmailTrigger(webhookData: { event_type: string; resource: { subscriber?: { email_address: string; name: { given_name: string; surname: string } }; plan?: { name: string }; payer?: { email_address: string; name: { given_name: string } }; amount?: { value: string }; reason?: string; dispute_amount?: { value: string }; disputed_transactions?: { seller_transaction_id: string }[] } }) {
   const { event_type, resource } = webhookData;
 
   switch (event_type) {

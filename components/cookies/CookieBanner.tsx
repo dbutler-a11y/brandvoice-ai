@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useCookieConsent } from '@/lib/cookies';
-import { Cookie, X } from 'lucide-react';
+import { Cookie } from 'lucide-react';
 
 export default function CookieBanner() {
   const { showBanner, acceptAll, rejectAll, setShowPreferences } = useCookieConsent();

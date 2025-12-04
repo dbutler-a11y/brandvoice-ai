@@ -12,8 +12,15 @@ import {
   getPaymentReceivedEmailTemplate,
 } from './templates';
 
-// Initialize Resend client
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy-load Resend client to avoid build-time initialization errors
+let resendClient: Resend | null = null;
+
+function getResendClient(): Resend {
+  if (!resendClient) {
+    resendClient = new Resend(process.env.RESEND_API_KEY || 'placeholder');
+  }
+  return resendClient;
+}
 
 // Email configuration
 const EMAIL_FROM = process.env.EMAIL_FROM || 'BrandVoice.AI <hello@brandvoice.ai>';
@@ -39,7 +46,7 @@ export async function sendWelcomeEmail(
   packageName: string
 ): Promise<EmailResponse> {
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResendClient().emails.send({
       from: EMAIL_FROM,
       to: [to],
       subject: `Welcome to BrandVoice.AI, ${clientName}!`,
@@ -75,7 +82,7 @@ export async function sendPaymentFailedEmail(
   updatePaymentLink: string
 ): Promise<EmailResponse> {
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResendClient().emails.send({
       from: EMAIL_FROM,
       to: [to],
       subject: 'Payment Failed - Action Required',
@@ -111,7 +118,7 @@ export async function sendWinBackEmail(
   specialOfferCode?: string
 ): Promise<EmailResponse> {
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResendClient().emails.send({
       from: EMAIL_FROM,
       to: [to],
       subject: `We Miss You, ${clientName}! Special Offer Inside`,
@@ -151,7 +158,7 @@ export async function sendDisputeAlertEmail(
   try {
     const recipient = adminEmail || ADMIN_EMAIL;
 
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResendClient().emails.send({
       from: EMAIL_FROM,
       to: [recipient],
       subject: `🚨 URGENT: Payment Dispute Alert - ${clientName}`,
@@ -189,7 +196,7 @@ export async function sendPaymentReceivedEmail(
   orderId: string
 ): Promise<EmailResponse> {
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResendClient().emails.send({
       from: EMAIL_FROM,
       to: [to],
       subject: 'Payment Received - Thank You!',
@@ -227,7 +234,7 @@ export function isEmailConfigured(): boolean {
  */
 export async function sendTestEmail(testEmail: string): Promise<EmailResponse> {
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResendClient().emails.send({
       from: EMAIL_FROM,
       to: [testEmail],
       subject: 'BrandVoice.AI Email System Test',

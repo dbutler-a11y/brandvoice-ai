@@ -23,7 +23,7 @@ export async function GET() {
     // Test database connection
     await prisma.$queryRaw`SELECT 1`;
     health.checks.database = 'connected';
-  } catch (error) {
+  } catch {
     health.checks.database = 'disconnected';
     health.status = 'degraded';
   }

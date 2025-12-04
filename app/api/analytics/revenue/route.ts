@@ -158,13 +158,13 @@ export async function GET() {
           const addOns = JSON.parse(order.addOns)
           if (Array.isArray(addOns) && addOns.length > 0) {
             ordersWithAddOns++
-            addOns.forEach((addon: any) => {
+            addOns.forEach((addon: { name?: string; id?: string; price: number; quantity: number }) => {
               const name = addon.name || addon.id
               addOnCounts.set(name, (addOnCounts.get(name) || 0) + 1)
               addOnRevenue.set(name, (addOnRevenue.get(name) || 0) + (addon.price * addon.quantity * 100))
             })
           }
-        } catch (e) {
+        } catch {
           // Skip invalid JSON
         }
       }

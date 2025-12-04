@@ -12,7 +12,6 @@ import {
   Filter,
   List,
   Trash2,
-  Edit,
   X,
 } from 'lucide-react'
 
@@ -49,6 +48,7 @@ export default function RemindersPage() {
   const [loading, setLoading] = useState(true)
   const [viewMode, setViewMode] = useState<ViewMode>('list')
   const [showNewModal, setShowNewModal] = useState(false)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedReminder, setSelectedReminder] = useState<Reminder | null>(null)
 
   // Filters

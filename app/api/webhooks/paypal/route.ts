@@ -360,7 +360,7 @@ export async function GET() {
       },
       recentEvents: recentLogs,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json({
       message: 'PayPal webhook endpoint is active',
       endpoint: '/api/webhooks/paypal',

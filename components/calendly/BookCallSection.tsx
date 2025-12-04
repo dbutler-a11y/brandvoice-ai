@@ -38,7 +38,7 @@ export default function BookCallSection({
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-900">Learn about your business</h4>
-                  <p className="text-gray-600">We'll discuss your goals, target audience, and brand voice.</p>
+                  <p className="text-gray-600">We&apos;ll discuss your goals, target audience, and brand voice.</p>
                 </div>
               </li>
               <li className="flex items-start gap-3">
@@ -71,7 +71,7 @@ export default function BookCallSection({
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-900">No pressure, just answers</h4>
-                  <p className="text-gray-600">Ask any questions - this is about finding if we're the right fit.</p>
+                  <p className="text-gray-600">Ask any questions - this is about finding if we&apos;re the right fit.</p>
                 </div>
               </li>
             </ul>

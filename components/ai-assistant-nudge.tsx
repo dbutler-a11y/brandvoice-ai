@@ -83,7 +83,7 @@ export function AIAssistantNudge() {
   const [isVisible, setIsVisible] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
-  const [triggerType, setTriggerType] = useState<'scroll' | 'time' | 'exit' | null>(null);
+  const [, setTriggerType] = useState<'scroll' | 'time' | 'exit' | null>(null);
 
   const nudgeConfig = getNudgeForPath(pathname);
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Bell, CheckCircle, Clock, AlertCircle, Snooze, X } from 'lucide-react'
+import { Bell, CheckCircle, Clock, AlertCircle } from 'lucide-react'
 
 interface Reminder {
   id: string

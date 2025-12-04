@@ -42,7 +42,7 @@ export async function PATCH(
     const data = await request.json();
 
     // Build update object dynamically
-    const updateData: Record<string, any> = {};
+    const updateData: Record<string, unknown> = {};
 
     // Handle status updates
     if (data.status) {

@@ -14,6 +14,7 @@ export default function VoiceAgentWidget({
 }: VoiceAgentWidgetProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isListening, setIsListening] = useState(false);
 
   const elevenlabsAgentId = agentId || process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID;

@@ -2,8 +2,7 @@ import { NextResponse } from 'next/server';
 import {
   updateLeadScore,
   calculateLeadScore,
-  getLeadGrade,
-  shouldAutoQualifyLead
+  getLeadGrade
 } from '@/lib/leadScoring';
 import { prisma } from '@/lib/prisma';
 
@@ -34,7 +33,7 @@ export async function GET(
     }
 
     // Calculate current score (without updating DB)
-    const scoreBreakdown = calculateLeadScore(lead as any);
+    const scoreBreakdown = calculateLeadScore(lead as Parameters<typeof calculateLeadScore>[0]);
 
     return NextResponse.json({
       leadId: lead.id,

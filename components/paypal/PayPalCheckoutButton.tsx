@@ -23,13 +23,12 @@ export default function PayPalCheckoutButton({
   packageId,
   packageName,
   amount,
-  isSubscription,
   addOns = [],
   onSuccess,
   onError,
 }: PayPalCheckoutButtonProps) {
   const router = useRouter();
-  const [{ isPending, isResolved, isRejected }] = usePayPalScriptReducer();
+  const [{ isPending, isRejected }] = usePayPalScriptReducer();
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Calculate total with add-ons

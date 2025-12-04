@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Example PayPal Webhook API Route
- * 
+ *
  * Copy this to: app/api/webhooks/paypal/route.ts
  * 
  * This demonstrates how to integrate the PayPal webhook handlers
@@ -95,7 +96,7 @@ export async function POST(req: NextRequest) {
  * 
  * Useful for testing that the endpoint is accessible
  */
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   return NextResponse.json({ 
     message: 'PayPal webhook endpoint is active',
     timestamp: new Date().toISOString()
@@ -108,9 +109,9 @@ export async function GET(req: NextRequest) {
  * This function should verify the webhook came from PayPal
  * See PayPal docs for implementation details
  */
-async function verifyPayPalSignature(
-  req: NextRequest, 
-  body: PayPalWebhookPayload
+async function _verifyPayPalSignature(
+  _req: NextRequest,
+  _body: PayPalWebhookPayload
 ): Promise<boolean> {
   // Implementation would go here
   // See: https://developer.paypal.com/api/rest/webhooks/rest/

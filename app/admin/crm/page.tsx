@@ -9,7 +9,6 @@ import {
   Search,
   Filter,
   Plus,
-  Calendar,
   Phone,
   Mail,
   Building,
@@ -65,7 +64,7 @@ interface Activity {
   timestamp: string;
   title: string;
   description: string;
-  icon: any;
+  icon: React.ElementType;
 }
 
 // Lead statuses for pipeline
@@ -149,12 +148,11 @@ export default function CRMDashboardPage() {
 
       return matchesSearch && matchesDate;
     });
-  }, [leads, searchQuery, dateFilter]);
+  }, [leads, searchQuery, filterByDate]);
 
   // Calculate stats
   const stats = useMemo(() => {
     const thisMonthLeads = leads.filter(lead => filterByDate(lead.createdAt));
-    const thisMonthClients = clients.filter(client => filterByDate(client.createdAt));
     const thisMonthOrders = orders.filter(order => filterByDate(order.createdAt));
 
     const wonLeads = thisMonthLeads.filter(lead => lead.status === 'WON').length;
@@ -173,7 +171,7 @@ export default function CRMDashboardPage() {
       totalRevenue,
       activeClients
     };
-  }, [leads, clients, orders, dateFilter]);
+  }, [leads, clients, orders, filterByDate]);
 
   // Group leads by status for pipeline
   const pipelineData = useMemo(() => {
