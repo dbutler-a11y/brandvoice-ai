@@ -1,0 +1,376 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// User model for authentication and authorization
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  email     String   @unique
+  name      String?
+  avatarUrl String?
+  role      UserRole @default(CLIENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  clientUsers ClientUser[]
+}
+
+// Enum for user roles
+enum UserRole {
+  CLIENT
+  ADMIN
+}
+
+// Junction table to link Users to Clients (for client portal access)
+model ClientUser {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  clientId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, clientId])
+  @@index([userId])
+  @@index([clientId])
+}
+
+model Client {
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  businessName String
+  contactName  String
+  email        String
+  phone        String?
+  website      String?
+  niche        String
+  tone         String
+  goals        String   @db.Text
+  notes        String?  @db.Text
+
+  // Payment tracking fields
+  paymentStatus String   @default("unpaid") // "unpaid", "paid", "refunded"
+  paymentAmount Int?     // amount in cents
+  paymentDate   DateTime?
+  paymentMethod String?  // e.g., "paypal", "venmo", "wave", "cash"
+
+  // Package tracking
+  package               String?   // "launch-kit", "content-engine", "content-engine-pro", "authority-engine"
+  packagePrice          Int?      // Price in cents
+  isSubscription        Boolean   @default(false)
+  subscriptionStartDate DateTime?
+  subscriptionEndDate   DateTime?
+
+  // Add-ons tracking
+  addOns      String? @db.Text // JSON string: ["custom-avatar", "custom-voice", "promo-pack", "posting", "facebook-ads"]
+  addOnsTotal Int?             // Total add-ons price in cents
+
+  // Project status workflow (8 steps)
+  projectStatus       String    @default("discovery") // "discovery", "onboarding", "avatar-creation", "scriptwriting", "video-production", "qa-review", "delivered", "ongoing"
+  projectStartDate    DateTime?
+  projectDeliveryDate DateTime?
+
+  // Avatar/Voice tracking
+  avatarId        String? // Reference to selected/created avatar
+  voiceId         String? // ElevenLabs voice ID
+  voicePreference String? // Voice tone preference
+
+  // Facebook Ad Campaign (if add-on purchased)
+  fbAdCampaignStatus String? // "not-started", "discovery", "writing", "production", "delivered", "revisions", "finalized"
+  fbAdCampaignNotes  String? @db.Text
+
+  // Relations
+  intake       Intake?
+  scripts      Script[]
+  clientUsers  ClientUser[]
+  clientAssets ClientAsset[]
+}
+
+// ClientAsset model for storing video/file references
+model ClientAsset {
+  id          String   @id @default(uuid()) @db.Uuid
+  clientId    String
+  fileName    String
+  fileUrl     String
+  fileType    String   // e.g., "video/mp4", "image/png", "application/pdf"
+  fileSize    BigInt   // file size in bytes
+  uploadedAt  DateTime @default(now())
+  description String?  @db.Text
+
+  // Relations
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+}
+
+model Intake {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  clientId        String   @unique
+  rawFaqs         String   @db.Text
+  rawOffers       String   @db.Text
+  rawTestimonials String   @db.Text
+  rawPromos       String   @db.Text
+  brandVoiceNotes String   @db.Text
+  references      String   @db.Text
+  assetsFolder    String?
+  brandColors     String?
+  logoUrl         String?
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+}
+
+model Script {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  clientId        String
+  type            String   // FAQ, SERVICE, PROMO, TESTIMONIAL, TIP, BRAND
+  title           String
+  scriptText      String   @db.Text
+  durationSeconds Int?
+  status          String   @default("draft") // draft, approved, exported
+  notes           String?  @db.Text
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+}
+
+// Lead model for capturing prospects from voice agent conversations
+model Lead {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Contact Information (Required)
+  fullName  String?
+  email     String?
+  phone     String?
+
+  // Business Information
+  businessName     String?
+  businessType     String?  // Industry/niche
+  website          String?
+
+  // Products & Services
+  productsServices String?  @db.Text // What they offer
+  targetAudience   String?  @db.Text // Who they serve
+
+  // Video Marketing Goals
+  videoGoals           String?  @db.Text // What they want to achieve
+  currentVideoStrategy String?  @db.Text // Are they creating video now? How?
+
+  // Budget & Timeline
+  timeline        String?  // When they want to start
+  budgetAllocated String?  // Have they budgeted for video marketing?
+  budgetRange     String?  // Approximate budget range
+
+  // Platform & Content Preferences
+  socialPlatforms     String?  @db.Text // Which platforms they use
+  contentTopics       String?  @db.Text // Topics they want covered
+  competitorExamples  String?  @db.Text // Competitors they like
+
+  // Spokesperson Preferences
+  spokespersonGender String?  // Preferred gender
+  spokespersonAge    String?  // Preferred age range
+  spokespersonTone   String?  // Preferred tone/style
+
+  // Add-on Interests
+  interestedAddOns String?  @db.Text // JSON array: voice cloning, dubbing, etc.
+
+  // Package Interest
+  packageInterest String?  // Which package they're interested in
+
+  // Discovery Info
+  howHeardAboutUs   String?
+  biggestChallenge  String?  @db.Text
+  questionsOrConcerns String? @db.Text
+  preferredCallTime String?
+
+  // Lead Status & Tracking
+  status         LeadStatus @default(NEW)
+  score          Int        @default(0) // Lead quality score 0-100
+  isQualified    Boolean    @default(false)
+  qualifiedAt    DateTime?
+  convertedAt    DateTime?
+  convertedToClientId String? // Reference to Client if converted
+
+  // Source Tracking
+  source         String     @default("voice_agent") // voice_agent, chat, form, etc.
+  utmSource      String?
+  utmMedium      String?
+  utmCampaign    String?
+
+  // Data Quality
+  dataQualityScore   Int      @default(0) // Percentage of fields filled
+  validationStatus   String   @default("pending") // pending, validated, needs_review
+  validationNotes    String?  @db.Text
+  validatedAt        DateTime?
+
+  // Follow-up
+  lastContactedAt    DateTime?
+  nextFollowUpAt     DateTime?
+  followUpNotes      String?  @db.Text
+
+  // Relations
+  conversations VoiceConversation[]
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  PROPOSAL_SENT
+  NEGOTIATING
+  WON
+  LOST
+  NURTURING
+}
+
+// Voice Conversation model for storing ElevenLabs conversation logs
+model VoiceConversation {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  // ElevenLabs Data
+  elevenLabsConversationId String?  @unique
+  agentId                  String?
+
+  // Lead Association
+  leadId    String?
+  lead      Lead?    @relation(fields: [leadId], references: [id], onDelete: SetNull)
+
+  // Conversation Metadata
+  startedAt       DateTime?
+  endedAt         DateTime?
+  durationSeconds Int?
+
+  // Transcript & Analysis
+  transcript      String?  @db.Text // Full conversation transcript
+  summary         String?  @db.Text // AI-generated summary
+  extractedData   String?  @db.Text // JSON of extracted intake data
+
+  // Sentiment & Quality
+  sentiment       String?  // positive, neutral, negative
+  intentDetected  String?  // purchase_intent, information_seeking, etc.
+
+  // Call Outcome
+  outcome         String?  // booked_call, requested_info, not_interested, etc.
+  callBooked      Boolean  @default(false)
+  bookedCallTime  DateTime?
+
+  // Technical Data
+  userAgent       String?
+  ipAddress       String?
+
+  @@index([leadId])
+  @@index([elevenLabsConversationId])
+}
+
+// PayPal Orders
+model Order {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // PayPal Info
+  paypalOrderId   String   @unique
+  paypalStatus    String   // COMPLETED, PENDING, etc.
+
+  // Customer Info
+  payerEmail      String?
+  payerName       String?
+
+  // Package Info
+  packageId       String
+  packageName     String
+  packagePrice    Int      // Amount in cents
+
+  // Add-ons (JSON)
+  addOns          String?  @db.Text // JSON array of add-ons
+
+  // Totals
+  addOnsTotal     Int      @default(0) // In cents
+  totalAmount     Int      // Total in cents
+
+  // Fulfillment
+  status          String   @default("paid") // paid, processing, fulfilled, refunded
+  clientId        String?  // Reference to Client if converted
+  notes           String?  @db.Text
+
+  @@index([paypalOrderId])
+  @@index([payerEmail])
+}
+
+// AI Spokesperson characters available for clients
+model Spokesperson {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Basic Info
+  name            String   // e.g., "Sarah", "Marcus"
+  displayName     String   // e.g., "Sarah - The Beauty Expert"
+  description     String   @db.Text // Short bio/description
+
+  // Industry Focus
+  primaryNiche    String   // e.g., "Med Spa / Aesthetics"
+  secondaryNiches String?  @db.Text // Comma-separated other niches they work for
+
+  // Character Traits
+  tone            String   // e.g., "Luxury, Sophisticated"
+  personality     String   // e.g., "Warm, Professional, Knowledgeable"
+  ageRange        String   // e.g., "30-40"
+  gender          String   // e.g., "Female", "Male", "Non-binary"
+
+  // Visual Assets
+  avatarUrl       String?  // Profile image URL
+  thumbnailUrl    String?  // Small thumbnail
+  demoVideoUrl    String?  // Sample video URL (YouTube/Vimeo embed)
+  demoVideoThumb  String?  // Video thumbnail image
+
+  // Customization Options (JSON strings for flexibility)
+  hairOptions     String?  @db.Text // JSON: ["blonde", "brunette", "black", "red"]
+  clothingOptions String?  @db.Text // JSON: ["business", "casual", "medical"]
+  backgroundOptions String? @db.Text // JSON: ["office", "studio", "outdoor"]
+
+  // Voice Info
+  voiceSample     String?  // Audio sample URL
+  voiceStyle      String?  // e.g., "Warm and articulate"
+  accentOptions   String?  @db.Text // JSON: ["American", "British", "Neutral"]
+
+  // Pricing & Availability
+  tier            String   @default("standard") // "standard", "premium", "exclusive"
+  basePrice       Int      @default(997) // Price in cents ($9.97 = 997)
+  isAvailable     Boolean  @default(true)
+  isExclusive     Boolean  @default(false) // If claimed by a client
+  exclusiveToId   String?  // Client ID if exclusive
+
+  // VidBuzz Integration
+  vidbuzzActorId  String?  // ID in VidBuzz system
+  vidbuzzVoiceId  String?  // Voice ID in VidBuzz
+
+  // Stats
+  timesUsed       Int      @default(0)
+  avgRating       Float?   // Client satisfaction rating
+
+  // Ordering
+  sortOrder       Int      @default(0)
+  featured        Boolean  @default(false)
+}

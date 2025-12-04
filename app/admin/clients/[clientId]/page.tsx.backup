@@ -1,0 +1,686 @@
+'use client'
+
+import { useEffect, useState, useCallback } from 'react'
+import { useParams } from 'next/navigation'
+import { SCRIPT_TYPE_LABELS, estimateDuration } from '@/lib/utils'
+import type { ClientWithRelations, ScriptData } from '@/lib/types'
+
+export default function ClientDetailPage() {
+  const params = useParams()
+  const clientId = params.clientId as string
+
+  const [client, setClient] = useState<ClientWithRelations | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [generating, setGenerating] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [showIntake, setShowIntake] = useState(false)
+  const [editingScript, setEditingScript] = useState<string | null>(null)
+  const [editForm, setEditForm] = useState({ scriptText: '', status: '' })
+  const [paymentForm, setPaymentForm] = useState({
+    paymentStatus: '',
+    paymentAmount: '',
+    paymentMethod: '',
+  })
+  const [savingPayment, setSavingPayment] = useState(false)
+
+  const fetchClient = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/clients/${clientId}`)
+      if (!response.ok) throw new Error('Failed to fetch client')
+      const data = await response.json()
+      setClient(data)
+      // Initialize payment form with current values
+      setPaymentForm({
+        paymentStatus: data.paymentStatus || 'unpaid',
+        paymentAmount: data.paymentAmount ? (data.paymentAmount / 100).toString() : '',
+        paymentMethod: data.paymentMethod || '',
+      })
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+      setLoading(false)
+    }
+  }, [clientId])
+
+  useEffect(() => {
+    fetchClient()
+  }, [fetchClient])
+
+  const savePayment = async () => {
+    setSavingPayment(true)
+    try {
+      const paymentData: Record<string, unknown> = {
+        paymentStatus: paymentForm.paymentStatus,
+      }
+
+      // Only include paymentAmount if it's provided
+      if (paymentForm.paymentAmount.trim() !== '') {
+        paymentData.paymentAmount = Math.round(parseFloat(paymentForm.paymentAmount) * 100)
+      }
+
+      // Only include paymentMethod if it's provided
+      if (paymentForm.paymentMethod.trim() !== '') {
+        paymentData.paymentMethod = paymentForm.paymentMethod
+      }
+
+      // Set paymentDate to now if changing to paid and no date exists
+      if (paymentForm.paymentStatus === 'paid' && !client?.paymentDate) {
+        paymentData.paymentDate = new Date().toISOString()
+      }
+
+      const response = await fetch(`/api/clients/${clientId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(paymentData),
+      })
+
+      if (!response.ok) throw new Error('Failed to update payment status')
+
+      await fetchClient()
+      alert('Payment status updated successfully!')
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to save payment status')
+    } finally {
+      setSavingPayment(false)
+    }
+  }
+
+  const handleGenerateScripts = async () => {
+    if (!confirm('Generate 30-day script pack? This will create 30 new scripts.')) {
+      return
+    }
+
+    setGenerating(true)
+    setError(null)
+
+    try {
+      const response = await fetch(`/api/clients/${clientId}/generate-scripts`, {
+        method: 'POST',
+      })
+
+      if (!response.ok) throw new Error('Failed to generate scripts')
+
+      await fetchClient()
+      alert('30 scripts generated successfully!')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to generate scripts')
+    } finally {
+      setGenerating(false)
+    }
+  }
+
+  const startEditScript = (script: ScriptData) => {
+    setEditingScript(script.id)
+    setEditForm({
+      scriptText: script.scriptText,
+      status: script.status,
+    })
+  }
+
+  const cancelEdit = () => {
+    setEditingScript(null)
+    setEditForm({ scriptText: '', status: '' })
+  }
+
+  const saveScript = async (scriptId: string) => {
+    try {
+      const response = await fetch(`/api/scripts/${scriptId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(editForm),
+      })
+
+      if (!response.ok) throw new Error('Failed to update script')
+
+      await fetchClient()
+      setEditingScript(null)
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to save script')
+    }
+  }
+
+  // Export helper functions
+  const formatScriptsAsText = () => {
+    if (!client) return ''
+
+    const currentDate = new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+
+    let output = '================================\n'
+    output += `${client.businessName.toUpperCase()} - 30-Day Script Pack\n`
+    output += `Generated: ${currentDate}\n`
+    output += '================================\n\n'
+
+    const scriptTypes = [
+      { key: 'FAQ', label: 'FAQ SCRIPTS' },
+      { key: 'SERVICE', label: 'SERVICE/EXPLAINER SCRIPTS' },
+      { key: 'PROMO', label: 'PROMO SCRIPTS' },
+      { key: 'TESTIMONIAL', label: 'TESTIMONIAL SCRIPTS' },
+      { key: 'TIP', label: 'TIP/EDUCATIONAL SCRIPTS' },
+      { key: 'BRAND', label: 'BRAND/CREDIBILITY SCRIPTS' },
+    ]
+
+    scriptTypes.forEach(({ key, label }) => {
+      const scripts = client.scripts.filter((s) => s.type === key)
+      if (scripts.length === 0) return
+
+      output += `--- ${label} (${scripts.length}) ---\n\n`
+
+      scripts.forEach((script, index) => {
+        output += `[${index + 1}] ${script.title}\n`
+        output += `${script.scriptText}\n`
+        const duration = script.durationSeconds || estimateDuration(script.scriptText)
+        output += `Duration: ~${duration} seconds\n\n`
+      })
+
+      output += '\n'
+    })
+
+    return output
+  }
+
+  const handleCopyToClipboard = async () => {
+    try {
+      const textContent = formatScriptsAsText()
+      await navigator.clipboard.writeText(textContent)
+      alert('All scripts copied to clipboard!')
+    } catch (err) {
+      alert('Failed to copy to clipboard. Please try again.')
+    }
+  }
+
+  const handleDownloadTXT = () => {
+    if (!client) return
+
+    const textContent = formatScriptsAsText()
+    const blob = new Blob([textContent], { type: 'text/plain' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${client.businessName.replace(/\s+/g, '_')}_scripts.txt`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
+  const handleDownloadJSON = () => {
+    if (!client) return
+
+    const exportData = {
+      client: {
+        businessName: client.businessName,
+        contactName: client.contactName,
+        email: client.email,
+        niche: client.niche,
+        tone: client.tone,
+      },
+      exportedAt: new Date().toISOString(),
+      scripts: client.scripts.map((script) => ({
+        type: script.type,
+        title: script.title,
+        scriptText: script.scriptText,
+        durationSeconds: script.durationSeconds || estimateDuration(script.scriptText),
+        status: script.status,
+      })),
+      scriptsByType: {
+        FAQ: client.scripts.filter((s) => s.type === 'FAQ').map((s) => ({
+          title: s.title,
+          scriptText: s.scriptText,
+          durationSeconds: s.durationSeconds || estimateDuration(s.scriptText),
+        })),
+        SERVICE: client.scripts.filter((s) => s.type === 'SERVICE').map((s) => ({
+          title: s.title,
+          scriptText: s.scriptText,
+          durationSeconds: s.durationSeconds || estimateDuration(s.scriptText),
+        })),
+        PROMO: client.scripts.filter((s) => s.type === 'PROMO').map((s) => ({
+          title: s.title,
+          scriptText: s.scriptText,
+          durationSeconds: s.durationSeconds || estimateDuration(s.scriptText),
+        })),
+        TESTIMONIAL: client.scripts.filter((s) => s.type === 'TESTIMONIAL').map((s) => ({
+          title: s.title,
+          scriptText: s.scriptText,
+          durationSeconds: s.durationSeconds || estimateDuration(s.scriptText),
+        })),
+        TIP: client.scripts.filter((s) => s.type === 'TIP').map((s) => ({
+          title: s.title,
+          scriptText: s.scriptText,
+          durationSeconds: s.durationSeconds || estimateDuration(s.scriptText),
+        })),
+        BRAND: client.scripts.filter((s) => s.type === 'BRAND').map((s) => ({
+          title: s.title,
+          scriptText: s.scriptText,
+          durationSeconds: s.durationSeconds || estimateDuration(s.scriptText),
+        })),
+      },
+    }
+
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+      type: 'application/json',
+    })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${client.businessName.replace(/\s+/g, '_')}_scripts.json`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-gray-500">Loading...</div>
+      </div>
+    )
+  }
+
+  if (error || !client) {
+    return (
+      <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+        {error || 'Client not found'}
+      </div>
+    )
+  }
+
+  const scriptsByType = {
+    FAQ: client.scripts.filter((s) => s.type === 'FAQ'),
+    SERVICE: client.scripts.filter((s) => s.type === 'SERVICE'),
+    PROMO: client.scripts.filter((s) => s.type === 'PROMO'),
+    TESTIMONIAL: client.scripts.filter((s) => s.type === 'TESTIMONIAL'),
+    TIP: client.scripts.filter((s) => s.type === 'TIP'),
+    BRAND: client.scripts.filter((s) => s.type === 'BRAND'),
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">{client.businessName}</h1>
+        <p className="text-gray-600 mt-1">{client.niche}</p>
+      </div>
+
+      {/* Payment Status Card */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">Payment Status</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Current Status
+            </label>
+            <div className="mb-3">
+              {client.paymentStatus === 'paid' ? (
+                <span className="px-3 py-1.5 text-sm font-semibold rounded-full bg-green-100 text-green-800">
+                  Paid
+                </span>
+              ) : client.paymentStatus === 'refunded' ? (
+                <span className="px-3 py-1.5 text-sm font-semibold rounded-full bg-red-100 text-red-800">
+                  Refunded
+                </span>
+              ) : (
+                <span className="px-3 py-1.5 text-sm font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                  Unpaid
+                </span>
+              )}
+            </div>
+            <select
+              value={paymentForm.paymentStatus}
+              onChange={(e) => setPaymentForm({ ...paymentForm, paymentStatus: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+            >
+              <option value="unpaid">Unpaid</option>
+              <option value="paid">Paid</option>
+              <option value="refunded">Refunded</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Payment Amount ($)
+            </label>
+            {client.paymentAmount && (
+              <p className="text-gray-900 mb-1 text-sm">
+                Current: ${(client.paymentAmount / 100).toFixed(2)}
+              </p>
+            )}
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              value={paymentForm.paymentAmount}
+              onChange={(e) => setPaymentForm({ ...paymentForm, paymentAmount: e.target.value })}
+              placeholder="Enter amount"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-400"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Payment Method
+            </label>
+            {client.paymentMethod && (
+              <p className="text-gray-900 mb-1 text-sm capitalize">
+                Current: {client.paymentMethod}
+              </p>
+            )}
+            <select
+              value={paymentForm.paymentMethod}
+              onChange={(e) => setPaymentForm({ ...paymentForm, paymentMethod: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+            >
+              <option value="">Select method</option>
+              <option value="paypal">PayPal</option>
+              <option value="venmo">Venmo</option>
+              <option value="wave">Wave</option>
+              <option value="cash">Cash</option>
+              <option value="check">Check</option>
+              <option value="bank_transfer">Bank Transfer</option>
+              <option value="credit_card">Credit Card</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Payment Date
+            </label>
+            {client.paymentDate && (
+              <p className="text-gray-900 text-sm">
+                {new Date(client.paymentDate).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <button
+            onClick={savePayment}
+            disabled={savingPayment}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium disabled:bg-blue-400 disabled:cursor-not-allowed"
+          >
+            {savingPayment ? 'Saving...' : 'Save Payment Info'}
+          </button>
+        </div>
+      </div>
+
+      {/* Client Info Card */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">Client Information</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div>
+            <label className="text-sm font-medium text-gray-500">Contact Name</label>
+            <p className="text-gray-900">{client.contactName}</p>
+          </div>
+          <div>
+            <label className="text-sm font-medium text-gray-500">Email</label>
+            <p className="text-gray-900">{client.email}</p>
+          </div>
+          {client.phone && (
+            <div>
+              <label className="text-sm font-medium text-gray-500">Phone</label>
+              <p className="text-gray-900">{client.phone}</p>
+            </div>
+          )}
+          {client.website && (
+            <div>
+              <label className="text-sm font-medium text-gray-500">Website</label>
+              <a
+                href={client.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800"
+              >
+                {client.website}
+              </a>
+            </div>
+          )}
+          <div>
+            <label className="text-sm font-medium text-gray-500">Tone</label>
+            <p className="text-gray-900">{client.tone}</p>
+          </div>
+          <div className="md:col-span-2 lg:col-span-3">
+            <label className="text-sm font-medium text-gray-500">Goals</label>
+            <p className="text-gray-900">{client.goals}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Intake Data Card */}
+      {client.intake && (
+        <div className="bg-white rounded-lg shadow p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold text-gray-900">Intake Data</h2>
+            <button
+              onClick={() => setShowIntake(!showIntake)}
+              className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+            >
+              {showIntake ? 'Hide' : 'Show'}
+            </button>
+          </div>
+
+          {showIntake && (
+            <div className="space-y-4 border-t pt-4">
+              {client.intake.rawFaqs && (
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Raw FAQs</label>
+                  <p className="text-gray-900 whitespace-pre-wrap">{client.intake.rawFaqs}</p>
+                </div>
+              )}
+              {client.intake.rawOffers && (
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Raw Offers</label>
+                  <p className="text-gray-900 whitespace-pre-wrap">{client.intake.rawOffers}</p>
+                </div>
+              )}
+              {client.intake.rawTestimonials && (
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Raw Testimonials</label>
+                  <p className="text-gray-900 whitespace-pre-wrap">{client.intake.rawTestimonials}</p>
+                </div>
+              )}
+              {client.intake.rawPromos && (
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Raw Promos</label>
+                  <p className="text-gray-900 whitespace-pre-wrap">{client.intake.rawPromos}</p>
+                </div>
+              )}
+              {client.intake.brandVoiceNotes && (
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Brand Voice Notes</label>
+                  <p className="text-gray-900 whitespace-pre-wrap">{client.intake.brandVoiceNotes}</p>
+                </div>
+              )}
+              {client.intake.references && (
+                <div>
+                  <label className="text-sm font-medium text-gray-500">References</label>
+                  <p className="text-gray-900 whitespace-pre-wrap">{client.intake.references}</p>
+                </div>
+              )}
+              {client.intake.brandColors && (
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Brand Colors</label>
+                  <p className="text-gray-900">{client.intake.brandColors}</p>
+                </div>
+              )}
+              {client.intake.logoUrl && (
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Logo URL</label>
+                  <a
+                    href={client.intake.logoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-800"
+                  >
+                    {client.intake.logoUrl}
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Scripts Section */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-semibold text-gray-900">
+            Scripts ({client.scripts.length})
+          </h2>
+          <button
+            onClick={handleGenerateScripts}
+            disabled={generating}
+            className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-md font-medium disabled:bg-green-400 disabled:cursor-not-allowed"
+          >
+            {generating ? 'Generating...' : 'Generate 30-Day Script Pack'}
+          </button>
+        </div>
+
+        {/* Export Scripts Section */}
+        {client.scripts.length > 0 && (
+          <div className="mb-6 pb-6 border-b border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">Export Scripts</h3>
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={handleCopyToClipboard}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-md font-medium transition-colors"
+              >
+                Copy All to Clipboard
+              </button>
+              <button
+                onClick={handleDownloadTXT}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-md font-medium transition-colors"
+              >
+                Download as TXT
+              </button>
+              <button
+                onClick={handleDownloadJSON}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-md font-medium transition-colors"
+              >
+                Download as JSON
+              </button>
+            </div>
+          </div>
+        )}
+
+        {client.scripts.length === 0 ? (
+          <p className="text-gray-500 text-center py-8">
+            No scripts yet. Click the button above to generate a 30-day pack.
+          </p>
+        ) : (
+          <div className="space-y-6">
+            {Object.entries(scriptsByType).map(([type, scripts]) => {
+              if (scripts.length === 0) return null
+
+              return (
+                <div key={type}>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3 pb-2 border-b">
+                    {SCRIPT_TYPE_LABELS[type]} ({scripts.length})
+                  </h3>
+                  <div className="space-y-3">
+                    {scripts.map((script) => (
+                      <div
+                        key={script.id}
+                        className="border border-gray-200 rounded-lg p-4 hover:border-gray-300"
+                      >
+                        {editingScript === script.id ? (
+                          // Edit mode
+                          <div className="space-y-3">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Script Text
+                              </label>
+                              <textarea
+                                value={editForm.scriptText}
+                                onChange={(e) =>
+                                  setEditForm({ ...editForm, scriptText: e.target.value })
+                                }
+                                rows={6}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-400"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Status
+                              </label>
+                              <select
+                                value={editForm.status}
+                                onChange={(e) =>
+                                  setEditForm({ ...editForm, status: e.target.value })
+                                }
+                                className="px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                              >
+                                <option value="draft">Draft</option>
+                                <option value="approved">Approved</option>
+                                <option value="exported">Exported</option>
+                              </select>
+                            </div>
+                            <div className="flex space-x-2">
+                              <button
+                                onClick={() => saveScript(script.id)}
+                                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                              >
+                                Save
+                              </button>
+                              <button
+                                onClick={cancelEdit}
+                                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          // View mode
+                          <div>
+                            <div className="flex justify-between items-start mb-2">
+                              <h4 className="font-semibold text-gray-900">{script.title}</h4>
+                              <div className="flex items-center space-x-2">
+                                <span
+                                  className={`px-2 py-1 text-xs font-medium rounded ${
+                                    script.status === 'approved'
+                                      ? 'bg-green-100 text-green-800'
+                                      : script.status === 'exported'
+                                      ? 'bg-blue-100 text-blue-800'
+                                      : 'bg-gray-100 text-gray-800'
+                                  }`}
+                                >
+                                  {script.status}
+                                </span>
+                                <button
+                                  onClick={() => startEditScript(script)}
+                                  className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                >
+                                  Edit
+                                </button>
+                              </div>
+                            </div>
+                            <p className="text-gray-600 text-sm whitespace-pre-wrap line-clamp-2">
+                              {script.scriptText.split('\n').slice(0, 2).join('\n')}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
