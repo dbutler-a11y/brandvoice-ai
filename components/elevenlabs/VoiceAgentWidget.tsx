@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { Volume2, VolumeX, X, Home, MessageCircle, HelpCircle, Search, Send, ChevronDown } from 'lucide-react';
+import { X, Home, MessageCircle, HelpCircle, Search, Send, ChevronDown } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface VoiceAgentWidgetProps {
   agentId?: string;
@@ -24,7 +25,6 @@ export default function VoiceAgentWidget({
 }: VoiceAgentWidgetProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
   const [activeTab, setActiveTab] = useState<TabType>('home');
   const [searchQuery, setSearchQuery] = useState('');
   const [messages, setMessages] = useState<Message[]>([
@@ -263,66 +263,53 @@ export default function VoiceAgentWidget({
         </div>
       )}
 
-      {/* Expanded State - Full Widget */}
+      {/* Expanded State - Full Widget - Redesigned Layout */}
       {isExpanded && (
         <div className="fixed bottom-6 right-8 z-50 w-[380px] bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 animate-slideUp">
-          {/* Video/Avatar Section */}
-          <div className="relative bg-gradient-to-br from-gray-900 to-gray-800 aspect-video">
-            {/* Always show Samira's avatar as background */}
-            <div className="w-full h-full flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-20 h-20 rounded-lg overflow-hidden mx-auto mb-3 border-2 border-white/30">
-                  <Image
-                    src="/images/samira-avatar.jpg"
-                    alt="Samira - AI Assistant"
-                    width={80}
-                    height={80}
-                    className="object-cover object-top w-full h-full"
-                  />
-                </div>
-                <p className="text-white font-semibold">Samira</p>
-                <p className="text-gray-400 text-sm">AI Customer Support</p>
-                {activeTab === 'home' && (
-                  <p className="text-indigo-400 text-xs mt-2">Click mic to talk or use Messages to chat</p>
-                )}
-              </div>
-            </div>
-
-            {/* ElevenLabs Widget - overlay on Home tab only */}
-            {isLoaded && activeTab === 'home' && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                {/* @ts-expect-error - ElevenLabs custom element */}
-                <elevenlabs-convai agent-id={elevenlabsAgentId}></elevenlabs-convai>
-              </div>
-            )}
-
-            {/* Mute/Unmute Button */}
-            <button
-              onClick={() => setIsMuted(!isMuted)}
-              className="absolute bottom-4 left-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors"
-            >
-              {isMuted ? (
-                <VolumeX className="w-5 h-5 text-white" />
-              ) : (
-                <Volume2 className="w-5 h-5 text-white" />
-              )}
-            </button>
-
-            {/* Close Button */}
+          {/* Header Section with Avatar and Mic - Compact */}
+          <div className="relative bg-gradient-to-br from-gray-900 to-gray-800 px-4 py-5">
+            {/* Close & Minimize buttons */}
             <button
               onClick={handleClose}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors"
+              className="absolute top-3 left-3 w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors"
+            >
+              <ChevronDown className="w-4 h-4 text-white" />
+            </button>
+            <button
+              onClick={handleClose}
+              className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors"
             >
               <X className="w-4 h-4 text-white" />
             </button>
 
-            {/* Minimize Button */}
-            <button
-              onClick={handleClose}
-              className="absolute top-4 left-4 w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors"
-            >
-              <ChevronDown className="w-4 h-4 text-white" />
-            </button>
+            {/* Avatar, Info, and Mic in a row */}
+            <div className="flex items-center gap-4 mt-6">
+              {/* Avatar */}
+              <div className="w-16 h-16 rounded-lg overflow-hidden border-2 border-white/30 flex-shrink-0">
+                <Image
+                  src="/images/samira-avatar.jpg"
+                  alt="Samira - AI Assistant"
+                  width={64}
+                  height={64}
+                  className="object-cover object-top w-full h-full"
+                />
+              </div>
+
+              {/* Info Text */}
+              <div className="flex-1 min-w-0">
+                <p className="text-white font-semibold text-lg">Samira</p>
+                <p className="text-gray-400 text-sm">AI Customer Support</p>
+                <p className="text-indigo-400 text-xs mt-1">Click mic to talk or use Messages</p>
+              </div>
+
+              {/* ElevenLabs Mic Widget - Positioned here */}
+              {isLoaded && activeTab === 'home' && (
+                <div className="flex-shrink-0 relative w-14 h-14">
+                  {/* @ts-expect-error - ElevenLabs custom element */}
+                  <elevenlabs-convai agent-id={elevenlabsAgentId}></elevenlabs-convai>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Tab Navigation */}
@@ -363,32 +350,71 @@ export default function VoiceAgentWidget({
           </div>
 
           {/* Tab Content */}
-          <div className="h-[280px] overflow-hidden">
-            {/* Home Tab */}
+          <div className="h-[300px] overflow-hidden">
+            {/* Home Tab - Quick Actions with Working Links */}
             {activeTab === 'home' && (
               <div className="p-4 h-full overflow-y-auto">
                 <h3 className="font-semibold text-gray-900 mb-3">Quick Actions</h3>
                 <div className="space-y-2">
-                  <button className="w-full p-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all text-sm">
-                    Book a Strategy Call
-                  </button>
-                  <button className="w-full p-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors text-sm">
-                    View Pricing
-                  </button>
-                  <button className="w-full p-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors text-sm">
-                    See Sample Videos
-                  </button>
-                </div>
-                <div className="mt-4 pt-4 border-t border-gray-100">
-                  <p className="text-xs text-gray-500 text-center">
-                    Talk to Samira using the mic above
-                  </p>
-                  <button
-                    onClick={() => setActiveTab('messages')}
-                    className="mt-2 w-full py-2 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-medium hover:bg-indigo-100 transition-colors"
+                  <Link
+                    href="#book-call"
+                    onClick={handleClose}
+                    className="block w-full p-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all text-sm text-center"
                   >
-                    Or chat with Samira via text
-                  </button>
+                    Book a Strategy Call
+                  </Link>
+                  <Link
+                    href="#pricing"
+                    onClick={handleClose}
+                    className="block w-full p-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors text-sm text-center"
+                  >
+                    View Pricing
+                  </Link>
+                  <Link
+                    href="/portfolio"
+                    onClick={handleClose}
+                    className="block w-full p-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors text-sm text-center"
+                  >
+                    See Sample Videos
+                  </Link>
+                </div>
+
+                {/* Divider */}
+                <div className="mt-4 pt-4 border-t border-gray-100">
+                  <h4 className="font-medium text-gray-700 text-sm mb-2">More Options</h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link
+                      href="/how-it-works"
+                      onClick={handleClose}
+                      className="p-3 bg-gray-50 rounded-lg text-center hover:bg-gray-100 transition-colors"
+                    >
+                      <span className="block text-lg mb-1">🎬</span>
+                      <span className="text-xs text-gray-700 font-medium">How It Works</span>
+                    </Link>
+                    <Link
+                      href="/faq"
+                      onClick={handleClose}
+                      className="p-3 bg-gray-50 rounded-lg text-center hover:bg-gray-100 transition-colors"
+                    >
+                      <span className="block text-lg mb-1">❓</span>
+                      <span className="text-xs text-gray-700 font-medium">FAQ</span>
+                    </Link>
+                    <Link
+                      href="/voice-preview"
+                      onClick={handleClose}
+                      className="p-3 bg-gray-50 rounded-lg text-center hover:bg-gray-100 transition-colors"
+                    >
+                      <span className="block text-lg mb-1">🎤</span>
+                      <span className="text-xs text-gray-700 font-medium">Voice Samples</span>
+                    </Link>
+                    <button
+                      onClick={() => setActiveTab('messages')}
+                      className="p-3 bg-gray-50 rounded-lg text-center hover:bg-gray-100 transition-colors"
+                    >
+                      <span className="block text-lg mb-1">💬</span>
+                      <span className="text-xs text-gray-700 font-medium">Chat with Samira</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
