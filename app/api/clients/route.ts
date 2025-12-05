@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import type { FullIntakeFormData } from '@/lib/types'
+import { requireAdmin } from '@/lib/auth'
 
 // GET /api/clients - Get all clients
 export async function GET() {
+  // Check authentication
+  const authResult = await requireAdmin()
+  if (authResult instanceof NextResponse) return authResult
+
   try {
     const clients = await prisma.client.findMany({
       include: {
@@ -28,6 +33,10 @@ export async function GET() {
 
 // POST /api/clients - Create new client with intake
 export async function POST(request: NextRequest) {
+  // Check authentication
+  const authResult = await requireAdmin()
+  if (authResult instanceof NextResponse) return authResult
+
   try {
     const data: FullIntakeFormData = await request.json()
 

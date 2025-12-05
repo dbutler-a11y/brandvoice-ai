@@ -25,6 +25,21 @@ body {
     text-wrap: balance;
   }
 
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Smooth touch scrolling for iOS */
+  .-webkit-overflow-scrolling-touch {
+    -webkit-overflow-scrolling: touch;
+  }
+
   @keyframes slide-in {
     from {
       transform: translateX(100%);

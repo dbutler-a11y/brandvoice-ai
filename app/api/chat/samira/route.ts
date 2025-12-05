@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { rateLimit, rateLimitResponse, addRateLimitHeaders, RateLimitTier } from '@/lib/rate-limit';
 
 // Force dynamic - don't prerender
 export const dynamic = 'force-dynamic';
@@ -7,11 +8,61 @@ export const dynamic = 'force-dynamic';
 // Uses the same agent and knowledge base as Samira's voice widget
 export async function POST(request: NextRequest) {
   try {
-    const { message, conversationId } = await request.json();
+    // SECURITY: Apply STANDARD rate limiting (30 requests/min)
+    // This endpoint calls ElevenLabs Conversational AI which costs money
+    const rateLimitResult = rateLimit(request, RateLimitTier.STANDARD);
+    if (!rateLimitResult.success) {
+      return rateLimitResponse(rateLimitResult);
+    }
 
+    // SECURITY: Validate request body exists and is JSON
+    let body;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid JSON in request body' },
+        { status: 400 }
+      );
+    }
+
+    const { message, conversationId } = body;
+
+    // SECURITY: Validate required fields
     if (!message) {
       return NextResponse.json(
-        { error: 'Message is required' },
+        { error: 'message is required' },
+        { status: 400 }
+      );
+    }
+
+    // SECURITY: Validate message type and length
+    if (typeof message !== 'string') {
+      return NextResponse.json(
+        { error: 'message must be a string' },
+        { status: 400 }
+      );
+    }
+
+    if (message.length === 0) {
+      return NextResponse.json(
+        { error: 'message cannot be empty' },
+        { status: 400 }
+      );
+    }
+
+    // SECURITY: Validate message length (max 2000 chars for chat)
+    if (message.length > 2000) {
+      return NextResponse.json(
+        { error: `message exceeds maximum length of 2000 characters (got ${message.length})` },
+        { status: 400 }
+      );
+    }
+
+    // SECURITY: Validate conversationId if provided
+    if (conversationId !== undefined && conversationId !== null && typeof conversationId !== 'string') {
+      return NextResponse.json(
+        { error: 'conversationId must be a string' },
         { status: 400 }
       );
     }
@@ -28,10 +79,11 @@ export async function POST(request: NextRequest) {
 
     if (!apiKey) {
       // Fallback response when API key is not configured
-      return NextResponse.json({
+      const fallbackResponse = NextResponse.json({
         response: getFallbackResponse(message),
         conversationId: conversationId || 'fallback-' + Date.now(),
       });
+      return addRateLimitHeaders(fallbackResponse, rateLimitResult);
     }
 
     // Call ElevenLabs Conversational AI text endpoint
@@ -56,18 +108,22 @@ export async function POST(request: NextRequest) {
       console.error('ElevenLabs API error:', errorData);
 
       // Return fallback response on API error
-      return NextResponse.json({
+      const errorFallbackResponse = NextResponse.json({
         response: getFallbackResponse(message),
         conversationId: conversationId || 'fallback-' + Date.now(),
       });
+      return addRateLimitHeaders(errorFallbackResponse, rateLimitResult);
     }
 
     const data = await response.json();
 
-    return NextResponse.json({
+    // SECURITY: Add rate limit headers to successful response
+    const successResponse = NextResponse.json({
       response: data.response || data.text || data.message || data.output,
       conversationId: data.conversation_id || conversationId,
     });
+
+    return addRateLimitHeaders(successResponse, rateLimitResult);
   } catch (error) {
     console.error('Samira chat API error:', error);
     return NextResponse.json(

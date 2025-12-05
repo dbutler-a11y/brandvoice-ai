@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { rateLimit, RateLimitTier } from '@/lib/rate-limit';
 
 const PAYPAL_API_BASE = process.env.PAYPAL_MODE === 'live'
   ? 'https://api-m.paypal.com'
@@ -40,6 +41,15 @@ async function generateAccessToken(): Promise<string> {
  * Capture PayPal order
  */
 export async function POST(request: NextRequest) {
+  // Apply rate limiting to prevent abuse
+  const rateLimitResult = rateLimit(request, RateLimitTier.STRICT);
+  if (!rateLimitResult.allowed) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      { status: 429 }
+    );
+  }
+
   try {
     const body = await request.json();
     const { orderId, packageId } = body;
@@ -47,6 +57,14 @@ export async function POST(request: NextRequest) {
     if (!orderId) {
       return NextResponse.json(
         { error: 'Missing order ID' },
+        { status: 400 }
+      );
+    }
+
+    // Validate orderId format (PayPal order IDs are alphanumeric)
+    if (typeof orderId !== 'string' || !/^[A-Za-z0-9]+$/.test(orderId)) {
+      return NextResponse.json(
+        { error: 'Invalid order ID format' },
         { status: 400 }
       );
     }

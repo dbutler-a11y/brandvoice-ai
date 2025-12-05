@@ -10,7 +10,7 @@ export default function CookieBanner() {
   if (!showBanner) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[9999] p-3 sm:p-4 animate-slide-up">
+    <div className="fixed bottom-0 left-0 right-0 z-[9999] p-3 sm:p-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:pb-[max(1rem,env(safe-area-inset-bottom))] animate-slide-up">
       <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden">
         <div className="p-4 sm:p-5">
           {/* Header Row */}

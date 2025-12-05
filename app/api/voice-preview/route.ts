@@ -1,4 +1,5 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { rateLimit, rateLimitResponse, addRateLimitHeaders, RateLimitTier } from '@/lib/rate-limit';
 
 // Sample voices from ElevenLabs that represent different tones/styles
 // These are public voice IDs from ElevenLabs voice library
@@ -75,9 +76,52 @@ export async function GET() {
 }
 
 // POST - Generate audio preview for a specific voice
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const { voiceId, text } = await request.json();
+    // SECURITY: Apply STRICT rate limiting (5 requests/min)
+    // This endpoint calls ElevenLabs TTS which costs money
+    const rateLimitResult = rateLimit(request, RateLimitTier.STRICT);
+    if (!rateLimitResult.success) {
+      return rateLimitResponse(rateLimitResult);
+    }
+
+    // SECURITY: Validate request body exists and is JSON
+    let body;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid JSON in request body' },
+        { status: 400 }
+      );
+    }
+
+    // SECURITY: Validate required fields
+    const { voiceId, text } = body;
+
+    if (!voiceId) {
+      return NextResponse.json(
+        { error: 'voiceId is required' },
+        { status: 400 }
+      );
+    }
+
+    // SECURITY: Validate text length if provided (max 500 chars for voice preview)
+    if (text !== undefined && text !== null) {
+      if (typeof text !== 'string') {
+        return NextResponse.json(
+          { error: 'text must be a string' },
+          { status: 400 }
+        );
+      }
+
+      if (text.length > 500) {
+        return NextResponse.json(
+          { error: `text exceeds maximum length of 500 characters (got ${text.length})` },
+          { status: 400 }
+        );
+      }
+    }
 
     const apiKey = process.env.ELEVENLABS_API_KEY;
     if (!apiKey) {
@@ -97,7 +141,7 @@ export async function POST(request: Request) {
     }
 
     // Use provided text or default preview text
-    const textToSpeak = text || voice.previewText;
+    const textToSpeak = text ? text.trim() : voice.previewText;
 
     // Call ElevenLabs TTS API
     const response = await fetch(
@@ -135,13 +179,16 @@ export async function POST(request: Request) {
     // Return audio as base64
     const base64Audio = Buffer.from(audioBuffer).toString('base64');
 
-    return NextResponse.json({
+    // SECURITY: Add rate limit headers to successful response
+    const successResponse = NextResponse.json({
       audio: base64Audio,
       voice: {
         id: voice.id,
         name: voice.name,
       },
     });
+
+    return addRateLimitHeaders(successResponse, rateLimitResult);
 
   } catch (error) {
     console.error('Voice preview error:', error);

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 type Spokesperson = {
   id: string
@@ -273,10 +274,13 @@ export default function PortfolioPage() {
                   {/* Avatar Placeholder */}
                   <div className="relative mb-4">
                     {spokesperson.thumbnailUrl || spokesperson.avatarUrl ? (
-                      <img
+                      <Image
                         src={spokesperson.thumbnailUrl || spokesperson.avatarUrl || ''}
                         alt={spokesperson.displayName}
+                        width={300}
+                        height={300}
                         className="w-full aspect-square object-cover rounded-lg"
+                        unoptimized
                       />
                     ) : (
                       <div className="w-full aspect-square bg-gradient-to-br from-purple-400 to-indigo-500 rounded-lg flex items-center justify-center">

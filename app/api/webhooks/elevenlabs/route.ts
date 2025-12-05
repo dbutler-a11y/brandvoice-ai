@@ -1,5 +1,73 @@
 import { NextResponse } from 'next/server';
+import { createHmac, timingSafeEqual } from 'crypto';
 import { prisma } from '@/lib/prisma';
+import { applyRateLimit } from '@/lib/ratelimit';
+import { validateWebhookPayload } from '@/lib/validation';
+
+/**
+ * Verify ElevenLabs webhook signature using HMAC-SHA256
+ * This provides cryptographic verification that the webhook came from ElevenLabs
+ */
+async function verifyWebhookSignature(
+  request: Request,
+  rawBody: string
+): Promise<{ valid: boolean; error?: string }> {
+  const webhookSecret = process.env.ELEVENLABS_WEBHOOK_SECRET;
+
+  // If no secret configured, log warning but allow in development
+  if (!webhookSecret) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('[ElevenLabs Webhook] No webhook secret configured - skipping verification in development');
+      return { valid: true };
+    }
+    console.error('[ElevenLabs Webhook] ELEVENLABS_WEBHOOK_SECRET not configured');
+    return { valid: false, error: 'Webhook secret not configured' };
+  }
+
+  // Get signature from headers
+  const signature = request.headers.get('x-elevenlabs-signature')
+    || request.headers.get('x-signature')
+    || request.headers.get('x-webhook-signature');
+
+  if (!signature) {
+    console.error('[ElevenLabs Webhook] Missing signature header');
+    return { valid: false, error: 'Missing signature header' };
+  }
+
+  try {
+    // Compute expected HMAC signature
+    const expectedSignature = createHmac('sha256', webhookSecret)
+      .update(rawBody)
+      .digest('hex');
+
+    // Use timing-safe comparison to prevent timing attacks
+    const signatureBuffer = Buffer.from(signature, 'hex');
+    const expectedBuffer = Buffer.from(expectedSignature, 'hex');
+
+    // Check buffer lengths match first
+    if (signatureBuffer.length !== expectedBuffer.length) {
+      // If lengths don't match, try comparing as plain strings (some providers prefix with algorithm)
+      const signatureWithoutPrefix = signature.replace(/^sha256=/, '');
+      if (signatureWithoutPrefix === expectedSignature) {
+        return { valid: true };
+      }
+      console.error('[ElevenLabs Webhook] Signature length mismatch');
+      return { valid: false, error: 'Invalid signature' };
+    }
+
+    const isValid = timingSafeEqual(signatureBuffer, expectedBuffer);
+
+    if (!isValid) {
+      console.error('[ElevenLabs Webhook] Signature verification failed');
+      return { valid: false, error: 'Invalid signature' };
+    }
+
+    return { valid: true };
+  } catch (error) {
+    console.error('[ElevenLabs Webhook] Error verifying signature:', error);
+    return { valid: false, error: 'Signature verification error' };
+  }
+}
 
 // ElevenLabs webhook payload types
 interface ElevenLabsWebhookPayload {
@@ -235,17 +303,50 @@ function calculateDataQuality(data: Record<string, string | null>): number {
 }
 
 export async function POST(request: Request) {
+  let rawBody = '';
+
   try {
-    // Verify webhook secret if configured
-    const webhookSecret = process.env.ELEVENLABS_WEBHOOK_SECRET;
-    if (webhookSecret) {
-      const signature = request.headers.get('x-elevenlabs-signature');
-      if (signature !== webhookSecret) {
-        return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
-      }
+    // Apply rate limiting (STANDARD - 30 requests per minute)
+    const rateLimitCheck = applyRateLimit(request, 'STANDARD');
+    if (rateLimitCheck.response) {
+      console.warn('[ElevenLabs Webhook] Rate limit exceeded');
+      return rateLimitCheck.response;
     }
 
-    const payload: ElevenLabsWebhookPayload = await request.json();
+    // Get raw body for signature verification
+    rawBody = await request.text();
+
+    // Verify webhook signature using HMAC
+    const signatureVerification = await verifyWebhookSignature(request, rawBody);
+    if (!signatureVerification.valid) {
+      console.error('[ElevenLabs Webhook] Signature verification failed:', signatureVerification.error);
+      return NextResponse.json(
+        { error: signatureVerification.error || 'Invalid signature' },
+        { status: 401 }
+      );
+    }
+
+    // Parse the payload
+    const payload: ElevenLabsWebhookPayload = JSON.parse(rawBody);
+
+    // Validate required fields
+    const validation = validateWebhookPayload(payload, [
+      'conversation_id',
+      'agent_id',
+      'status',
+    ]);
+
+    if (!validation.valid) {
+      console.error('[ElevenLabs Webhook] Missing required fields:', validation.missing);
+      return NextResponse.json(
+        {
+          error: 'Invalid payload',
+          missing: validation.missing,
+        },
+        { status: 400 }
+      );
+    }
+
     console.log('Received ElevenLabs webhook:', payload.conversation_id);
 
     // Only process completed conversations
@@ -269,12 +370,31 @@ export async function POST(request: Request) {
     const isQualified = leadScore >= 50;
 
     // Create or find lead
-    let lead = null;
+    let lead: Awaited<ReturnType<typeof prisma.lead.findFirst>> = null;
 
-    // Try to find existing lead by email
+    // Try to find existing lead by email (duplicate prevention)
     if (extractedData.email) {
       lead = await prisma.lead.findFirst({
         where: { email: extractedData.email }
+      });
+
+      if (lead) {
+        console.log(`[ElevenLabs Webhook] Found existing lead by email: ${lead.id}`);
+      }
+    }
+
+    // Also check for duplicate by conversation ID to prevent reprocessing
+    const existingConversation = await prisma.voiceConversation.findUnique({
+      where: { elevenLabsConversationId: payload.conversation_id }
+    });
+
+    if (existingConversation) {
+      console.log(`[ElevenLabs Webhook] Conversation already processed: ${payload.conversation_id}`);
+      return NextResponse.json({
+        success: true,
+        message: 'Conversation already processed',
+        leadId: existingConversation.leadId,
+        conversationId: existingConversation.id,
       });
     }
 

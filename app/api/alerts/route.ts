@@ -1,8 +1,13 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { requireAdmin } from '@/lib/auth';
 
 // GET /api/alerts - Get all alerts
 export async function GET() {
+  // Check authentication
+  const authResult = await requireAdmin()
+  if (authResult instanceof NextResponse) return authResult
+
   try {
     const alerts = await prisma.alert.findMany({
       orderBy: [
@@ -25,6 +30,10 @@ export async function GET() {
 
 // POST /api/alerts - Create a new alert
 export async function POST(request: Request) {
+  // Check authentication
+  const authResult = await requireAdmin()
+  if (authResult instanceof NextResponse) return authResult
+
   try {
     const data = await request.json();
 

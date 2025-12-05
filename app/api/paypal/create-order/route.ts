@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { rateLimit, RateLimitTier } from '@/lib/rate-limit';
 
 const PAYPAL_API_BASE = process.env.PAYPAL_MODE === 'live'
   ? 'https://api-m.paypal.com'
@@ -40,6 +41,15 @@ async function generateAccessToken(): Promise<string> {
  * Create PayPal order
  */
 export async function POST(request: NextRequest) {
+  // Apply rate limiting to prevent abuse
+  const rateLimitResult = rateLimit(request, RateLimitTier.STRICT);
+  if (!rateLimitResult.allowed) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      { status: 429 }
+    );
+  }
+
   try {
     const body = await request.json();
     const { packageId, packageName, price, isSubscription } = body;
@@ -47,6 +57,15 @@ export async function POST(request: NextRequest) {
     if (!packageId || !packageName || !price) {
       return NextResponse.json(
         { error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+
+    // Validate price is a positive number
+    const numericPrice = parseFloat(price);
+    if (isNaN(numericPrice) || numericPrice <= 0 || numericPrice > 50000) {
+      return NextResponse.json(
+        { error: 'Invalid price value' },
         { status: 400 }
       );
     }

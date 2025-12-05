@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { requireAdmin } from '@/lib/auth'
 
 // GET all spokespersons
 export async function GET() {
+  // Check authentication
+  const authResult = await requireAdmin()
+  if (authResult instanceof NextResponse) return authResult
+
   try {
     const spokespersons = await prisma.spokesperson.findMany({
       orderBy: [
@@ -24,6 +29,10 @@ export async function GET() {
 
 // POST create new spokesperson
 export async function POST(request: NextRequest) {
+  // Check authentication
+  const authResult = await requireAdmin()
+  if (authResult instanceof NextResponse) return authResult
+
   try {
     const data = await request.json()
 

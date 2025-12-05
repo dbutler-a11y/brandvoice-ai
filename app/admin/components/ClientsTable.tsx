@@ -205,53 +205,18 @@ export default function ClientsTable({ clients }: ClientsTableProps) {
         </div>
       ) : (
         <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Business Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Niche
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Contact Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Email
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Payment
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date Created
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Scripts
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+          {/* Mobile: Card Layout */}
+          <div className="block md:hidden">
+            <div className="divide-y divide-gray-200">
               {filteredClients.map((client) => (
-                <tr key={client.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
+                <div key={client.id} className="p-4 hover:bg-gray-50">
+                  <div className="flex items-start justify-between mb-2">
                     <Link
                       href={`/admin/clients/${client.id}`}
-                      className="text-blue-600 hover:text-blue-800 font-medium"
+                      className="text-blue-600 hover:text-blue-800 font-medium text-lg"
                     >
                       {client.businessName}
                     </Link>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {client.niche}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {client.contactName}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {client.email}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
                     {client.paymentStatus === 'paid' ? (
                       <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
                         Paid
@@ -265,23 +230,111 @@ export default function ClientsTable({ clients }: ClientsTableProps) {
                         Unpaid
                       </span>
                     )}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {formatDate(client.createdAt)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {client._count.scripts === 0 ? (
-                      <span className="text-gray-400">0 scripts</span>
-                    ) : (
-                      <span className="text-gray-900 font-medium">
-                        {client._count.scripts} script{client._count.scripts !== 1 ? 's' : ''}
-                      </span>
-                    )}
-                  </td>
-                </tr>
+                  </div>
+                  <div className="space-y-1 text-sm">
+                    <p className="text-gray-900">
+                      <span className="font-medium">Contact:</span> {client.contactName}
+                    </p>
+                    <p className="text-gray-600">{client.email}</p>
+                    <p className="text-gray-900">
+                      <span className="font-medium">Niche:</span> {client.niche}
+                    </p>
+                    <div className="flex items-center justify-between pt-2 mt-2 border-t border-gray-100">
+                      <span className="text-gray-500 text-xs">{formatDate(client.createdAt)}</span>
+                      {client._count.scripts === 0 ? (
+                        <span className="text-gray-400 text-xs">0 scripts</span>
+                      ) : (
+                        <span className="text-gray-900 font-medium text-xs">
+                          {client._count.scripts} script{client._count.scripts !== 1 ? 's' : ''}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </div>
+
+          {/* Desktop: Table Layout with horizontal scroll */}
+          <div className="hidden md:block overflow-x-auto -webkit-overflow-scrolling-touch">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Business Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Niche
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Contact Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Email
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Payment
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Date Created
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Scripts
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredClients.map((client) => (
+                  <tr key={client.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <Link
+                        href={`/admin/clients/${client.id}`}
+                        className="text-blue-600 hover:text-blue-800 font-medium"
+                      >
+                        {client.businessName}
+                      </Link>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {client.niche}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {client.contactName}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {client.email}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      {client.paymentStatus === 'paid' ? (
+                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                          Paid
+                        </span>
+                      ) : client.paymentStatus === 'refunded' ? (
+                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                          Refunded
+                        </span>
+                      ) : (
+                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                          Unpaid
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {formatDate(client.createdAt)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {client._count.scripts === 0 ? (
+                        <span className="text-gray-400">0 scripts</span>
+                      ) : (
+                        <span className="text-gray-900 font-medium">
+                          {client._count.scripts} script{client._count.scripts !== 1 ? 's' : ''}
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

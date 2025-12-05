@@ -160,9 +160,30 @@ export default function PortalLoginPage() {
 
           {/* Help Links */}
           <div className="mt-6 text-center space-y-2">
-            <a href="#" className="text-sm text-blue-600 hover:text-blue-800 block">
+            <button
+              onClick={async () => {
+                if (!email) {
+                  setError('Please enter your email address first');
+                  return;
+                }
+                setLoading(true);
+                try {
+                  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                    redirectTo: `${window.location.origin}/portal/reset-password`,
+                  });
+                  if (error) throw error;
+                  setError(null);
+                  alert('Password reset email sent! Check your inbox.');
+                } catch (err) {
+                  setError(err instanceof Error ? err.message : 'Failed to send reset email');
+                } finally {
+                  setLoading(false);
+                }
+              }}
+              className="text-sm text-blue-600 hover:text-blue-800 block w-full"
+            >
               Forgot your password?
-            </a>
+            </button>
             <div className="pt-4 border-t border-gray-200">
               <p className="text-sm text-gray-600">
                 Need help?{' '}

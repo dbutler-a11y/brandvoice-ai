@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { applyRateLimit } from '@/lib/ratelimit';
+import { requireAuth, isAuthError } from '@/lib/auth';
 
 // GET /api/leads/[id] - Get a single lead
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  // Apply relaxed rate limiting
+  const rateLimitCheck = applyRateLimit(request, 'RELAXED');
+  if (rateLimitCheck.response) {
+    return rateLimitCheck.response;
+  }
   try {
     const lead = await prisma.lead.findUnique({
       where: { id: params.id },
@@ -38,6 +45,18 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  // Require authentication
+  const user = await requireAuth();
+  if (isAuthError(user)) {
+    return user;
+  }
+
+  // Apply standard rate limiting
+  const rateLimitCheck = applyRateLimit(request, 'STANDARD');
+  if (rateLimitCheck.response) {
+    return rateLimitCheck.response;
+  }
+
   try {
     const data = await request.json();
 
@@ -98,9 +117,21 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  // Require authentication
+  const user = await requireAuth();
+  if (isAuthError(user)) {
+    return user;
+  }
+
+  // Apply standard rate limiting
+  const rateLimitCheck = applyRateLimit(request, 'STANDARD');
+  if (rateLimitCheck.response) {
+    return rateLimitCheck.response;
+  }
+
   try {
     await prisma.lead.delete({
-      where: { id: params.id }
+      where: { id: params.id },
     });
 
     return NextResponse.json({ success: true });

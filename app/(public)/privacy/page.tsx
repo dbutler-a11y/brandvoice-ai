@@ -13,7 +13,7 @@ export default function PrivacyPolicyPage() {
       {/* Header */}
       <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-bold mb-4">Privacy Policy</h1>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4">Privacy Policy</h1>
           <p className="text-purple-100">Last updated: {lastUpdated}</p>
         </div>
       </div>

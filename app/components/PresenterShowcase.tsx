@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 
 // Sample presenter data - easily update with real images later
 export const samplePresenters = [
@@ -50,6 +51,25 @@ export const samplePresenters = [
 
 export default function PresenterShowcase() {
   const [hoveredId, setHoveredId] = useState<number | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Detect mobile on client side
+  if (typeof window !== 'undefined') {
+    const checkMobile = () => window.innerWidth < 768
+    if (isMobile !== checkMobile()) {
+      setIsMobile(checkMobile())
+    }
+  }
+
+  const handleInteraction = (id: number) => {
+    if (isMobile) {
+      // Toggle on mobile (touch)
+      setHoveredId(hoveredId === id ? null : id)
+    } else {
+      // Just hover on desktop
+      setHoveredId(id)
+    }
+  }
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 lg:gap-8">
@@ -57,8 +77,9 @@ export default function PresenterShowcase() {
         <div
           key={presenter.id}
           className="text-center group"
-          onMouseEnter={() => setHoveredId(presenter.id)}
-          onMouseLeave={() => setHoveredId(null)}
+          onMouseEnter={() => !isMobile && setHoveredId(presenter.id)}
+          onMouseLeave={() => !isMobile && setHoveredId(null)}
+          onClick={() => handleInteraction(presenter.id)}
         >
           {/* Avatar Circle */}
           <div className="relative mb-4 mx-auto">
@@ -69,10 +90,13 @@ export default function PresenterShowcase() {
                   : 'border-gray-200 shadow-lg'
               }`}
             >
-              <img
+              <Image
                 src={presenter.image}
                 alt={presenter.name}
+                width={128}
+                height={128}
                 className="w-full h-full object-cover"
+                unoptimized
               />
             </div>
 
@@ -107,10 +131,12 @@ export default function PresenterShowcase() {
             ))}
           </div>
 
-          {/* Description - shown on hover */}
+          {/* Description - shown on hover/click on desktop, always visible on mobile */}
           <div
             className={`overflow-hidden transition-all duration-300 ${
-              hoveredId === presenter.id ? 'max-h-20 opacity-100' : 'max-h-0 opacity-0'
+              hoveredId === presenter.id
+                ? 'max-h-20 opacity-100'
+                : 'md:max-h-0 md:opacity-0 max-h-20 opacity-100'
             }`}
           >
             <p className="text-sm text-gray-600 px-2">{presenter.description}</p>

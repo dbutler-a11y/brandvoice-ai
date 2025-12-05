@@ -50,7 +50,7 @@ export default function CookiePreferencesModal() {
       />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden animate-scale-in">
+      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-h-[calc(100dvh-2rem)] overflow-hidden animate-scale-in flex flex-col">
         {/* Header */}
         <div className="px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-indigo-50">
           <div className="flex items-center justify-between">
@@ -65,9 +65,10 @@ export default function CookiePreferencesModal() {
             </div>
             <button
               onClick={handleCancel}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2.5 hover:bg-gray-100 rounded-lg transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+              aria-label="Close preferences"
             >
-              <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -78,7 +79,7 @@ export default function CookiePreferencesModal() {
         </div>
 
         {/* Cookie Categories */}
-        <div className="px-6 py-4 space-y-4 max-h-[50vh] overflow-y-auto">
+        <div className="px-6 py-4 space-y-4 overflow-y-auto flex-1">
           {/* Necessary Cookies - Always On */}
           <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
             <div className="flex items-center justify-between">

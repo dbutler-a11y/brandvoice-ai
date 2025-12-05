@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
+import Image from 'next/image'
 
 interface Spokesperson {
   id: string
@@ -763,7 +764,7 @@ Personality: Warm, knowledgeable, nurturing...`}
 
       {/* Spokespersons Grid */}
       {spokespersons.length === 0 ? (
-        <div className="bg-white rounded-lg shadow p-12 text-center">
+        <div className="bg-white rounded-lg shadow px-4 sm:px-6 lg:px-8 py-8 sm:py-12 text-center">
           <div className="text-6xl mb-4">🎭</div>
           <h3 className="text-xl font-semibold text-gray-900 mb-2">No Spokespersons Yet</h3>
           <p className="text-gray-600 mb-6">Add your first AI spokesperson to get started.</p>
@@ -781,10 +782,13 @@ Personality: Warm, knowledgeable, nurturing...`}
               {/* Avatar/Image */}
               <div className="h-48 bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center relative">
                 {sp.avatarUrl ? (
-                  <img
+                  <Image
                     src={sp.avatarUrl}
                     alt={sp.name}
+                    width={400}
+                    height={192}
                     className="w-full h-full object-cover"
+                    unoptimized
                   />
                 ) : (
                   <div className="text-6xl">👤</div>

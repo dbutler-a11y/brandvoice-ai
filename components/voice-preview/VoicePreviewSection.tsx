@@ -131,56 +131,53 @@ export default function VoicePreviewSection() {
           </p>
         </div>
 
-        {/* Voice Cards Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          {/* Female Voices */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-700 mb-4 flex items-center">
-              <span className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center mr-2">
-                <svg className="w-4 h-4 text-pink-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                </svg>
-              </span>
-              Female Voices
-            </h3>
-            <div className="space-y-4">
-              {femaleVoices.map((voice) => (
-                <VoiceCard
-                  key={voice.id}
-                  voice={voice}
-                  isSelected={selectedVoice?.id === voice.id}
-                  isPlaying={isPlaying && selectedVoice?.id === voice.id}
-                  isLoading={loadingVoiceId === voice.id}
-                  onPlay={() => playVoicePreview(voice)}
-                  onStop={stopPlayback}
-                />
-              ))}
-            </div>
+        {/* Female Voices Section */}
+        <div className="mb-10">
+          <h3 className="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+            <span className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center mr-2">
+              <svg className="w-4 h-4 text-pink-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+              </svg>
+            </span>
+            Female Voices
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {femaleVoices.map((voice) => (
+              <VoiceCard
+                key={voice.id}
+                voice={voice}
+                isSelected={selectedVoice?.id === voice.id}
+                isPlaying={isPlaying && selectedVoice?.id === voice.id}
+                isLoading={loadingVoiceId === voice.id}
+                onPlay={() => playVoicePreview(voice)}
+                onStop={stopPlayback}
+              />
+            ))}
           </div>
+        </div>
 
-          {/* Male Voices */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-700 mb-4 flex items-center">
-              <span className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-2">
-                <svg className="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                </svg>
-              </span>
-              Male Voices
-            </h3>
-            <div className="space-y-4">
-              {maleVoices.map((voice) => (
-                <VoiceCard
-                  key={voice.id}
-                  voice={voice}
-                  isSelected={selectedVoice?.id === voice.id}
-                  isPlaying={isPlaying && selectedVoice?.id === voice.id}
-                  isLoading={loadingVoiceId === voice.id}
-                  onPlay={() => playVoicePreview(voice)}
-                  onStop={stopPlayback}
-                />
-              ))}
-            </div>
+        {/* Male Voices Section */}
+        <div className="mb-12">
+          <h3 className="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+            <span className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-2">
+              <svg className="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+              </svg>
+            </span>
+            Male Voices
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {maleVoices.map((voice) => (
+              <VoiceCard
+                key={voice.id}
+                voice={voice}
+                isSelected={selectedVoice?.id === voice.id}
+                isPlaying={isPlaying && selectedVoice?.id === voice.id}
+                isLoading={loadingVoiceId === voice.id}
+                onPlay={() => playVoicePreview(voice)}
+                onStop={stopPlayback}
+              />
+            ))}
           </div>
         </div>
 

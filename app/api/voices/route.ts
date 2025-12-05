@@ -1,4 +1,5 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { rateLimit, rateLimitResponse, addRateLimitHeaders, RateLimitTier } from '@/lib/rate-limit';
 
 // Voice data structure
 // This will later integrate with ElevenLabs API
@@ -197,14 +198,77 @@ export async function GET(request: Request) {
 }
 
 // POST endpoint for voice generation with ElevenLabs
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    // SECURITY: Apply STRICT rate limiting (5 requests/min)
+    // This endpoint calls ElevenLabs TTS which costs money
+    const rateLimitResult = rateLimit(request, RateLimitTier.STRICT);
+    if (!rateLimitResult.success) {
+      return rateLimitResponse(rateLimitResult);
+    }
+
+    // SECURITY: Validate request body exists and is JSON
+    let body;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json(
+        { success: false, error: 'Invalid JSON in request body' },
+        { status: 400 }
+      );
+    }
+
     const { voiceId, text, stability = 0.5, similarityBoost = 0.75 } = body;
 
+    // SECURITY: Validate required fields
     if (!voiceId || !text) {
       return NextResponse.json(
         { success: false, error: 'voiceId and text are required' },
+        { status: 400 }
+      );
+    }
+
+    // SECURITY: Validate field types
+    if (typeof voiceId !== 'string') {
+      return NextResponse.json(
+        { success: false, error: 'voiceId must be a string' },
+        { status: 400 }
+      );
+    }
+
+    if (typeof text !== 'string') {
+      return NextResponse.json(
+        { success: false, error: 'text must be a string' },
+        { status: 400 }
+      );
+    }
+
+    // SECURITY: Validate text length (max 500 chars for voice generation)
+    if (text.length === 0) {
+      return NextResponse.json(
+        { success: false, error: 'text cannot be empty' },
+        { status: 400 }
+      );
+    }
+
+    if (text.length > 500) {
+      return NextResponse.json(
+        { success: false, error: `text exceeds maximum length of 500 characters (got ${text.length})` },
+        { status: 400 }
+      );
+    }
+
+    // SECURITY: Validate stability and similarityBoost parameters
+    if (typeof stability !== 'number' || stability < 0 || stability > 1) {
+      return NextResponse.json(
+        { success: false, error: 'stability must be a number between 0 and 1' },
+        { status: 400 }
+      );
+    }
+
+    if (typeof similarityBoost !== 'number' || similarityBoost < 0 || similarityBoost > 1) {
+      return NextResponse.json(
+        { success: false, error: 'similarityBoost must be a number between 0 and 1' },
         { status: 400 }
       );
     }
@@ -246,12 +310,16 @@ export async function POST(request: Request) {
     }
 
     const audioBuffer = await response.arrayBuffer();
-    return new NextResponse(audioBuffer, {
+
+    // SECURITY: Add rate limit headers to successful response
+    const successResponse = new NextResponse(audioBuffer, {
       headers: {
         'Content-Type': 'audio/mpeg',
         'Content-Length': audioBuffer.byteLength.toString(),
       },
     });
+
+    return addRateLimitHeaders(successResponse, rateLimitResult);
   } catch (error) {
     console.error('Error generating voice:', error);
     return NextResponse.json(

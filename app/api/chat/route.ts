@@ -1,4 +1,5 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
+import { rateLimit, rateLimitResponse, addRateLimitHeaders, RateLimitTier } from '@/lib/rate-limit'
 
 interface Message {
   role: 'user' | 'assistant' | 'system'
@@ -50,20 +51,111 @@ When generating scripts, keep them:
 
 Be creative, practical, and business-focused. Provide actionable ideas.`
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const { messages, context } = await request.json()
+    // SECURITY: Apply STANDARD rate limiting (30 requests/min)
+    // This endpoint calls OpenAI API which costs money
+    const rateLimitResult = rateLimit(request, RateLimitTier.STANDARD);
+    if (!rateLimitResult.success) {
+      return rateLimitResponse(rateLimitResult);
+    }
 
-    const apiKey = process.env.OPENAI_API_KEY
+    // SECURITY: Validate request body exists and is JSON
+    let body;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid JSON in request body' },
+        { status: 400 }
+      );
+    }
+
+    const { messages, context } = body;
+
+    // SECURITY: Validate required fields
+    if (!messages) {
+      return NextResponse.json(
+        { error: 'messages array is required' },
+        { status: 400 }
+      );
+    }
+
+    // SECURITY: Validate messages is an array
+    if (!Array.isArray(messages)) {
+      return NextResponse.json(
+        { error: 'messages must be an array' },
+        { status: 400 }
+      );
+    }
+
+    // SECURITY: Validate messages array is not empty
+    if (messages.length === 0) {
+      return NextResponse.json(
+        { error: 'messages array cannot be empty' },
+        { status: 400 }
+      );
+    }
+
+    // SECURITY: Validate messages array length (prevent abuse)
+    if (messages.length > 50) {
+      return NextResponse.json(
+        { error: 'messages array exceeds maximum length of 50' },
+        { status: 400 }
+      );
+    }
+
+    // SECURITY: Validate each message has required structure
+    for (let i = 0; i < messages.length; i++) {
+      const msg = messages[i];
+      if (!msg || typeof msg !== 'object') {
+        return NextResponse.json(
+          { error: `Message at index ${i} must be an object` },
+          { status: 400 }
+        );
+      }
+      if (!msg.content || typeof msg.content !== 'string') {
+        return NextResponse.json(
+          { error: `Message at index ${i} must have a content string` },
+          { status: 400 }
+        );
+      }
+      // SECURITY: Validate message content length (max 2000 chars)
+      if (msg.content.length > 2000) {
+        return NextResponse.json(
+          { error: `Message at index ${i} exceeds maximum length of 2000 characters` },
+          { status: 400 }
+        );
+      }
+    }
+
+    // SECURITY: Validate context if provided
+    if (context !== undefined && context !== null) {
+      if (typeof context !== 'string') {
+        return NextResponse.json(
+          { error: 'context must be a string' },
+          { status: 400 }
+        );
+      }
+      if (context.length > 2000) {
+        return NextResponse.json(
+          { error: `context exceeds maximum length of 2000 characters (got ${context.length})` },
+          { status: 400 }
+        );
+      }
+    }
+
+    const apiKey = process.env.OPENAI_API_KEY;
 
     if (!apiKey || apiKey === 'sk-your-openai-api-key-here') {
       // Return mock response for development
-      return NextResponse.json({
+      const mockResponse = NextResponse.json({
         message: {
           role: 'assistant',
           content: getMockResponse(messages[messages.length - 1]?.content || '')
         }
-      })
+      });
+      return addRateLimitHeaders(mockResponse, rateLimitResult);
     }
 
     // Build messages array with system prompt
@@ -95,7 +187,9 @@ export async function POST(request: Request) {
     const data = await response.json()
     const assistantMessage = data.choices[0]?.message
 
-    return NextResponse.json({ message: assistantMessage })
+    // SECURITY: Add rate limit headers to successful response
+    const successResponse = NextResponse.json({ message: assistantMessage });
+    return addRateLimitHeaders(successResponse, rateLimitResult);
   } catch (error) {
     console.error('Chat API error:', error)
     return NextResponse.json(

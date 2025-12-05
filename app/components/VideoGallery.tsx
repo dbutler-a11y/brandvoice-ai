@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 
 // Sample video data - easily update with real URLs later
 export const sampleVideos = [
@@ -74,10 +75,13 @@ export default function VideoGallery() {
           >
             {/* Thumbnail */}
             <div className="relative aspect-video overflow-hidden bg-gray-200">
-              <img
+              <Image
                 src={video.thumbnail}
                 alt={video.title}
+                width={640}
+                height={360}
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                unoptimized
               />
 
               {/* Play Button Overlay */}

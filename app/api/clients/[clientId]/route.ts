@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { requireAdmin } from '@/lib/auth'
 
 // GET /api/clients/[clientId] - Get single client with all relations
 export async function GET(
   request: NextRequest,
   { params }: { params: { clientId: string } }
 ) {
+  // Check authentication
+  const authResult = await requireAdmin()
+  if (authResult instanceof NextResponse) return authResult
+
   try {
     const client = await prisma.client.findUnique({
       where: { id: params.clientId },
@@ -41,6 +46,10 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: { clientId: string } }
 ) {
+  // Check authentication
+  const authResult = await requireAdmin()
+  if (authResult instanceof NextResponse) return authResult
+
   try {
     const body = await request.json()
 
@@ -101,6 +110,10 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { clientId: string } }
 ) {
+  // Check authentication
+  const authResult = await requireAdmin()
+  if (authResult instanceof NextResponse) return authResult
+
   try {
     // Check if client exists
     const client = await prisma.client.findUnique({

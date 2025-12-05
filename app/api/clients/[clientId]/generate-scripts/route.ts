@@ -4,12 +4,17 @@ import { buildScriptPrompt } from '@/lib/scriptTemplates'
 import { generateScriptsWithLLM } from '@/lib/llm'
 import { estimateDuration } from '@/lib/utils'
 import { ClientWithRelations, IntakeData } from '@/lib/types'
+import { requireAdmin } from '@/lib/auth'
 
 // POST /api/clients/[clientId]/generate-scripts - Generate 30 scripts for a client using LLM
 export async function POST(
   request: NextRequest,
   { params }: { params: { clientId: string } }
 ) {
+  // Check authentication
+  const authResult = await requireAdmin()
+  if (authResult instanceof NextResponse) return authResult
+
   try {
     // Step 1: Fetch client + intake
     const client = await prisma.client.findUnique({

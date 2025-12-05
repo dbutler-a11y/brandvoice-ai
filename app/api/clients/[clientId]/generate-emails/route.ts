@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { requireAdmin } from '@/lib/auth'
 
 interface EmailSequence {
   subject: string
@@ -29,6 +30,10 @@ export async function POST(
   request: NextRequest,
   { params }: { params: { clientId: string } }
 ) {
+  // Check authentication
+  const authResult = await requireAdmin()
+  if (authResult instanceof NextResponse) return authResult
+
   try {
     // Fetch client data
     const client = await prisma.client.findUnique({

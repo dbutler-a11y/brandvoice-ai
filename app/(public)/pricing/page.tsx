@@ -245,7 +245,7 @@ export default function PricingPage() {
                   <span className="text-gray-600 ml-2">/month</span>
                 </div>
                 <Link
-                  href="/contact"
+                  href="/services/facebook-ad-engine"
                   className="bg-gradient-to-r from-orange-500 to-pink-500 text-white px-6 py-3 rounded-lg font-semibold hover:from-orange-600 hover:to-pink-600 transition-all duration-200 shadow-lg"
                 >
                   Learn More

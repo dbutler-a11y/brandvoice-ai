@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import FileUpload from '@/components/admin/FileUpload'
 import { listClientFiles, deleteFile } from '@/lib/supabase/storage'
 import { createClient } from '@/lib/supabase/client'
@@ -244,10 +245,13 @@ export default function ClientAssetsPage() {
                     {/* Preview */}
                     <div className="mb-3">
                       {asset.folder === 'images' ? (
-                        <img
+                        <Image
                           src={asset.publicUrl}
                           alt={asset.name}
+                          width={400}
+                          height={160}
                           className="w-full h-40 object-cover rounded-md bg-gray-100"
+                          unoptimized
                         />
                       ) : (
                         <div className="w-full h-40 flex items-center justify-center bg-gray-100 rounded-md">

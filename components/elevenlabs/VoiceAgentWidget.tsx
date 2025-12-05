@@ -85,16 +85,24 @@ export default function VoiceAgentWidget({
       }
     }
 
-    // Load ElevenLabs Convai widget script
+    // Load ElevenLabs Convai widget script (updated URL)
     const script = document.createElement('script');
-    script.src = 'https://elevenlabs.io/convai-widget/index.js';
+    script.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed';
     script.async = true;
-    script.onload = () => setIsLoaded(true);
+    script.type = 'text/javascript';
+    script.onload = () => {
+      console.log('ElevenLabs widget script loaded successfully');
+      setIsLoaded(true);
+    };
+    script.onerror = () => {
+      console.error('Failed to load ElevenLabs widget script');
+      setIsLoaded(false);
+    };
     document.body.appendChild(script);
 
     return () => {
       const existingScript = document.querySelector(
-        'script[src="https://elevenlabs.io/convai-widget/index.js"]'
+        'script[src="https://unpkg.com/@elevenlabs/convai-widget-embed"]'
       );
       if (existingScript) {
         existingScript.remove();
@@ -207,7 +215,7 @@ export default function VoiceAgentWidget({
     <>
       {/* Collapsed State - Clean modern design */}
       {!isExpanded && (
-        <div className={`fixed bottom-8 right-24 z-50 flex items-end gap-4 ${className}`}>
+        <div className={`fixed bottom-8 right-4 sm:right-8 z-50 flex items-end gap-4 ${className}`}>
           {/* Main widget container - positioned to avoid ElevenLabs floating button */}
           <div className="flex items-center gap-3">
             {/* Square avatar thumbnail - larger */}
@@ -265,21 +273,23 @@ export default function VoiceAgentWidget({
 
       {/* Expanded State - Full Widget - Redesigned Layout */}
       {isExpanded && (
-        <div className="fixed bottom-6 right-8 z-50 w-[380px] bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 animate-slideUp">
+        <div className="fixed bottom-6 right-4 sm:right-8 z-50 w-full max-w-[calc(100vw-2rem)] sm:w-[380px] bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 animate-slideUp">
           {/* Header Section with Avatar and Mic - Compact */}
           <div className="relative bg-gradient-to-br from-gray-900 to-gray-800 px-4 py-5">
             {/* Close & Minimize buttons */}
             <button
               onClick={handleClose}
-              className="absolute top-3 left-3 w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors"
+              aria-label="Minimize widget"
+              className="absolute top-2 left-2 w-11 h-11 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors"
             >
-              <ChevronDown className="w-4 h-4 text-white" />
+              <ChevronDown className="w-5 h-5 text-white" />
             </button>
             <button
               onClick={handleClose}
-              className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors"
+              aria-label="Close widget"
+              className="absolute top-2 right-2 w-11 h-11 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors"
             >
-              <X className="w-4 h-4 text-white" />
+              <X className="w-5 h-5 text-white" />
             </button>
 
             {/* Avatar, Info, and Mic in a row */}
@@ -299,14 +309,25 @@ export default function VoiceAgentWidget({
               <div className="flex-1 min-w-0">
                 <p className="text-white font-semibold text-lg">Samira</p>
                 <p className="text-gray-400 text-sm">AI Customer Support</p>
-                <p className="text-indigo-400 text-xs mt-1">Click mic to talk or use Messages</p>
+                <p className="text-indigo-400 text-xs mt-1">
+                  {isLoaded ? 'Click mic to talk or use Messages' : 'Use Messages tab to chat'}
+                </p>
               </div>
 
-              {/* ElevenLabs Mic Widget - Positioned here */}
-              {isLoaded && activeTab === 'home' && (
+              {/* ElevenLabs Mic Widget - Positioned here - Always visible */}
+              {isLoaded && (
                 <div className="flex-shrink-0 relative w-14 h-14">
                   {/* @ts-expect-error - ElevenLabs custom element */}
                   <elevenlabs-convai agent-id={elevenlabsAgentId}></elevenlabs-convai>
+                </div>
+              )}
+              {!isLoaded && (
+                <div className="flex-shrink-0 w-14 h-14 flex items-center justify-center">
+                  <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center animate-pulse">
+                    <svg className="w-5 h-5 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                    </svg>
+                  </div>
                 </div>
               )}
             </div>
@@ -464,7 +485,7 @@ export default function VoiceAgentWidget({
                       onChange={(e) => setInputMessage(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                       placeholder="Type a message..."
-                      className="flex-1 px-4 py-2 bg-gray-100 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="flex-1 px-4 py-2 bg-gray-100 rounded-full text-sm text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                     <button
                       onClick={handleSendMessage}
@@ -489,7 +510,7 @@ export default function VoiceAgentWidget({
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Search for help..."
-                      className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-lg text-sm text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
                 </div>

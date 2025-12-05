@@ -1,8 +1,16 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { applyRateLimit } from '@/lib/ratelimit';
+import { validateLeadData } from '@/lib/validation';
+import { notifyNewLead } from '@/lib/email';
 
 // GET - List all leads with filtering
 export async function GET(request: Request) {
+  // Apply relaxed rate limiting to prevent abuse
+  const rateLimitCheck = applyRateLimit(request, 'RELAXED');
+  if (rateLimitCheck.response) {
+    return rateLimitCheck.response;
+  }
   try {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status');
@@ -88,47 +96,96 @@ export async function GET(request: Request) {
 
 // POST - Create a new lead manually
 export async function POST(request: Request) {
+  // Apply standard rate limiting (30 requests per minute)
+  const rateLimitCheck = applyRateLimit(request, 'STANDARD');
+  if (rateLimitCheck.response) {
+    return rateLimitCheck.response;
+  }
+
   try {
     const data = await request.json();
 
+    // Validate and sanitize input data
+    const validation = validateLeadData(data);
+
+    if (!validation.valid) {
+      console.error('[Leads API] Validation errors:', validation.errors);
+      return NextResponse.json(
+        {
+          error: 'Invalid input data',
+          details: validation.errors,
+        },
+        { status: 400 }
+      );
+    }
+
+    // Check for duplicate email if provided
+    if (validation.sanitized.email) {
+      const existingLead = await prisma.lead.findFirst({
+        where: { email: validation.sanitized.email },
+      });
+
+      if (existingLead) {
+        return NextResponse.json(
+          {
+            error: 'Duplicate lead',
+            message: 'A lead with this email already exists',
+            leadId: existingLead.id,
+          },
+          { status: 409 }
+        );
+      }
+    }
+
+    // Create lead with sanitized data
     const lead = await prisma.lead.create({
       data: {
-        fullName: data.fullName || null,
-        email: data.email || null,
-        phone: data.phone || null,
-        businessName: data.businessName || null,
-        businessType: data.businessType || null,
-        website: data.website || null,
-        productsServices: data.productsServices || null,
-        targetAudience: data.targetAudience || null,
-        videoGoals: data.videoGoals || null,
-        currentVideoStrategy: data.currentVideoStrategy || null,
-        timeline: data.timeline || null,
-        budgetAllocated: data.budgetAllocated || null,
-        budgetRange: data.budgetRange || null,
-        socialPlatforms: data.socialPlatforms || null,
-        contentTopics: data.contentTopics || null,
-        competitorExamples: data.competitorExamples || null,
-        spokespersonGender: data.spokespersonGender || null,
-        spokespersonAge: data.spokespersonAge || null,
-        spokespersonTone: data.spokespersonTone || null,
-        interestedAddOns: data.interestedAddOns || null,
-        packageInterest: data.packageInterest || null,
-        howHeardAboutUs: data.howHeardAboutUs || null,
-        biggestChallenge: data.biggestChallenge || null,
-        questionsOrConcerns: data.questionsOrConcerns || null,
-        preferredCallTime: data.preferredCallTime || null,
-        source: data.source || 'manual',
-        utmSource: data.utmSource || null,
-        utmMedium: data.utmMedium || null,
-        utmCampaign: data.utmCampaign || null,
-      }
+        fullName: validation.sanitized.fullName || null,
+        email: validation.sanitized.email || null,
+        phone: validation.sanitized.phone || null,
+        businessName: validation.sanitized.businessName || null,
+        businessType: validation.sanitized.businessType || null,
+        website: validation.sanitized.website || null,
+        productsServices: validation.sanitized.productsServices || null,
+        targetAudience: validation.sanitized.targetAudience || null,
+        videoGoals: validation.sanitized.videoGoals || null,
+        currentVideoStrategy: validation.sanitized.currentVideoStrategy || null,
+        timeline: validation.sanitized.timeline || null,
+        budgetAllocated: validation.sanitized.budgetAllocated || null,
+        budgetRange: validation.sanitized.budgetRange || null,
+        socialPlatforms: validation.sanitized.socialPlatforms || null,
+        contentTopics: validation.sanitized.contentTopics || null,
+        competitorExamples: validation.sanitized.competitorExamples || null,
+        spokespersonGender: validation.sanitized.spokespersonGender || null,
+        spokespersonAge: validation.sanitized.spokespersonAge || null,
+        spokespersonTone: validation.sanitized.spokespersonTone || null,
+        interestedAddOns: validation.sanitized.interestedAddOns || null,
+        packageInterest: validation.sanitized.packageInterest || null,
+        howHeardAboutUs: validation.sanitized.howHeardAboutUs || null,
+        biggestChallenge: validation.sanitized.biggestChallenge || null,
+        questionsOrConcerns: validation.sanitized.questionsOrConcerns || null,
+        preferredCallTime: validation.sanitized.preferredCallTime || null,
+        source: validation.sanitized.source || 'manual',
+        utmSource: validation.sanitized.utmSource || null,
+        utmMedium: validation.sanitized.utmMedium || null,
+        utmCampaign: validation.sanitized.utmCampaign || null,
+      },
     });
+
+    // Send email notification for new lead (non-blocking)
+    notifyNewLead({
+      name: validation.sanitized.fullName || 'Unknown',
+      email: validation.sanitized.email || 'No email',
+      phone: validation.sanitized.phone ?? undefined,
+      company: validation.sanitized.businessName ?? undefined,
+      source: validation.sanitized.source || 'website',
+      message: validation.sanitized.questionsOrConcerns ?? undefined,
+    }).catch(err => console.error('Failed to send lead notification:', err));
 
     return NextResponse.json({ success: true, lead });
 
   } catch (error) {
-    console.error('Error creating lead:', error);
+    console.error('[Leads API] Error creating lead:', error);
     return NextResponse.json(
       { error: 'Failed to create lead' },
       { status: 500 }

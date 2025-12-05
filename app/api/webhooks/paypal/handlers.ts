@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { prisma } from '@/lib/prisma';
+import { notifyPaymentSuccess, notifyPaymentFailed, notifyRefundProcessed } from '@/lib/email';
 
 /**
  * PayPal Webhook Event Handlers
@@ -117,6 +118,18 @@ export async function handleOrderCompleted(payload: PayPalWebhookPayload) {
       });
       console.log(`[Handler] Linked order to Lead: ${lead.id}`);
     }
+  }
+
+  // Send payment success email notification (non-blocking)
+  if (existingOrder) {
+    notifyPaymentSuccess({
+      orderId: orderId,
+      customerEmail: payer.email || 'Unknown',
+      customerName: payer.name || undefined,
+      packageName: existingOrder.packageName || 'Video Package',
+      amount: (existingOrder.totalAmount || 0) / 100,
+      isSubscription: false,
+    }).catch(err => console.error('[Handler] Failed to send payment email:', err));
   }
 
   return {
@@ -366,6 +379,15 @@ export async function handlePaymentRefunded(payload: PayPalWebhookPayload) {
 
   console.log(`[Handler] Created admin alert for refund: ${refundId}`);
 
+  // Send refund email notification (non-blocking)
+  const client = order.clientId ? await prisma.client.findUnique({ where: { id: order.clientId } }) : null;
+  notifyRefundProcessed({
+    orderId: order.id,
+    customerEmail: client?.email || 'Unknown',
+    amount: refundAmount,
+    reason: 'PayPal refund processed',
+  }).catch(err => console.error('[Handler] Failed to send refund email:', err));
+
   return {
     refundId,
     orderId: order.id,
@@ -596,11 +618,15 @@ export async function handlePaymentFailed(payload: PayPalWebhookPayload) {
 
     if (shouldSuspend) {
       console.log(`[Handler] Client ${client.id} flagged for suspension after 3 failed payments`);
-      // TODO: Send final warning email
-      // TODO: Create admin task to review account
     }
 
-    // TODO: Send payment update request email to customer
+    // Send payment failed email notification (non-blocking)
+    notifyPaymentFailed({
+      customerEmail: client.email || 'Unknown',
+      packageName: 'Subscription',
+      amount: 0, // Amount not available in this event
+      errorMessage: `Payment attempt ${newFailedCount} failed`,
+    }).catch(err => console.error('[Handler] Failed to send payment failed email:', err));
   } else {
     console.warn(`[Handler] Could not find client for subscription ${subscriptionId}`);
   }

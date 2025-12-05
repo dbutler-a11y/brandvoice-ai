@@ -92,14 +92,14 @@ const VoiceCard = ({ voice, isPlaying, onPlay }: {
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
             </svg>
-            Pause Preview
+            {voice.audioUrl ? 'Pause' : 'Playing...'}
           </>
         ) : (
           <>
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
             </svg>
-            Play Sample
+            {voice.audioUrl ? 'Play Sample' : 'Preview Voice'}
           </>
         )}
       </button>
@@ -141,20 +141,33 @@ export default function VoicePreviewPage() {
   };
 
   const handlePlayVoice = (voiceId: string) => {
+    const voice = voices.find(v => v.id === voiceId);
     if (playingVoiceId === voiceId) {
       // Stop playing
       setPlayingVoiceId(null);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
     } else {
-      // Show toast notification about upcoming feature
-      const voice = voices.find(v => v.id === voiceId);
-      setToastMessage(`Voice preview coming soon - ElevenLabs integration pending for ${voice?.name || 'this voice'}`);
-      setShowToast(true);
-
-      // Visual feedback: briefly show as "playing" then reset
-      setPlayingVoiceId(voiceId);
-      setTimeout(() => {
-        setPlayingVoiceId(null);
-      }, 1500);
+      // Check if voice has an audio URL
+      if (voice?.audioUrl) {
+        // Play actual audio
+        if (audioRef.current) {
+          audioRef.current.src = voice.audioUrl;
+          audioRef.current.play();
+          setPlayingVoiceId(voiceId);
+        }
+      } else {
+        // Show info toast that this voice's sample is being prepared
+        setToastMessage(`${voice?.displayName || 'This voice'} - Sample audio coming soon! Book a call to hear live demos.`);
+        setShowToast(true);
+        // Brief visual feedback
+        setPlayingVoiceId(voiceId);
+        setTimeout(() => {
+          setPlayingVoiceId(null);
+        }, 1500);
+      }
     }
   };
 
@@ -306,9 +319,7 @@ export default function VoicePreviewPage() {
             Book a call and we&apos;ll help you pick the perfect voice for your brand.
           </p>
           <Link
-            href="https://calendly.com/your-calendly-link"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/booking"
             className="inline-flex items-center gap-2 bg-white text-purple-600 px-8 py-4 rounded-full text-lg font-bold hover:bg-gray-100 transition-colors duration-200 shadow-xl hover:shadow-2xl transform hover:scale-105"
           >
             Book a Call

@@ -1,11 +1,16 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { requireAdmin } from '@/lib/auth';
 
 // Force dynamic - don't prerender
 export const dynamic = 'force-dynamic'
 
 // GET /api/disputes - Get all disputes
 export async function GET() {
+  // Check authentication
+  const authResult = await requireAdmin()
+  if (authResult instanceof NextResponse) return authResult
+
   try {
     const disputes = await prisma.dispute.findMany({
       orderBy: [

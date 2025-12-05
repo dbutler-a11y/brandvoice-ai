@@ -221,7 +221,7 @@ export default function RemindersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gray-50 px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -358,12 +358,12 @@ export default function RemindersPage() {
 
         {/* Content */}
         {loading ? (
-          <div className="bg-white rounded-lg shadow p-12 text-center">
+          <div className="bg-white rounded-lg shadow px-4 sm:px-6 lg:px-8 py-8 sm:py-12 text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
             <p className="text-gray-600 mt-4">Loading reminders...</p>
           </div>
         ) : reminders.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-12 text-center">
+          <div className="bg-white rounded-lg shadow px-4 sm:px-6 lg:px-8 py-8 sm:py-12 text-center">
             <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">No reminders found</h3>
             <p className="text-gray-600 mb-6">
@@ -576,7 +576,7 @@ function NewReminderModal({ onClose, onSuccess }: { onClose: () => void; onSucce
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg shadow-xl max-w-lg w-full max-h-[calc(100dvh-2rem)] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900">Create New Reminder</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">

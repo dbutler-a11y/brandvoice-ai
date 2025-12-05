@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { requireAdmin } from '@/lib/auth'
 
 // GET /api/reminders - List reminders with filters
 export async function GET(req: NextRequest) {
+  // Check authentication
+  const authResult = await requireAdmin()
+  if (authResult instanceof NextResponse) return authResult
+
   try {
     const { searchParams } = new URL(req.url)
     const status = searchParams.get('status')
@@ -15,7 +20,14 @@ export async function GET(req: NextRequest) {
     const today = searchParams.get('today') === 'true'
 
     // Build where clause
-    const where: Record<string, unknown> = {}
+    interface WhereClause {
+      status?: string;
+      type?: string;
+      leadId?: string;
+      clientId?: string;
+      dueAt?: { gte?: Date; lte?: Date; lt?: Date };
+    }
+    const where: WhereClause = {}
 
     if (status) {
       where.status = status
@@ -132,6 +144,10 @@ export async function GET(req: NextRequest) {
 
 // POST /api/reminders - Create a new reminder
 export async function POST(req: NextRequest) {
+  // Check authentication
+  const authResult = await requireAdmin()
+  if (authResult instanceof NextResponse) return authResult
+
   try {
     const body = await req.json()
     const { type, title, description, priority, dueAt, leadId, clientId } = body

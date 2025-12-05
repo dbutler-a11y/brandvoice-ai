@@ -63,13 +63,9 @@ async function verifyPayPalSignature(
 ): Promise<boolean> {
   const webhookId = process.env.PAYPAL_WEBHOOK_ID;
 
-  // If no webhook ID is configured, skip verification in development
+  // Always require webhook ID - no bypass in any environment
   if (!webhookId) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn('⚠️  PAYPAL_WEBHOOK_ID not set - skipping signature verification (DEV MODE)');
-      return true;
-    }
-    console.error('PAYPAL_WEBHOOK_ID not configured');
+    console.error('[PayPal Webhook Security] PAYPAL_WEBHOOK_ID not configured - signature verification required');
     return false;
   }
 
@@ -80,7 +76,13 @@ async function verifyPayPalSignature(
   const authAlgo = request.headers.get('paypal-auth-algo');
 
   if (!transmissionId || !transmissionTime || !transmissionSig || !certUrl || !authAlgo) {
-    console.error('Missing required PayPal webhook headers');
+    console.error('[PayPal Webhook Security] Missing required webhook headers:', {
+      hasTransmissionId: !!transmissionId,
+      hasTransmissionTime: !!transmissionTime,
+      hasTransmissionSig: !!transmissionSig,
+      hasCertUrl: !!certUrl,
+      hasAuthAlgo: !!authAlgo,
+    });
     return false;
   }
 
@@ -90,7 +92,7 @@ async function verifyPayPalSignature(
     const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
 
     if (!clientId || !clientSecret) {
-      console.error('PayPal credentials not configured');
+      console.error('[PayPal Webhook Security] PayPal credentials not configured');
       return false;
     }
 
@@ -112,7 +114,11 @@ async function verifyPayPalSignature(
     });
 
     if (!authResponse.ok) {
-      console.error('Failed to get PayPal access token:', await authResponse.text());
+      const errorText = await authResponse.text();
+      console.error('[PayPal Webhook Security] Failed to get access token:', {
+        status: authResponse.status,
+        error: errorText,
+      });
       return false;
     }
 
@@ -137,15 +143,28 @@ async function verifyPayPalSignature(
     });
 
     if (!verifyResponse.ok) {
-      console.error('PayPal signature verification failed:', await verifyResponse.text());
+      const errorText = await verifyResponse.text();
+      console.error('[PayPal Webhook Security] Signature verification failed:', {
+        status: verifyResponse.status,
+        error: errorText,
+      });
       return false;
     }
 
     const verifyData = await verifyResponse.json();
-    return verifyData.verification_status === 'SUCCESS';
+    const isValid = verifyData.verification_status === 'SUCCESS';
+
+    if (!isValid) {
+      console.error('[PayPal Webhook Security] Verification status not SUCCESS:', verifyData);
+    }
+
+    return isValid;
 
   } catch (error) {
-    console.error('Error verifying PayPal signature:', error);
+    console.error('[PayPal Webhook Security] Error verifying signature:', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return false;
   }
 }
@@ -188,7 +207,11 @@ export async function POST(request: Request) {
   try {
     // Get raw body for signature verification
     rawBody = await request.text();
-    webhookPayload = JSON.parse(rawBody);
+    webhookPayload = JSON.parse(rawBody) as PayPalWebhookPayload;
+
+    if (!webhookPayload || !webhookPayload.event_type || !webhookPayload.id) {
+      throw new Error('Invalid webhook payload: missing required fields');
+    }
 
     console.log(`[PayPal Webhook] Received event: ${webhookPayload.event_type} (${webhookPayload.id})`);
 

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback, useRef } from 'react'
+import Image from 'next/image'
 import { uploadFile } from '@/lib/supabase/storage'
 
 interface FileUploadProps {
@@ -226,10 +227,13 @@ export default function FileUpload({ clientId, folder, onUploadComplete }: FileU
       {previewUrl && !uploading && (
         <div className="mt-4">
           <p className="text-sm font-medium text-gray-700 mb-2">Preview:</p>
-          <img
+          <Image
             src={previewUrl}
             alt="Preview"
-            className="max-w-xs max-h-48 rounded-lg border border-gray-300"
+            width={320}
+            height={192}
+            className="max-w-xs max-h-48 rounded-lg border border-gray-300 object-contain"
+            unoptimized
           />
         </div>
       )}

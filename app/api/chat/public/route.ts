@@ -1,4 +1,5 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { rateLimit, rateLimitResponse, addRateLimitHeaders, RateLimitTier } from '@/lib/rate-limit';
 
 interface Message {
   role: 'user' | 'assistant' | 'system';
@@ -85,21 +86,96 @@ function getMockResponse(userMessage: string): string {
   return "Thanks for your question! I'd love to help. For the most accurate and personalized answer, I'd recommend booking a quick discovery call with our team. They can dive deep into your specific needs and show you exactly how our AI spokesperson service can work for your business. Would you like to schedule one?";
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const { messages } = await request.json();
+    // SECURITY: Apply STANDARD rate limiting (30 requests/min)
+    // This endpoint calls OpenAI API which costs money
+    const rateLimitResult = rateLimit(request, RateLimitTier.STANDARD);
+    if (!rateLimitResult.success) {
+      return rateLimitResponse(rateLimitResult);
+    }
+
+    // SECURITY: Validate request body exists and is JSON
+    let body;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid JSON in request body' },
+        { status: 400 }
+      );
+    }
+
+    const { messages } = body;
+
+    // SECURITY: Validate required fields
+    if (!messages) {
+      return NextResponse.json(
+        { error: 'messages array is required' },
+        { status: 400 }
+      );
+    }
+
+    // SECURITY: Validate messages is an array
+    if (!Array.isArray(messages)) {
+      return NextResponse.json(
+        { error: 'messages must be an array' },
+        { status: 400 }
+      );
+    }
+
+    // SECURITY: Validate messages array is not empty
+    if (messages.length === 0) {
+      return NextResponse.json(
+        { error: 'messages array cannot be empty' },
+        { status: 400 }
+      );
+    }
+
+    // SECURITY: Validate messages array length (prevent abuse)
+    if (messages.length > 50) {
+      return NextResponse.json(
+        { error: 'messages array exceeds maximum length of 50' },
+        { status: 400 }
+      );
+    }
+
+    // SECURITY: Validate each message has required structure
+    for (let i = 0; i < messages.length; i++) {
+      const msg = messages[i];
+      if (!msg || typeof msg !== 'object') {
+        return NextResponse.json(
+          { error: `Message at index ${i} must be an object` },
+          { status: 400 }
+        );
+      }
+      if (!msg.content || typeof msg.content !== 'string') {
+        return NextResponse.json(
+          { error: `Message at index ${i} must have a content string` },
+          { status: 400 }
+        );
+      }
+      // SECURITY: Validate message content length (max 2000 chars)
+      if (msg.content.length > 2000) {
+        return NextResponse.json(
+          { error: `Message at index ${i} exceeds maximum length of 2000 characters` },
+          { status: 400 }
+        );
+      }
+    }
 
     const apiKey = process.env.OPENAI_API_KEY;
 
     if (!apiKey || apiKey === 'sk-your-openai-api-key-here') {
       // Return mock response for development
       const lastUserMessage = messages[messages.length - 1]?.content || '';
-      return NextResponse.json({
+      const mockResponse = NextResponse.json({
         message: {
           role: 'assistant',
           content: getMockResponse(lastUserMessage),
         },
       });
+      return addRateLimitHeaders(mockResponse, rateLimitResult);
     }
 
     // Build messages array with system prompt
@@ -131,7 +207,9 @@ export async function POST(request: Request) {
     const data = await response.json();
     const assistantMessage = data.choices[0]?.message;
 
-    return NextResponse.json({ message: assistantMessage });
+    // SECURITY: Add rate limit headers to successful response
+    const successResponse = NextResponse.json({ message: assistantMessage });
+    return addRateLimitHeaders(successResponse, rateLimitResult);
   } catch (error) {
     console.error('Chat API error:', error);
     return NextResponse.json(

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { requireAdmin } from '@/lib/auth';
 
 interface OrderPayload {
   paypalOrderId: string;
@@ -19,6 +20,10 @@ interface OrderPayload {
 
 // GET /api/orders - Get all orders (admin only)
 export async function GET() {
+  // Check authentication
+  const authResult = await requireAdmin()
+  if (authResult instanceof NextResponse) return authResult
+
   try {
     const orders = await prisma.order.findMany({
       orderBy: {
@@ -38,6 +43,10 @@ export async function GET() {
 
 // POST /api/orders - Create new order after PayPal payment
 export async function POST(request: NextRequest) {
+  // Check authentication
+  const authResult = await requireAdmin()
+  if (authResult instanceof NextResponse) return authResult
+
   try {
     const data: OrderPayload = await request.json();
 

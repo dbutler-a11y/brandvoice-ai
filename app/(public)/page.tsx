@@ -75,10 +75,13 @@ export default function HomePage() {
 
             {/* Demo Video Placeholder */}
             <div className="max-w-4xl mx-auto mt-12">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-gradient-to-br from-gray-900 to-gray-800">
+              <Link
+                href="/portfolio"
+                className="block relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-gradient-to-br from-gray-900 to-gray-800 group cursor-pointer hover:shadow-3xl transition-all duration-300"
+              >
                 <div className="aspect-video flex items-center justify-center">
                   <div className="text-center">
-                    <div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
+                    <div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm group-hover:bg-white/20 group-hover:scale-110 transition-all duration-300">
                       <svg
                         className="w-10 h-10 text-white"
                         fill="currentColor"
@@ -87,15 +90,15 @@ export default function HomePage() {
                         <path d="M8 5v14l11-7z" />
                       </svg>
                     </div>
-                    <p className="text-white text-lg font-semibold">
-                      Watch Demo Video
+                    <p className="text-white text-lg font-semibold group-hover:text-purple-300 transition-colors">
+                      View Sample Videos
                     </p>
                     <p className="text-gray-400 text-sm mt-2">
-                      See how it works in 90 seconds
+                      See AI spokesperson examples in action
                     </p>
                   </div>
                 </div>
-              </div>
+              </Link>
             </div>
           </div>
         </div>
