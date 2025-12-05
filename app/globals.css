@@ -70,3 +70,13 @@ body {
     animation: scale-in 0.2s ease-out;
   }
 }
+
+/* Hide ElevenLabs native widget when our custom panel is expanded */
+body.hide-elevenlabs-widget elevenlabs-convai,
+body.hide-elevenlabs-widget [class*="elevenlabs"],
+body.hide-elevenlabs-widget [id*="elevenlabs"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}

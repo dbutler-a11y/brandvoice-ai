@@ -45,6 +45,18 @@ export default function VoiceAgentWidget({
 
   const elevenlabsAgentId = agentId || process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID;
 
+  // Hide ElevenLabs native widget when our panel is expanded
+  useEffect(() => {
+    if (isExpanded) {
+      document.body.classList.add('hide-elevenlabs-widget');
+    } else {
+      document.body.classList.remove('hide-elevenlabs-widget');
+    }
+    return () => {
+      document.body.classList.remove('hide-elevenlabs-widget');
+    };
+  }, [isExpanded]);
+
   // Mark user as having interacted (suppresses future nudges)
   const handleUserInteraction = useCallback(() => {
     setHasInteracted(true);
