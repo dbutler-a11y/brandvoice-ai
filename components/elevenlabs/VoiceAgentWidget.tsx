@@ -264,27 +264,31 @@ export default function VoiceAgentWidget({
         <div className="fixed bottom-6 right-8 z-50 w-[380px] bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 animate-slideUp">
           {/* Video/Avatar Section */}
           <div className="relative bg-gradient-to-br from-gray-900 to-gray-800 aspect-video">
-            {/* ElevenLabs Widget or Avatar */}
-            {isLoaded && activeTab === 'home' ? (
-              <div className="w-full h-full flex items-center justify-center">
+            {/* Always show Samira's avatar as background */}
+            <div className="w-full h-full flex items-center justify-center">
+              <div className="text-center">
+                <div className="w-20 h-20 rounded-lg overflow-hidden mx-auto mb-3 border-2 border-white/30">
+                  <Image
+                    src="/images/samira-avatar.jpg"
+                    alt="Samira - AI Assistant"
+                    width={80}
+                    height={80}
+                    className="object-cover object-top w-full h-full"
+                  />
+                </div>
+                <p className="text-white font-semibold">Samira</p>
+                <p className="text-gray-400 text-sm">AI Customer Support</p>
+                {activeTab === 'home' && (
+                  <p className="text-indigo-400 text-xs mt-2">Click mic to talk or use Messages to chat</p>
+                )}
+              </div>
+            </div>
+
+            {/* ElevenLabs Widget - overlay on Home tab only */}
+            {isLoaded && activeTab === 'home' && (
+              <div className="absolute inset-0 flex items-center justify-center">
                 {/* @ts-expect-error - ElevenLabs custom element */}
                 <elevenlabs-convai agent-id={elevenlabsAgentId}></elevenlabs-convai>
-              </div>
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-20 h-20 rounded-lg overflow-hidden mx-auto mb-3 border-2 border-white/30">
-                    <Image
-                      src="/images/samira-avatar.jpg"
-                      alt="Samira - AI Assistant"
-                      width={80}
-                      height={80}
-                      className="object-cover object-top w-full h-full"
-                    />
-                  </div>
-                  <p className="text-white font-semibold">Samira</p>
-                  <p className="text-gray-400 text-sm">AI Customer Support</p>
-                </div>
               </div>
             )}
 
@@ -373,8 +377,14 @@ export default function VoiceAgentWidget({
                 </div>
                 <div className="mt-4 pt-4 border-t border-gray-100">
                   <p className="text-xs text-gray-500 text-center">
-                    Talk to Samira by clicking the microphone above
+                    Talk to Samira using the mic above
                   </p>
+                  <button
+                    onClick={() => setActiveTab('messages')}
+                    className="mt-2 w-full py-2 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-medium hover:bg-indigo-100 transition-colors"
+                  >
+                    Or chat with Samira via text
+                  </button>
                 </div>
               </div>
             )}
