@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { Volume2, VolumeX, X, Home, MessageCircle, HelpCircle, Search, Send, ChevronDown, Headphones } from 'lucide-react';
+import { Volume2, VolumeX, X, Home, MessageCircle, HelpCircle, Search, Send, ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 
 interface VoiceAgentWidgetProps {
@@ -195,8 +195,8 @@ export default function VoiceAgentWidget({
     <>
       {/* Collapsed State - Clean modern design */}
       {!isExpanded && (
-        <div className={`fixed bottom-8 right-10 z-50 flex items-end gap-4 ${className}`}>
-          {/* Main widget container - no background */}
+        <div className={`fixed bottom-8 right-24 z-50 flex items-end gap-4 ${className}`}>
+          {/* Main widget container - positioned to avoid ElevenLabs floating button */}
           <div className="flex items-center gap-3">
             {/* Square avatar thumbnail - larger */}
             <button
@@ -222,14 +222,6 @@ export default function VoiceAgentWidget({
               Book demo
             </button>
           </div>
-
-          {/* Headphones/Support button - larger */}
-          <button
-            onClick={handleExpand}
-            className="w-14 h-14 bg-indigo-600 rounded-full flex items-center justify-center shadow-xl hover:bg-indigo-700 hover:scale-105 transition-all"
-          >
-            <Headphones className="w-6 h-6 text-white" />
-          </button>
 
           {/* Nudge popup */}
           {showNudge && !hasInteracted && (
