@@ -1,11 +1,10 @@
 <svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
   <rect width="180" height="180" rx="40" fill="url(#gradient)"/>
-  <path d="M45 45H78.75C92.8125 45 103.9 50.625 110 59.0625C116.1 67.5 116.1 78.75 110 87.1875C103.9 95.625 92.8125 101.25 78.75 101.25H61.875V135H45V45ZM61.875 84.375H78.75C84.375 84.375 88.875 82.6875 91.6875 79.875C94.5 77.0625 95.625 73.125 95.625 68.625C95.625 64.125 94.5 60.75 91.6875 57.9375C88.875 55.125 84.375 53.4375 78.75 53.4375H61.875V84.375Z" fill="white"/>
-  <path d="M112.5 78.75L135 135H118.125L112.5 118.125H90L84.375 135H67.5L90 78.75H112.5ZM106.875 103.5L101.25 90L95.625 103.5H106.875Z" fill="white"/>
+  <text x="90" y="110" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="white" text-anchor="middle">BV</text>
   <defs>
     <linearGradient id="gradient" x1="0" y1="0" x2="180" y2="180" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#6366F1"/>
-      <stop offset="1" stop-color="#8B5CF6"/>
+      <stop stop-color="#9333EA"/>
+      <stop offset="1" stop-color="#4F46E5"/>
     </linearGradient>
   </defs>
 </svg>

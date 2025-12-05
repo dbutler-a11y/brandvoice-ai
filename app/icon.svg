@@ -1,11 +1,10 @@
 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
   <rect width="32" height="32" rx="8" fill="url(#gradient)"/>
-  <path d="M8 8H14C16.5 8 18.5 9 19.5 10.5C20.5 12 20.5 14 19.5 15.5C18.5 17 16.5 18 14 18H11V24H8V8ZM11 15H14C15 15 15.8 14.7 16.3 14.2C16.8 13.7 17 13 17 12.2C17 11.4 16.8 10.8 16.3 10.3C15.8 9.8 15 9.5 14 9.5H11V15Z" fill="white"/>
-  <path d="M20 14L24 24H21L20 21H16L15 24H12L16 14H20ZM19 18.5L18 16L17 18.5H19Z" fill="white"/>
+  <text x="16" y="21" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">BV</text>
   <defs>
     <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#6366F1"/>
-      <stop offset="1" stop-color="#8B5CF6"/>
+      <stop stop-color="#9333EA"/>
+      <stop offset="1" stop-color="#4F46E5"/>
     </linearGradient>
   </defs>
 </svg>
