@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { Volume2, VolumeX, X, Home, MessageCircle, HelpCircle, Search, Send, ChevronDown } from 'lucide-react';
+import { Volume2, VolumeX, X, Home, MessageCircle, HelpCircle, Search, Send, ChevronDown, Headphones } from 'lucide-react';
 import Image from 'next/image';
 
 interface VoiceAgentWidgetProps {
@@ -49,7 +49,6 @@ export default function VoiceAgentWidget({
   const handleUserInteraction = useCallback(() => {
     setHasInteracted(true);
     setShowNudge(false);
-    // Store in sessionStorage so it persists during the session
     if (typeof window !== 'undefined') {
       sessionStorage.setItem('chatWidgetInteracted', 'true');
     }
@@ -67,7 +66,6 @@ export default function VoiceAgentWidget({
   }, []);
 
   useEffect(() => {
-    // Check if user has already interacted this session
     if (typeof window !== 'undefined') {
       const interacted = sessionStorage.getItem('chatWidgetInteracted');
       if (interacted === 'true') {
@@ -96,14 +94,12 @@ export default function VoiceAgentWidget({
   useEffect(() => {
     if (hasInteracted || isExpanded) return;
 
-    // Show nudge after 5 seconds of scrolling/being on page
     const nudgeTimer = setTimeout(() => {
       if (!hasInteracted && !isExpanded) {
         setShowNudge(true);
       }
     }, 5000);
 
-    // Auto-hide nudge after 8 seconds
     const hideTimer = setTimeout(() => {
       setShowNudge(false);
     }, 13000);
@@ -118,6 +114,9 @@ export default function VoiceAgentWidget({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Track conversation ID for ElevenLabs context
+  const [conversationId, setConversationId] = useState<string | null>(null);
+
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
 
@@ -129,28 +128,49 @@ export default function VoiceAgentWidget({
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const messageText = inputMessage;
     setInputMessage('');
     setIsTyping(true);
 
-    // Simulate AI response (in production, this would call your chatbot API)
-    setTimeout(() => {
-      const responses = [
-        "Great question! Our AI spokespersons are created using advanced AI technology that creates realistic, natural-looking video content.",
-        "You can get started by booking a free strategy call. We'll discuss your needs and create a custom package for you.",
-        "Our Content Engine package includes 30 new videos every month, delivered within 7 days.",
-        "Yes, you can customize the look, voice, and personality of your AI spokesperson to match your brand."
-      ];
+    try {
+      // Call the Samira chat API (uses ElevenLabs with same knowledge base as voice)
+      const response = await fetch('/api/chat/samira', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: messageText,
+          conversationId: conversationId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.conversationId) {
+        setConversationId(data.conversationId);
+      }
 
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: responses[Math.floor(Math.random() * responses.length)],
+        text: data.response || data.error || "I'm sorry, I couldn't process that request. Please try again.",
         isUser: false,
         timestamp: new Date()
       };
 
       setMessages(prev => [...prev, aiMessage]);
+    } catch (error) {
+      console.error('Chat error:', error);
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: "I'm having trouble connecting right now. Please try again or use the voice feature above!",
+        isUser: false,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   const helpTopics = [
@@ -173,34 +193,48 @@ export default function VoiceAgentWidget({
 
   return (
     <>
-      {/* Collapsed State - Small Avatar Thumbnail - Positioned on LEFT */}
+      {/* Collapsed State - Clean modern design */}
       {!isExpanded && (
-        <div className={`fixed bottom-6 left-6 z-50 ${className}`}>
-          {/* Pulse ring animation */}
-          <div className="absolute inset-0 w-16 h-16 rounded-full bg-purple-400 animate-ping opacity-20"></div>
+        <div className={`fixed bottom-8 right-10 z-50 flex items-end gap-4 ${className}`}>
+          {/* Main widget container - no background */}
+          <div className="flex items-center gap-3">
+            {/* Square avatar thumbnail - larger */}
+            <button
+              onClick={handleExpand}
+              className="relative w-20 h-20 rounded-xl overflow-hidden shadow-xl border-3 border-white hover:scale-105 transition-transform duration-300 ring-2 ring-gray-200"
+            >
+              <Image
+                src="/images/samira-avatar.jpg"
+                alt="Samira - AI Assistant"
+                fill
+                className="object-cover object-top"
+                sizes="80px"
+              />
+              {/* Online indicator */}
+              <div className="absolute bottom-2 right-2 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white shadow-sm"></div>
+            </button>
 
-          {/* Avatar thumbnail button */}
+            {/* Book demo button - larger */}
+            <button
+              onClick={handleExpand}
+              className="px-6 py-3.5 bg-white rounded-2xl shadow-xl font-semibold text-gray-800 hover:shadow-2xl hover:scale-105 transition-all text-base whitespace-nowrap border border-gray-100"
+            >
+              Book demo
+            </button>
+          </div>
+
+          {/* Headphones/Support button - larger */}
           <button
             onClick={handleExpand}
-            className="relative w-16 h-16 rounded-full overflow-hidden shadow-xl border-2 border-white hover:scale-110 transition-transform duration-300 group"
+            className="w-14 h-14 bg-indigo-600 rounded-full flex items-center justify-center shadow-xl hover:bg-indigo-700 hover:scale-105 transition-all"
           >
-            {/* Samira avatar image */}
-            <Image
-              src="/images/samira-avatar.jpg"
-              alt="Samira - AI Assistant"
-              fill
-              className="object-cover object-top"
-              sizes="64px"
-            />
-
-            {/* Online indicator */}
-            <div className="absolute bottom-1 right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+            <Headphones className="w-6 h-6 text-white" />
           </button>
 
-          {/* Nudge popup - only shows if user hasn't interacted */}
+          {/* Nudge popup */}
           {showNudge && !hasInteracted && (
-            <div className="absolute left-full ml-3 bottom-0 animate-fadeIn">
-              <div className="bg-white rounded-lg shadow-lg p-3 w-48 border border-gray-200">
+            <div className="absolute right-0 bottom-full mb-3 animate-fadeIn">
+              <div className="bg-white rounded-lg shadow-lg p-3 w-52 border border-gray-200">
                 <button
                   onClick={() => setShowNudge(false)}
                   className="absolute -top-2 -right-2 w-5 h-5 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors"
@@ -211,26 +245,26 @@ export default function VoiceAgentWidget({
                 <p className="text-xs text-gray-500 mt-1">Chat with Samira, our AI assistant</p>
                 <button
                   onClick={handleExpand}
-                  className="mt-2 w-full py-1.5 bg-purple-600 text-white text-xs rounded-md hover:bg-purple-700 transition-colors"
+                  className="mt-2 w-full py-1.5 bg-indigo-600 text-white text-xs rounded-md hover:bg-indigo-700 transition-colors"
                 >
                   Start Chat
                 </button>
               </div>
-              {/* Arrow pointing to avatar */}
-              <div className="absolute left-0 top-1/2 -translate-x-full -translate-y-1/2">
-                <div className="w-0 h-0 border-t-8 border-b-8 border-r-8 border-transparent border-r-white"></div>
+              {/* Arrow pointing down */}
+              <div className="absolute right-6 -bottom-2">
+                <div className="w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-white"></div>
               </div>
             </div>
           )}
         </div>
       )}
 
-      {/* Expanded State - Full Widget - Positioned on LEFT */}
+      {/* Expanded State - Full Widget */}
       {isExpanded && (
-        <div className="fixed bottom-6 left-6 z-50 w-[380px] bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 animate-slideUp">
+        <div className="fixed bottom-6 right-8 z-50 w-[380px] bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 animate-slideUp">
           {/* Video/Avatar Section */}
           <div className="relative bg-gradient-to-br from-gray-900 to-gray-800 aspect-video">
-            {/* ElevenLabs Widget or Avatar Video */}
+            {/* ElevenLabs Widget or Avatar */}
             {isLoaded && activeTab === 'home' ? (
               <div className="w-full h-full flex items-center justify-center">
                 {/* @ts-expect-error - ElevenLabs custom element */}
@@ -239,7 +273,7 @@ export default function VoiceAgentWidget({
             ) : (
               <div className="w-full h-full flex items-center justify-center">
                 <div className="text-center">
-                  <div className="w-20 h-20 rounded-full overflow-hidden mx-auto mb-3 border-2 border-white/30">
+                  <div className="w-20 h-20 rounded-lg overflow-hidden mx-auto mb-3 border-2 border-white/30">
                     <Image
                       src="/images/samira-avatar.jpg"
                       alt="Samira - AI Assistant"
@@ -254,7 +288,7 @@ export default function VoiceAgentWidget({
               </div>
             )}
 
-            {/* Mute/Unmute Button Overlay */}
+            {/* Mute/Unmute Button */}
             <button
               onClick={() => setIsMuted(!isMuted)}
               className="absolute bottom-4 left-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors"
@@ -289,7 +323,7 @@ export default function VoiceAgentWidget({
               onClick={() => setActiveTab('home')}
               className={`flex-1 py-3 text-sm font-medium flex items-center justify-center gap-2 transition-colors
                 ${activeTab === 'home'
-                  ? 'text-purple-600 border-b-2 border-purple-600 bg-purple-50'
+                  ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50'
                   : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                 }`}
             >
@@ -300,7 +334,7 @@ export default function VoiceAgentWidget({
               onClick={() => setActiveTab('messages')}
               className={`flex-1 py-3 text-sm font-medium flex items-center justify-center gap-2 transition-colors
                 ${activeTab === 'messages'
-                  ? 'text-purple-600 border-b-2 border-purple-600 bg-purple-50'
+                  ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50'
                   : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                 }`}
             >
@@ -311,7 +345,7 @@ export default function VoiceAgentWidget({
               onClick={() => setActiveTab('help')}
               className={`flex-1 py-3 text-sm font-medium flex items-center justify-center gap-2 transition-colors
                 ${activeTab === 'help'
-                  ? 'text-purple-600 border-b-2 border-purple-600 bg-purple-50'
+                  ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50'
                   : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                 }`}
             >
@@ -327,7 +361,7 @@ export default function VoiceAgentWidget({
               <div className="p-4 h-full overflow-y-auto">
                 <h3 className="font-semibold text-gray-900 mb-3">Quick Actions</h3>
                 <div className="space-y-2">
-                  <button className="w-full p-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-indigo-700 transition-all text-sm">
+                  <button className="w-full p-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all text-sm">
                     Book a Strategy Call
                   </button>
                   <button className="w-full p-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors text-sm">
@@ -345,10 +379,9 @@ export default function VoiceAgentWidget({
               </div>
             )}
 
-            {/* Messages Tab - Chat Interface */}
+            {/* Messages Tab */}
             {activeTab === 'messages' && (
               <div className="flex flex-col h-full">
-                {/* Messages Container */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
                   {messages.map((message) => (
                     <div
@@ -358,12 +391,12 @@ export default function VoiceAgentWidget({
                       <div
                         className={`max-w-[80%] rounded-2xl px-4 py-2 ${
                           message.isUser
-                            ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white'
+                            ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white'
                             : 'bg-gray-100 text-gray-800'
                         }`}
                       >
                         <p className="text-sm">{message.text}</p>
-                        <p className={`text-xs mt-1 ${message.isUser ? 'text-purple-200' : 'text-gray-400'}`}>
+                        <p className={`text-xs mt-1 ${message.isUser ? 'text-indigo-200' : 'text-gray-400'}`}>
                           {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </p>
                       </div>
@@ -383,7 +416,6 @@ export default function VoiceAgentWidget({
                   <div ref={messagesEndRef} />
                 </div>
 
-                {/* Message Input */}
                 <div className="p-3 border-t border-gray-100">
                   <div className="flex items-center gap-2">
                     <input
@@ -392,12 +424,12 @@ export default function VoiceAgentWidget({
                       onChange={(e) => setInputMessage(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                       placeholder="Type a message..."
-                      className="flex-1 px-4 py-2 bg-gray-100 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="flex-1 px-4 py-2 bg-gray-100 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                     <button
                       onClick={handleSendMessage}
                       disabled={!inputMessage.trim()}
-                      className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white flex items-center justify-center hover:from-purple-700 hover:to-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white flex items-center justify-center hover:from-indigo-700 hover:to-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <Send className="w-4 h-4" />
                     </button>
@@ -409,7 +441,6 @@ export default function VoiceAgentWidget({
             {/* Help Tab */}
             {activeTab === 'help' && (
               <div className="h-full flex flex-col">
-                {/* Search Bar */}
                 <div className="p-4 border-b border-gray-100">
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -418,12 +449,11 @@ export default function VoiceAgentWidget({
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Search for help..."
-                      className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
                 </div>
 
-                {/* Help Topics */}
                 <div className="flex-1 overflow-y-auto p-4">
                   <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
                     Help Topics
@@ -432,7 +462,7 @@ export default function VoiceAgentWidget({
                     {filteredTopics.map((topic, index) => (
                       <button
                         key={index}
-                        onClick={() => {
+                        onClick={async () => {
                           setActiveTab('messages');
                           const helpMessage: Message = {
                             id: Date.now().toString(),
@@ -441,15 +471,38 @@ export default function VoiceAgentWidget({
                             timestamp: new Date()
                           };
                           setMessages(prev => [...prev, helpMessage]);
-                          setTimeout(() => {
-                            const response: Message = {
+                          setIsTyping(true);
+
+                          try {
+                            const response = await fetch('/api/chat/samira', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({
+                                message: `Tell me about ${topic.title}. ${topic.description}`,
+                                conversationId: conversationId,
+                              }),
+                            });
+                            const data = await response.json();
+                            if (data.conversationId) setConversationId(data.conversationId);
+
+                            const aiResponse: Message = {
+                              id: (Date.now() + 1).toString(),
+                              text: data.response || `I'd be happy to help with ${topic.title.toLowerCase()}! ${topic.description}. Would you like me to explain more?`,
+                              isUser: false,
+                              timestamp: new Date()
+                            };
+                            setMessages(prev => [...prev, aiResponse]);
+                          } catch {
+                            const fallbackResponse: Message = {
                               id: (Date.now() + 1).toString(),
                               text: `I'd be happy to help with ${topic.title.toLowerCase()}! ${topic.description}. Would you like me to explain more?`,
                               isUser: false,
                               timestamp: new Date()
                             };
-                            setMessages(prev => [...prev, response]);
-                          }, 1000);
+                            setMessages(prev => [...prev, fallbackResponse]);
+                          } finally {
+                            setIsTyping(false);
+                          }
                         }}
                         className="w-full p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-left"
                       >
@@ -490,11 +543,11 @@ export default function VoiceAgentWidget({
         @keyframes fadeIn {
           from {
             opacity: 0;
-            transform: translateX(-10px);
+            transform: translateY(10px);
           }
           to {
             opacity: 1;
-            transform: translateX(0);
+            transform: translateY(0);
           }
         }
         .animate-fadeIn {
