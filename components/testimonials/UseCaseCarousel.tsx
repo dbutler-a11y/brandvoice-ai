@@ -99,26 +99,54 @@ function TestimonialCard({ testimonial }: TestimonialCardProps) {
   const departmentColor =
     departmentColors[testimonial.department] || departmentColors["REAL ESTATE"];
 
-  const handleVideoClick = () => {
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (videoRef.current) {
+        videoRef.current.pause();
+        videoRef.current.currentTime = 0;
+      }
+    };
+  }, []);
+
+  const handleVideoClick = async () => {
     if (!videoRef.current) return;
+
+    const video = videoRef.current;
 
     if (isPlaying) {
       // Stop if playing
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0;
+      video.pause();
+      video.currentTime = 0;
       setIsPlaying(false);
     } else {
-      // Play with sound
-      videoRef.current.muted = false;
-      videoRef.current.volume = 1.0;
-      videoRef.current.currentTime = 0;
-      videoRef.current.play();
-      setIsPlaying(true);
+      // Play with sound - unmute and play in direct response to click
+      video.muted = false;
+      video.volume = 1.0;
+      video.currentTime = 0;
+
+      try {
+        await video.play();
+        setIsPlaying(true);
+      } catch (error) {
+        console.warn('Unmuted playback failed, trying muted:', error);
+        // Fallback to muted if browser blocks sound
+        video.muted = true;
+        try {
+          await video.play();
+          setIsPlaying(true);
+        } catch (mutedError) {
+          console.error('Playback failed:', mutedError);
+        }
+      }
     }
   };
 
   const handleVideoEnd = () => {
     setIsPlaying(false);
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+    }
   };
 
   return (
@@ -137,6 +165,7 @@ function TestimonialCard({ testimonial }: TestimonialCardProps) {
               src={testimonial.media}
               poster={testimonial.poster}
               className="w-full h-full object-cover cursor-pointer"
+              muted
               playsInline
               preload="metadata"
               onEnded={handleVideoEnd}
