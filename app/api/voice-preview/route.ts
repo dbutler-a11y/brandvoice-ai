@@ -2,68 +2,174 @@ import { NextRequest, NextResponse } from 'next/server';
 import { rateLimit, rateLimitResponse, addRateLimitHeaders, RateLimitTier } from '@/lib/rate-limit';
 
 // Sample voices from ElevenLabs that represent different tones/styles
-// These are public voice IDs from ElevenLabs voice library
+// All voices have static audio files pre-downloaded to /public/audio/voices/
 const SAMPLE_VOICES = [
   {
-    id: 'EXAVITQu4vr4xnSDxMaL', // Sarah
+    id: 'EXAVITQu4vr4xnSDxMaL',
     name: 'Sarah',
     description: 'Warm & Professional',
     gender: 'female',
     age: '30s',
     tone: 'Friendly and approachable, perfect for coaching and wellness brands',
-    previewText: "Hi there! I'm Sarah, and I'm here to help your brand connect with your audience in an authentic, engaging way.",
+    previewText: "Hi, I'm Sarah, and I'm excited to be your AI spokesperson. I'll help you connect with your audience in a warm and professional way that builds trust and drives results.",
+    audioFile: 'sarah.mp3',
   },
   {
-    id: '21m00Tcm4TlvDq8ikWAM', // Rachel
+    id: '21m00Tcm4TlvDq8ikWAM',
     name: 'Rachel',
-    description: 'Clear & Authoritative',
+    description: 'Sophisticated & Elegant',
     gender: 'female',
     age: '30s',
-    tone: 'Clear and confident, ideal for corporate and educational content',
-    previewText: "Welcome! I'm Rachel. Let me show you how AI spokespersons can transform your content strategy.",
+    tone: 'Refined and elegant, ideal for luxury and high-end brands',
+    previewText: "Good day, I'm Rachel. With a sophisticated and elegant tone, I bring a touch of refinement to your brand's message, perfect for luxury and high-end markets.",
+    audioFile: 'rachel.mp3',
   },
   {
-    id: 'IKne3meq5aSn9XLyUdCD', // Charlie
+    id: 'IKne3meq5aSn9XLyUdCD',
     name: 'Charlie',
     description: 'Energetic & Youthful',
     gender: 'male',
     age: '20s',
     tone: 'Dynamic and energetic, great for fitness and tech brands',
     previewText: "Hey! I'm Charlie, ready to bring energy and excitement to your brand's message!",
+    audioFile: 'charlie.mp3',
   },
   {
-    id: 'TX3LPaxmHKxFdv7VOQHJ', // Liam
+    id: 'TX3LPaxmHKxFdv7VOQHJ',
     name: 'Liam',
     description: 'Deep & Trustworthy',
     gender: 'male',
     age: '40s',
     tone: 'Deep and reassuring, perfect for finance and healthcare',
     previewText: "Hello, I'm Liam. I bring a sense of trust and reliability to every message I deliver.",
+    audioFile: 'liam.mp3',
   },
   {
-    id: 'XB0fDUnXU5powFXDhCwa', // Charlotte
+    id: 'XB0fDUnXU5powFXDhCwa',
     name: 'Charlotte',
     description: 'Sophisticated & Elegant',
     gender: 'female',
     age: '40s',
     tone: 'Refined and elegant, ideal for luxury and high-end brands',
     previewText: "Good day. I'm Charlotte, bringing sophistication and elegance to your brand communication.",
+    audioFile: 'charlotte.mp3',
   },
   {
-    id: 'pFZP5JQG7iQjIQuC4Bku', // Lily
+    id: 'pFZP5JQG7iQjIQuC4Bku',
     name: 'Lily',
     description: 'Warm & Conversational',
     gender: 'female',
     age: '20s',
     tone: 'Casual and relatable, perfect for social media content',
     previewText: "Hey! I'm Lily, and I'm all about keeping things real and relatable for your audience.",
+    audioFile: 'lily.mp3',
+  },
+  {
+    id: 'TxGEqnHWrfWFTfGW9XjX',
+    name: 'Michael',
+    description: 'Authoritative & Clear',
+    gender: 'male',
+    age: '40s',
+    tone: 'Clear and authoritative, perfect for professional services and B2B',
+    previewText: "Hi, I'm Michael. With a clear and authoritative voice, I'll deliver your message with confidence and credibility, perfect for professional services and B2B communications.",
+    audioFile: 'michael.mp3',
+  },
+  {
+    id: 'pNInz6obpgDQGcFmaJgB',
+    name: 'David',
+    description: 'Calm & Reassuring',
+    gender: 'male',
+    age: '40s',
+    tone: 'Calm and reassuring, ideal for healthcare and education',
+    previewText: "Hello, I'm David. With a calm and reassuring presence, I help your audience feel comfortable and informed, making complex topics easy to understand.",
+    audioFile: 'david.mp3',
+  },
+  {
+    id: 'ErXwobaYiN019PkySvjV',
+    name: 'James',
+    description: 'Motivating & Inspiring',
+    gender: 'male',
+    age: '30s',
+    tone: 'Motivating and inspiring, great for coaching and personal development',
+    previewText: "What's up! I'm James, and I'm here to motivate and inspire your audience to take action. Let's turn your message into a movement!",
+    audioFile: 'james.mp3',
+  },
+  {
+    id: 'jsCqWAovK2LkecY7zXl4',
+    name: 'Olivia',
+    description: 'Caring & Compassionate',
+    gender: 'female',
+    age: '30s',
+    tone: 'Caring and compassionate, perfect for healthcare and non-profits',
+    previewText: "Hello, I'm Olivia. My caring and compassionate voice creates a safe space for your audience, perfect for sensitive topics and healthcare communications.",
+    audioFile: 'olivia.mp3',
+  },
+  {
+    id: 'onwK4e9ZLuTAKqWW03F9',
+    name: 'Alex',
+    description: 'Modern & Tech-Savvy',
+    gender: 'male',
+    age: '20s',
+    tone: 'Modern and tech-savvy, ideal for startups and innovation',
+    previewText: "Hey, I'm Alex. With a modern and tech-savvy approach, I speak the language of innovation and help your cutting-edge brand connect with forward-thinking audiences.",
+    audioFile: 'alex.mp3',
+  },
+  {
+    id: 'jBpfuIE2acCO8z3wKNLl',
+    name: 'Sophia',
+    description: 'Natural & Authentic',
+    gender: 'female',
+    age: '30s',
+    tone: 'Natural and authentic, perfect for sustainability and wellness',
+    previewText: "Hi, I'm Sophia. My natural and authentic voice resonates with audiences who value genuine connections and sustainable living. Let's tell your story in a real way.",
+    audioFile: 'sophia.mp3',
+  },
+  {
+    id: 'flq6f7yk4E4fJM5XTYuZ',
+    name: 'Marcus',
+    description: 'Powerful & Commanding',
+    gender: 'male',
+    age: '40s',
+    tone: 'Powerful and commanding, great for automotive and sports',
+    previewText: "I'm Marcus, and I deliver your message with power and command. Perfect for industries that need a bold, strong voice that demands attention.",
+    audioFile: 'marcus.mp3',
+  },
+  {
+    id: 'XrExE9yKIg1WjnnlVkGX',
+    name: 'Jessica',
+    description: 'Friendly & Conversational',
+    gender: 'female',
+    age: '30s',
+    tone: 'Friendly and conversational, ideal for hospitality and real estate',
+    previewText: "Hi! I'm Jessica, and I love having real conversations with your audience. My friendly and approachable style makes everyone feel right at home.",
+    audioFile: 'jessica.mp3',
+  },
+  {
+    id: 'iP95p4xoKVk53GoZ742B',
+    name: 'Chris',
+    description: 'Versatile & Adaptable',
+    gender: 'male',
+    age: '30s',
+    tone: 'Versatile and adaptable, perfect for tech and general business',
+    previewText: "Hi, I'm Chris. My versatile voice adapts to any message or audience, making me perfect for tech companies and businesses that need flexibility.",
+    audioFile: 'chris.mp3',
+  },
+  {
+    id: '9BWtsMINqrJLrRacOk9x',
+    name: 'Emily',
+    description: 'Energetic & Upbeat',
+    gender: 'female',
+    age: '20s',
+    tone: 'Energetic and upbeat, great for fitness, retail, and events',
+    previewText: "Hey there! I'm Emily, and I bring energy and enthusiasm to every message. Let's get your audience excited about what you have to offer!",
+    audioFile: 'emily.mp3',
   },
 ];
 
-// GET - Return list of available voices
+// GET - Return list of available voices with static audio URLs
 export async function GET() {
   return NextResponse.json({
-    voices: SAMPLE_VOICES.map(({ id, name, description, gender, age, tone, previewText }) => ({
+    voices: SAMPLE_VOICES.map(({ id, name, description, gender, age, tone, previewText, audioFile }) => ({
       id,
       name,
       description,
@@ -71,6 +177,8 @@ export async function GET() {
       age,
       tone,
       previewText,
+      // Static audio file URL - no API call needed
+      audioUrl: `/audio/voices/${audioFile}`,
     })),
   });
 }

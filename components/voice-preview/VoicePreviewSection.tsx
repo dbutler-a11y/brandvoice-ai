@@ -10,13 +10,13 @@ interface Voice {
   age: string;
   tone: string;
   previewText: string;
+  audioUrl: string; // Static audio file URL
 }
 
 export default function VoicePreviewSection() {
   const [voices, setVoices] = useState<Voice[]>([]);
   const [selectedVoice, setSelectedVoice] = useState<Voice | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [, setIsLoading] = useState(false);
   const [loadingVoiceId, setLoadingVoiceId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -58,51 +58,30 @@ export default function VoicePreviewSection() {
     }
 
     setSelectedVoice(voice);
-    setIsLoading(true);
     setLoadingVoiceId(voice.id);
 
     try {
-      const response = await fetch('/api/voice-preview', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          voiceId: voice.id,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to generate preview');
-      }
-
-      const data = await response.json();
-
-      // Create audio from base64
-      const audioBlob = new Blob(
-        [Uint8Array.from(atob(data.audio), c => c.charCodeAt(0))],
-        { type: 'audio/mpeg' }
-      );
-      const audioUrl = URL.createObjectURL(audioBlob);
-
-      audioRef.current = new Audio(audioUrl);
+      // Use static audio file URL - no API call needed!
+      audioRef.current = new Audio(voice.audioUrl);
       audioRef.current.onended = () => {
         setIsPlaying(false);
-        URL.revokeObjectURL(audioUrl);
       };
       audioRef.current.onerror = () => {
         setIsPlaying(false);
+        setLoadingVoiceId(null);
         setError('Failed to play audio');
+      };
+      audioRef.current.oncanplaythrough = () => {
+        setLoadingVoiceId(null);
       };
 
       await audioRef.current.play();
       setIsPlaying(true);
+      setLoadingVoiceId(null);
 
     } catch (err) {
       console.error('Voice preview error:', err);
-      setError('Unable to generate voice preview. Please try again.');
-    } finally {
-      setIsLoading(false);
+      setError('Unable to play voice preview. Please try again.');
       setLoadingVoiceId(null);
     }
   };

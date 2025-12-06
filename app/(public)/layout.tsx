@@ -44,9 +44,9 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
               </p>
             </div>
 
-            {/* Quick Links */}
+            {/* Pages Column 1 */}
             <div>
-              <h3 className="text-white font-semibold mb-4">Quick Links</h3>
+              <h3 className="text-white font-semibold mb-4">Pages</h3>
               <ul className="space-y-2">
                 <li>
                   <Link
@@ -74,12 +74,35 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
                 </li>
                 <li>
                   <Link
+                    href="/voice-preview"
+                    className="hover:text-white transition-colors"
+                  >
+                    Voice Samples
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="/faq"
                     className="hover:text-white transition-colors"
                   >
                     FAQ
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    href="/contact"
+                    className="hover:text-white transition-colors"
+                  >
+                    Contact
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Pages Column 2 */}
+            <div>
+              <h3 className="text-white font-semibold mb-4">Account</h3>
+              <ul className="space-y-2">
                 <li>
                   <Link
                     href="/portal"
@@ -107,28 +130,15 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
                 <li>
                   <CookieSettingsButton />
                 </li>
-              </ul>
-            </div>
-
-            {/* Contact */}
-            <div>
-              <h3 className="text-white font-semibold mb-4">Contact</h3>
-              <div className="space-y-4">
-                <p>
-                  <a
-                    href="mailto:hello@brandvoice.ai"
-                    className="hover:text-white transition-colors"
+                <li className="pt-4">
+                  <Link
+                    href="/#book-call"
+                    className="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg"
                   >
-                    hello@brandvoice.ai
-                  </a>
-                </p>
-                <Link
-                  href="/#book-call"
-                  className="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg"
-                >
-                  Book a Call
-                </Link>
-              </div>
+                    Book a Call
+                  </Link>
+                </li>
+              </ul>
             </div>
           </div>
 

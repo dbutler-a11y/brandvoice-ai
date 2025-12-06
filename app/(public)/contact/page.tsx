@@ -64,11 +64,11 @@ export default function ContactPage() {
               Prefer email? Send us a message and we&apos;ll respond within 24 hours.
             </p>
             <a
-              href="mailto:dbutler@eulaproperties.com"
+              href="mailto:hello@brandvoice.studio"
               className="text-purple-600 hover:text-purple-700 font-semibold flex items-center gap-2 group"
             >
               <EnvelopeIcon className="w-5 h-5" />
-              <span className="group-hover:underline">dbutler@eulaproperties.com</span>
+              <span className="group-hover:underline">hello@brandvoice.studio</span>
             </a>
           </div>
 
@@ -332,7 +332,7 @@ export default function ContactPage() {
               className="px-8 py-4 text-lg"
             />
             <a
-              href="mailto:dbutler@eulaproperties.com"
+              href="mailto:hello@brandvoice.studio"
               className="inline-flex items-center justify-center px-8 py-4 bg-purple-700 text-white font-semibold rounded-lg hover:bg-purple-800 transition-colors duration-200 border-2 border-white/30 text-lg"
             >
               <EnvelopeIcon className="w-5 h-5 mr-2" />

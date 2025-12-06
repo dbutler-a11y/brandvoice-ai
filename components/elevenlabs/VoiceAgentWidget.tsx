@@ -213,40 +213,13 @@ export default function VoiceAgentWidget({
 
   return (
     <>
-      {/* Collapsed State - Clean modern design */}
+      {/* Collapsed State - Clean mic button that triggers ElevenLabs voice */}
       {!isExpanded && (
-        <div className={`fixed bottom-8 right-4 sm:right-8 z-50 flex items-end gap-4 ${className}`}>
-          {/* Main widget container - positioned to avoid ElevenLabs floating button */}
-          <div className="flex items-center gap-3">
-            {/* Square avatar thumbnail - larger */}
-            <button
-              onClick={handleExpand}
-              className="relative w-20 h-20 rounded-xl overflow-hidden shadow-xl border-3 border-white hover:scale-105 transition-transform duration-300 ring-2 ring-gray-200"
-            >
-              <Image
-                src="/images/samira-avatar.jpg"
-                alt="Samira - AI Assistant"
-                fill
-                className="object-cover object-top"
-                sizes="80px"
-              />
-              {/* Online indicator */}
-              <div className="absolute bottom-2 right-2 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white shadow-sm"></div>
-            </button>
-
-            {/* Book demo button - larger */}
-            <button
-              onClick={handleExpand}
-              className="px-6 py-3.5 bg-white rounded-2xl shadow-xl font-semibold text-gray-800 hover:shadow-2xl hover:scale-105 transition-all text-base whitespace-nowrap border border-gray-100"
-            >
-              Book demo
-            </button>
-          </div>
-
+        <div className={`fixed bottom-6 right-4 sm:right-6 z-50 flex flex-col items-end gap-3 ${className}`}>
           {/* Nudge popup */}
           {showNudge && !hasInteracted && (
-            <div className="absolute right-0 bottom-full mb-3 animate-fadeIn">
-              <div className="bg-white rounded-lg shadow-lg p-3 w-52 border border-gray-200">
+            <div className="animate-fadeIn">
+              <div className="bg-white rounded-lg shadow-lg p-3 w-48 border border-gray-200 relative">
                 <button
                   onClick={() => setShowNudge(false)}
                   className="absolute -top-2 -right-2 w-5 h-5 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors"
@@ -254,13 +227,7 @@ export default function VoiceAgentWidget({
                   <X className="w-3 h-3 text-gray-600" />
                 </button>
                 <p className="text-sm text-gray-700 font-medium">Need help?</p>
-                <p className="text-xs text-gray-500 mt-1">Chat with Samira, our AI assistant</p>
-                <button
-                  onClick={handleExpand}
-                  className="mt-2 w-full py-1.5 bg-indigo-600 text-white text-xs rounded-md hover:bg-indigo-700 transition-colors"
-                >
-                  Start Chat
-                </button>
+                <p className="text-xs text-gray-500 mt-1">Click mic to talk with Samira</p>
               </div>
               {/* Arrow pointing down */}
               <div className="absolute right-6 -bottom-2">
@@ -268,6 +235,21 @@ export default function VoiceAgentWidget({
               </div>
             </div>
           )}
+
+          {/* Main widget - Avatar only */}
+          <button
+            onClick={handleExpand}
+            className="relative w-14 h-14 rounded-full overflow-hidden shadow-lg border-2 border-white hover:scale-105 transition-transform duration-300"
+          >
+            <Image
+              src="/images/samira-avatar.jpg"
+              alt="Samira - AI Assistant"
+              fill
+              className="object-cover object-top"
+              sizes="56px"
+            />
+            <div className="absolute bottom-0.5 right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+          </button>
         </div>
       )}
 
@@ -316,7 +298,7 @@ export default function VoiceAgentWidget({
 
               {/* ElevenLabs Mic Widget - Positioned here - Always visible */}
               {isLoaded && (
-                <div className="flex-shrink-0 relative w-14 h-14">
+                <div className="elevenlabs-widget-container flex-shrink-0 relative w-14 h-14">
                   {/* @ts-expect-error - ElevenLabs custom element */}
                   <elevenlabs-convai agent-id={elevenlabsAgentId}></elevenlabs-convai>
                 </div>

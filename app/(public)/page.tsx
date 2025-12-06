@@ -5,6 +5,7 @@ import { useState } from "react";
 import { BookCallSection } from "@/components/calendly";
 import { VoicePreviewSection } from "@/components/voice-preview";
 import { TestimonialSection } from "@/components/testimonials/TestimonialSection";
+import { UseCaseCarousel } from "@/components/testimonials/UseCaseCarousel";
 
 export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
@@ -102,6 +103,21 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Use Cases Carousel Section */}
+      <section className="py-16 bg-gradient-to-b from-gray-900 to-gray-800 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+          <div className="text-center">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              Trusted by Industry Leaders
+            </h2>
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+              See how businesses like yours are transforming their content strategy
+            </p>
+          </div>
+        </div>
+        <UseCaseCarousel />
       </section>
 
       {/* Problem/Solution Section */}

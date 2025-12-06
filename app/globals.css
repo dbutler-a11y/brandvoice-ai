@@ -86,12 +86,27 @@ body {
   }
 }
 
-/* Hide ElevenLabs native widget when our custom panel is expanded */
-body.hide-elevenlabs-widget elevenlabs-convai,
-body.hide-elevenlabs-widget [class*="elevenlabs"],
-body.hide-elevenlabs-widget [id*="elevenlabs"] {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
+/* Hide ElevenLabs native floating widget globally - we control when it shows */
+elevenlabs-convai:not(.show-elevenlabs) {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Show ElevenLabs widget only inside our expanded panel */
+.elevenlabs-widget-container elevenlabs-convai {
+  position: relative !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  clip: auto !important;
+  white-space: normal !important;
 }
