@@ -94,16 +94,8 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   };
 }
 
-export async function generateStaticParams() {
-  const posts = await prisma.blogPost.findMany({
-    where: { status: 'PUBLISHED' },
-    select: { slug: true },
-  });
-
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
-}
+// Enable dynamic rendering to avoid build-time database queries
+export const dynamic = 'force-dynamic';
 
 function ShareButtons({ url, title }: { url: string; title: string }) {
   const encodedUrl = encodeURIComponent(url);

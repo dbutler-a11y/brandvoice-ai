@@ -210,7 +210,14 @@ export async function POST(request: NextRequest) {
       const categoryData = categoryMap[topic.pillar] || categoryMap['ai-video'];
       const categorySlug = topic.pillar;
 
-      let category = await prisma.blogCategory.findUnique({ where: { slug: categorySlug } });
+      let category = await prisma.blogCategory.findFirst({
+        where: {
+          OR: [
+            { slug: categorySlug },
+            { name: categoryData.name }
+          ]
+        }
+      });
       if (!category) {
         category = await prisma.blogCategory.create({
           data: {

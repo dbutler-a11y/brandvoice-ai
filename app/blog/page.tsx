@@ -7,6 +7,9 @@ import { NewsletterSignup } from '@/components/blog/NewsletterSignup';
 import { Search } from 'lucide-react';
 import Link from 'next/link';
 
+// Force dynamic rendering to avoid build-time database queries
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Blog | BrandVoice Studio - AI Business Insights & Updates',
   description: 'Expert insights on leveraging AI for business growth, marketing automation, and brand building. Stay updated with the latest AI trends and strategies.',
