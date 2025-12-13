@@ -4,16 +4,7 @@
   "buildCommand": "prisma generate && next build",
   "installCommand": "npm install",
   "regions": ["iad1"],
-  "crons": [
-    {
-      "path": "/api/cron/daily-blog",
-      "schedule": "0 9 * * *"
-    },
-    {
-      "path": "/api/cron/weekly-digest",
-      "schedule": "0 10 * * 1"
-    }
-  ],
+  "crons": [],
   "functions": {
     "app/api/**/*.ts": {
       "maxDuration": 60
