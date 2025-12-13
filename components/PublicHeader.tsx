@@ -89,6 +89,12 @@ export function PublicHeader() {
               Examples
             </Link>
             <Link
+              href="/blog"
+              className="text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              Blog
+            </Link>
+            <Link
               href="/portal/login"
               className="text-gray-600 hover:text-gray-900 transition-colors"
             >
@@ -220,6 +226,13 @@ export function PublicHeader() {
             className="px-4 py-3 text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all font-medium"
           >
             Examples
+          </Link>
+          <Link
+            href="/blog"
+            onClick={handleLinkClick}
+            className="px-4 py-3 text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all font-medium"
+          >
+            Blog
           </Link>
           <Link
             href="/portal/login"

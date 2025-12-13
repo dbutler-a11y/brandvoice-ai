@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { ReactNode } from "react";
 import { CookieSettingsButton } from "@/components/cookies";
-import { ChatWidget } from "@/components/chat";
 import { VoiceAgentWidget } from "@/components/elevenlabs";
-import { AIAssistantNudge } from "@/components/ai-assistant-nudge";
 import { PublicHeader } from "@/components/PublicHeader";
 
 export default function PublicLayout({ children }: { children: ReactNode }) {
@@ -15,14 +13,8 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
       {/* Main Content */}
       <main className="flex-grow">{children}</main>
 
-      {/* Chat Widget */}
-      <ChatWidget />
-
-      {/* Voice Agent Widget */}
+      {/* Voice Agent Widget - Samira */}
       <VoiceAgentWidget />
-
-      {/* AI Assistant Nudge - Contextual prompts to encourage voice/chat usage */}
-      <AIAssistantNudge />
 
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-300">
@@ -90,6 +82,14 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
                 </li>
                 <li>
                   <Link
+                    href="/blog"
+                    className="hover:text-white transition-colors"
+                  >
+                    Blog
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="/contact"
                     className="hover:text-white transition-colors"
                   >
@@ -125,6 +125,14 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
                     className="hover:text-white transition-colors"
                   >
                     Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/careers"
+                    className="hover:text-white transition-colors"
+                  >
+                    Careers
                   </Link>
                 </li>
                 <li>

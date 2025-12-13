@@ -1,4 +1,13 @@
-export default function AuthCodeError() {
+'use client'
+
+import { useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
+
+function AuthCodeErrorContent() {
+  const searchParams = useSearchParams()
+  const error = searchParams.get('error')
+  const message = searchParams.get('message')
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -40,6 +49,14 @@ export default function AuthCodeError() {
               <span>OAuth configuration issue</span>
             </li>
           </ul>
+          {(error || message) && (
+            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg text-left">
+              <p className="text-xs font-mono text-red-800">
+                {error && <span className="block"><strong>Error:</strong> {error}</span>}
+                {message && <span className="block mt-1"><strong>Details:</strong> {message}</span>}
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="bg-white py-8 px-6 shadow-xl rounded-xl border border-gray-100">
@@ -63,5 +80,17 @@ export default function AuthCodeError() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function AuthCodeError() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
+        <div className="animate-pulse">Loading...</div>
+      </div>
+    }>
+      <AuthCodeErrorContent />
+    </Suspense>
   )
 }

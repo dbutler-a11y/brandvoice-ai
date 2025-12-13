@@ -85,7 +85,15 @@ export default function VoiceAgentWidget({
       }
     }
 
-    // Load ElevenLabs Convai widget script (updated URL)
+    // Load ElevenLabs Convai widget script
+    const existingScript = document.querySelector(
+      'script[src="https://unpkg.com/@elevenlabs/convai-widget-embed"]'
+    );
+    if (existingScript) {
+      setIsLoaded(true);
+      return;
+    }
+
     const script = document.createElement('script');
     script.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed';
     script.async = true;
@@ -98,16 +106,7 @@ export default function VoiceAgentWidget({
       console.error('Failed to load ElevenLabs widget script');
       setIsLoaded(false);
     };
-    document.body.appendChild(script);
-
-    return () => {
-      const existingScript = document.querySelector(
-        'script[src="https://unpkg.com/@elevenlabs/convai-widget-embed"]'
-      );
-      if (existingScript) {
-        existingScript.remove();
-      }
-    };
+    document.head.appendChild(script);
   }, []);
 
   // Auto-nudge effect - only shows if user hasn't interacted

@@ -99,13 +99,14 @@ model Client {
   fbAdCampaignNotes  String? @db.Text
 
   // Relations
-  intake       Intake?
-  scripts      Script[]
-  clientUsers  ClientUser[]
-  clientAssets ClientAsset[]
-  orders       Order[]
-  disputes     Dispute[]
-  refunds      Refund[]
+  intake         Intake?
+  scripts        Script[]
+  clientUsers    ClientUser[]
+  clientAssets   ClientAsset[]
+  orders         Order[]
+  disputes       Dispute[]
+  refunds        Refund[]
+  studioProjects StudioProject[]
 }
 
 // ClientAsset model for storing video/file references
@@ -535,4 +536,282 @@ model Alert {
   @@index([severity])
   @@index([isRead])
   @@index([createdAt])
+}
+
+// =============================================
+// ATHLETE AD STUDIO MODELS
+// =============================================
+
+// Athlete Studio Project - contains multiple athletes and frames
+model StudioProject {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  name            String
+  description     String   @db.Text
+  status          String   @default("active") // active, paused, completed, archived
+
+  // Project type and channel
+  projectType     String   @default("brand_campaign") // brand_campaign, product_launch, seasonal, ambassador_program
+  primaryChannel  String   @default("instagram") // instagram, tiktok, youtube, multi_platform
+  primaryGoal     String?  @db.Text
+
+  // Client association (links to main BrandVoice client)
+  clientId        String?
+  client          Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  brandName       String?
+
+  // BrandVoice offer reference
+  offerId         String?
+
+  // Relations
+  athletes        StudioAthlete[]
+
+  @@index([clientId])
+  @@index([status])
+}
+
+// Athletes in a studio project
+model StudioAthlete {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  projectId       String
+  project         StudioProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  name            String
+  sport           String
+  notes           String?  @db.Text
+
+  // Relations
+  frames          StudioFrame[]
+
+  @@index([projectId])
+}
+
+// Individual frames/storyboard items for an athlete
+model StudioFrame {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  athleteId       String
+  athlete         StudioAthlete @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+
+  // Frame content
+  order           Int      @default(1)
+  label           String
+  description     String   @db.Text
+  aiPrompt        String?  @db.Text
+
+  // Status workflow: idea -> prompt_ready -> sent_to_ai -> rendered -> revision_requested -> approved
+  status          String   @default("idea")
+
+  // Media
+  imageUrl        String?
+  thumbnailUrl    String?
+
+  // Production tracking
+  priority        String   @default("normal") // low, normal, high, urgent
+  dueDate         DateTime?
+  assignedTo      String?
+
+  // External links (JSON array)
+  externalLinks   String?  @db.Text
+
+  // Checkpoints (JSON array)
+  checkpoints     String?  @db.Text
+
+  // Revisions history (JSON array)
+  revisions       String?  @db.Text
+
+  // Notes/comments (JSON array)
+  notes           String?  @db.Text
+
+  @@index([athleteId])
+  @@index([status])
+  @@index([priority])
+}
+
+// =============================================
+// BLOG MODELS
+// =============================================
+
+// Blog Post model for SEO-optimized articles
+model BlogPost {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  publishedAt     DateTime?
+
+  // URL & SEO
+  slug            String   @unique
+  title           String
+  metaTitle       String?  // SEO title (falls back to title if not set)
+  metaDescription String?  @db.Text // SEO description
+  metaKeywords    String?  // SEO keywords (comma-separated)
+  canonicalUrl    String?  // For duplicate content management
+
+  // Content
+  excerpt         String   @db.Text // Short preview for cards
+  content         String   @db.Text // Main article content (HTML or Markdown)
+  contentFormat   String   @default("markdown") // "markdown" or "html"
+
+  // Media
+  featuredImage   String?  // Main hero image URL
+  featuredImageAlt String? // Alt text for accessibility & SEO
+  ogImage         String?  // Open Graph image (social sharing)
+
+  // Categorization
+  categoryId      String?
+  category        BlogCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  tags            BlogPostTag[]
+
+  // Author
+  authorId        String?
+  author          BlogAuthor? @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  // Status & Visibility
+  status          BlogPostStatus @default(DRAFT)
+  featured        Boolean  @default(false) // Show in featured section
+
+  // Reading stats
+  readingTime     Int?     // Estimated minutes to read
+  wordCount       Int?
+
+  // Engagement (can be updated via n8n)
+  viewCount       Int      @default(0)
+
+  // SEO Schema
+  schemaType      String   @default("Article") // Article, BlogPosting, NewsArticle, etc.
+
+  @@index([slug])
+  @@index([status])
+  @@index([publishedAt])
+  @@index([categoryId])
+  @@index([featured])
+}
+
+enum BlogPostStatus {
+  DRAFT
+  SCHEDULED
+  PUBLISHED
+  ARCHIVED
+}
+
+// Blog Category for organizing posts
+model BlogCategory {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  name            String   @unique
+  slug            String   @unique
+  description     String?  @db.Text
+  color           String?  // Hex color for UI
+  icon            String?  // Icon name or emoji
+
+  // SEO
+  metaTitle       String?
+  metaDescription String?  @db.Text
+
+  // Ordering
+  sortOrder       Int      @default(0)
+
+  // Relations
+  posts           BlogPost[]
+
+  @@index([slug])
+}
+
+// Blog Tags for flexible tagging
+model BlogTag {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+
+  name            String   @unique
+  slug            String   @unique
+
+  // Relations
+  posts           BlogPostTag[]
+
+  @@index([slug])
+}
+
+// Junction table for many-to-many Post <-> Tag relationship
+model BlogPostTag {
+  id              String   @id @default(cuid())
+  postId          String
+  tagId           String
+
+  post            BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag             BlogTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, tagId])
+  @@index([postId])
+  @@index([tagId])
+}
+
+// Blog Author for multi-author support
+model BlogAuthor {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  name            String
+  slug            String   @unique
+  email           String?
+  bio             String?  @db.Text
+  avatar          String?  // Profile image URL
+  title           String?  // Job title
+  company         String?  // Company name
+
+  // Social links
+  twitter         String?
+  linkedin        String?
+  website         String?
+
+  // Relations
+  posts           BlogPost[]
+
+  @@index([slug])
+}
+
+// Blog Topic Queue for automated content generation
+model BlogTopic {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Topic details
+  title           String   // The topic/headline to write about
+  pillar          String   // Content pillar: ai-video, business-growth, platform-strategy
+  primaryKeyword  String   // Main SEO keyword to target
+  secondaryKeywords String? // Comma-separated secondary keywords
+  searchIntent    String   @default("informational") // informational, transactional, navigational
+
+  // SEO data
+  searchVolume    Int?     // Estimated monthly searches
+  difficulty      Int?     // 1-100 keyword difficulty score
+  priority        Int      @default(50) // 1-100, higher = more important
+
+  // Scheduling
+  scheduledFor    DateTime? // When to generate/publish
+  status          String   @default("queued") // queued, generating, published, failed
+
+  // Generation tracking
+  generatedPostId String?  // Links to BlogPost once created
+  generatedAt     DateTime?
+  errorMessage    String?  @db.Text
+
+  // Content guidance
+  targetAudience  String?  // Who this content is for
+  contentAngle    String?  @db.Text // Unique angle/hook for the article
+  internalLinks   String?  @db.Text // Suggested internal links (JSON array)
+
+  @@index([status])
+  @@index([scheduledFor])
+  @@index([pillar])
 }

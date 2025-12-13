@@ -26,7 +26,9 @@ export default function SignInButton({
           redirectTo: `${window.location.origin}/auth/callback?next=${redirectTo}`,
           queryParams: {
             prompt: 'select_account',
+            access_type: 'offline',
           },
+          skipBrowserRedirect: false,
         },
       })
 

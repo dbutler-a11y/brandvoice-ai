@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Check, Star, Zap } from 'lucide-react';
 import { AIAssistantInlineCTA } from '@/components/ai-assistant-inline-cta';
+import { ContentPackageGrid } from '@/components/pricing/ContentPackageGrid';
 
 export default function PricingPage() {
   const packages = [
@@ -200,6 +201,9 @@ export default function PricingPage() {
         {/* AI Assistant CTA - Help choosing */}
         <AIAssistantInlineCTA variant="pricing" className="mt-8" />
       </div>
+
+      {/* Content Package Grid - What's Included */}
+      <ContentPackageGrid />
 
       {/* Add-ons Section */}
       <div className="bg-gray-50 py-20">

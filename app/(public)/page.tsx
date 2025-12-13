@@ -24,7 +24,7 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-purple-50 via-indigo-50 to-white overflow-hidden">
         {/* Background decoration */}
-        <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
           <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
         </div>
@@ -74,31 +74,35 @@ export default function HomePage() {
               </Link>
             </div>
 
-            {/* Demo Video Placeholder */}
+            {/* Hero Video */}
             <div className="max-w-4xl mx-auto mt-12">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-gradient-to-br from-gray-900 to-gray-800">
+                <div className="aspect-video">
+                  <video
+                    className="w-full h-full object-cover"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                  >
+                    <source src="/videos/hero-avatar.mp4" type="video/mp4" />
+                  </video>
+                </div>
+              </div>
+              {/* View More Link */}
               <Link
                 href="/portfolio"
-                className="block relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-gradient-to-br from-gray-900 to-gray-800 group cursor-pointer hover:shadow-3xl transition-all duration-300"
+                className="inline-flex items-center gap-2 mt-6 text-purple-600 hover:text-purple-700 font-semibold transition-colors group"
               >
-                <div className="aspect-video flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm group-hover:bg-white/20 group-hover:scale-110 transition-all duration-300">
-                      <svg
-                        className="w-10 h-10 text-white"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </div>
-                    <p className="text-white text-lg font-semibold group-hover:text-purple-300 transition-colors">
-                      View Sample Videos
-                    </p>
-                    <p className="text-gray-400 text-sm mt-2">
-                      See AI spokesperson examples in action
-                    </p>
-                  </div>
-                </div>
+                <span>View More Examples</span>
+                <svg
+                  className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
               </Link>
             </div>
           </div>

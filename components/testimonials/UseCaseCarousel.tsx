@@ -5,18 +5,6 @@ import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Play } from "lucide-react";
 
-// Department badge color mapping - soft pastel tones
-const departmentColors: Record<string, { bg: string; text: string }> = {
-  "REAL ESTATE": { bg: "bg-sky-300/90", text: "text-sky-900" },
-  HEALTHCARE: { bg: "bg-violet-300/90", text: "text-violet-900" },
-  FITNESS: { bg: "bg-amber-200/90", text: "text-amber-900" },
-  LEGAL: { bg: "bg-emerald-300/90", text: "text-emerald-900" },
-  "E-COMMERCE": { bg: "bg-rose-300/90", text: "text-rose-900" },
-  COACHING: { bg: "bg-orange-200/90", text: "text-orange-900" },
-  RESTAURANT: { bg: "bg-red-300/90", text: "text-red-900" },
-  FINANCE: { bg: "bg-teal-300/90", text: "text-teal-900" },
-};
-
 interface Testimonial {
   id: number;
   name: string;
@@ -96,11 +84,14 @@ function TestimonialCard({ testimonial }: TestimonialCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const departmentColor =
-    departmentColors[testimonial.department] || departmentColors["REAL ESTATE"];
 
-  // Cleanup on unmount
+  // Set muted on mount (React has a known bug with muted attribute)
   useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = true;
+      videoRef.current.defaultMuted = true;
+    }
+    // Cleanup on unmount
     return () => {
       if (videoRef.current) {
         videoRef.current.pause();
@@ -109,7 +100,10 @@ function TestimonialCard({ testimonial }: TestimonialCardProps) {
     };
   }, []);
 
-  const handleVideoClick = async () => {
+  const handleVideoClick = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+
     if (!videoRef.current) return;
 
     const video = videoRef.current;
@@ -120,24 +114,33 @@ function TestimonialCard({ testimonial }: TestimonialCardProps) {
       video.currentTime = 0;
       setIsPlaying(false);
     } else {
-      // Play with sound - unmute and play in direct response to click
+      // CRITICAL: Must unmute BEFORE calling play() in same user gesture
       video.muted = false;
       video.volume = 1.0;
       video.currentTime = 0;
 
-      try {
-        await video.play();
-        setIsPlaying(true);
-      } catch (error) {
-        console.warn('Unmuted playback failed, trying muted:', error);
-        // Fallback to muted if browser blocks sound
-        video.muted = true;
-        try {
-          await video.play();
-          setIsPlaying(true);
-        } catch (mutedError) {
-          console.error('Playback failed:', mutedError);
-        }
+      // Use the play() promise properly
+      const playPromise = video.play();
+
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsPlaying(true);
+            console.log('Video playing with sound, muted:', video.muted, 'volume:', video.volume);
+          })
+          .catch((error) => {
+            console.warn('Unmuted playback failed:', error);
+            // Fallback to muted if browser blocks sound
+            video.muted = true;
+            video.play()
+              .then(() => {
+                setIsPlaying(true);
+                console.log('Video playing muted (fallback)');
+              })
+              .catch((mutedError) => {
+                console.error('Playback failed completely:', mutedError);
+              });
+          });
       }
     }
   };
@@ -169,17 +172,20 @@ function TestimonialCard({ testimonial }: TestimonialCardProps) {
               playsInline
               preload="metadata"
               onEnded={handleVideoEnd}
-              onClick={handleVideoClick}
+              onClick={(e) => handleVideoClick(e)}
             />
-            {/* Play story button - shows on hover when not playing */}
-            {!isPlaying && isHovered && (
-              <div
-                onClick={handleVideoClick}
-                className="absolute bottom-24 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-white text-gray-900 rounded-full pl-3 pr-5 py-2.5 shadow-lg hover:shadow-xl transition-all hover:scale-105 z-20 cursor-pointer"
+            {/* Play story button - always visible on mobile, hover on desktop */}
+            {!isPlaying && (
+              <button
+                type="button"
+                onClick={(e) => handleVideoClick(e)}
+                className={`absolute bottom-24 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-white text-gray-900 rounded-full pl-3 pr-5 py-2.5 shadow-lg hover:shadow-xl transition-all hover:scale-105 z-50 cursor-pointer ${
+                  isHovered ? 'opacity-100' : 'opacity-100 sm:opacity-0 sm:group-hover:opacity-100'
+                }`}
               >
                 <Play className="w-4 h-4 fill-gray-900" />
                 <span className="font-semibold text-sm">Play story</span>
-              </div>
+              </button>
             )}
           </>
         ) : (
@@ -192,45 +198,6 @@ function TestimonialCard({ testimonial }: TestimonialCardProps) {
             priority
           />
         )}
-        {/* Dark gradient overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20 pointer-events-none" />
-      </div>
-
-      {/* Content Overlay */}
-      <div className="relative z-10 h-full flex flex-col justify-between p-4 sm:p-5 md:p-6">
-        {/* Top Section: Department Badge & Company */}
-        <div className="flex items-start justify-between gap-2">
-          {/* Department Badge */}
-          <span
-            className={`${departmentColor.bg} ${departmentColor.text} px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[8px] sm:text-[10px] font-bold uppercase tracking-wider shrink-0`}
-          >
-            {testimonial.department}
-          </span>
-
-          {/* Company Name - Top Right */}
-          <p className="text-white/90 text-[10px] sm:text-xs font-semibold text-right leading-tight drop-shadow-lg truncate max-w-[100px] sm:max-w-[130px]">
-            {testimonial.company}
-          </p>
-        </div>
-
-        {/* Bottom Section: Quote & Person Info */}
-        <div className="space-y-2 sm:space-y-3">
-          {/* Quote */}
-          <blockquote className="text-white text-sm sm:text-base md:text-lg lg:text-xl font-bold leading-snug drop-shadow-2xl">
-            &ldquo;{testimonial.quote}&rdquo;
-          </blockquote>
-
-          {/* Person Info */}
-          <div className="flex items-center gap-1.5">
-            <p className="text-white text-xs sm:text-sm font-semibold drop-shadow-lg">
-              {testimonial.name}
-            </p>
-            <span className="text-white/50 text-xs">·</span>
-            <p className="text-white/70 text-[10px] sm:text-xs drop-shadow-lg truncate">
-              {testimonial.title}
-            </p>
-          </div>
-        </div>
       </div>
 
       {/* Subtle border on hover */}

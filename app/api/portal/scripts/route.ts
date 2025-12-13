@@ -50,11 +50,14 @@ export async function GET() {
       },
     })
 
-    // Calculate word count for each script
-    const scriptsWithWordCount = scripts.map(script => ({
-      ...script,
-      wordCount: script.scriptText.trim().split(/\s+/).length,
-    }))
+    // Calculate word count for each script (handle empty strings)
+    const scriptsWithWordCount = scripts.map(script => {
+      const trimmed = script.scriptText?.trim() || ''
+      return {
+        ...script,
+        wordCount: trimmed ? trimmed.split(/\s+/).length : 0,
+      }
+    })
 
     return NextResponse.json(scriptsWithWordCount)
   } catch (error) {
