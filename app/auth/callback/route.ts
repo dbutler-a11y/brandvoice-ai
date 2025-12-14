@@ -92,8 +92,9 @@ export async function GET(request: NextRequest) {
 
   } catch (err) {
     console.error('Auth callback error:', err)
+    const errorMessage = err instanceof Error ? err.message : String(err)
     return NextResponse.redirect(
-      `${origin}/auth/auth-code-error?error=unexpected&message=${encodeURIComponent('An unexpected error occurred during authentication')}`
+      `${origin}/auth/auth-code-error?error=unexpected&message=${encodeURIComponent(errorMessage)}`
     )
   }
 }
