@@ -26,6 +26,57 @@ function countWords(content: string): number {
   return content.replace(/<[^>]*>/g, '').split(/\s+/).filter(word => word.length > 0).length;
 }
 
+// Curated Unsplash images by content pillar for consistent quality
+const PILLAR_IMAGES: Record<string, string[]> = {
+  'ai-video': [
+    'photo-1677442136019-21780ecad995', // AI robot
+    'photo-1485827404703-89b55fcc595e', // Robot hand
+    'photo-1620712943543-bcc4688e7485', // AI brain
+    'photo-1531746790731-6c087fecd65a', // Video production
+    'photo-1516321318423-f06f85e504b3', // Digital screen
+    'photo-1535378620166-273708d44e4c', // Tech studio
+    'photo-1633356122544-f134324a6cee', // AI concept
+    'photo-1611162617474-5b21e879e113', // Social media
+    'photo-1611162616305-c69b3fa7fbe0', // Instagram
+    'photo-1611162618071-b39a2ec055fb', // Facebook
+  ],
+  'business-growth': [
+    'photo-1460925895917-afdab827c52f', // Analytics dashboard
+    'photo-1551288049-bebda4e38f71', // Growth chart
+    'photo-1553877522-43269d4ea984', // Team meeting
+    'photo-1557804506-669a67965ba0', // Business strategy
+    'photo-1507003211169-0a1dd7228f2d', // Professional
+    'photo-1454165804606-c3d57bc86b40', // Working laptop
+    'photo-1542744173-8e7e53415bb0', // Business meeting
+    'photo-1559136555-9303baea8ebd', // Office space
+    'photo-1522071820081-009f0129c71c', // Team collaboration
+    'photo-1600880292203-757bb62b4baf', // Remote work
+  ],
+  'platform-strategy': [
+    'photo-1611162616305-c69b3fa7fbe0', // Social platforms
+    'photo-1611162618071-b39a2ec055fb', // Facebook
+    'photo-1611162617474-5b21e879e113', // Social media
+    'photo-1432888622747-4eb9a8f5a07e', // Content creation
+    'photo-1493119508027-2b584f234d6c', // Marketing
+    'photo-1563986768494-4dee2763ff3f', // TikTok style
+    'photo-1598128558393-70ff21433be0', // LinkedIn
+    'photo-1611162616305-c69b3fa7fbe0', // Instagram reels
+    'photo-1492619375914-88005aa9e8fb', // Video content
+    'photo-1499750310107-5fef28a66643', // Creative work
+  ],
+};
+
+// Get a relevant Unsplash image URL based on pillar and keyword
+function getUnsplashImage(pillar: string, primaryKeyword: string): string {
+  const images = PILLAR_IMAGES[pillar] || PILLAR_IMAGES['ai-video'];
+
+  // Use keyword hash to deterministically select an image (same keyword = same image)
+  const hash = primaryKeyword.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const imageId = images[hash % images.length];
+
+  return `https://images.unsplash.com/${imageId}?w=1200&h=630&fit=crop`;
+}
+
 // Get existing posts for internal linking
 async function getExistingPosts() {
   const posts = await prisma.blogPost.findMany({
@@ -241,6 +292,9 @@ export async function POST(request: NextRequest) {
         });
       }
 
+      // Get featured image
+      const featuredImage = getUnsplashImage(topic.pillar, topic.primaryKeyword);
+
       // Create the blog post
       const post = await prisma.blogPost.create({
         data: {
@@ -259,6 +313,9 @@ export async function POST(request: NextRequest) {
           categoryId: category.id,
           authorId: author.id,
           schemaType: 'Article',
+          featuredImage,
+          ogImage: featuredImage,
+          featuredImageAlt: `Featured image for ${topic.title}`,
         },
       });
 
