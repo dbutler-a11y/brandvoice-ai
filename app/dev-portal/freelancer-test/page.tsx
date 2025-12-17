@@ -110,26 +110,56 @@ export default function FreelancerTestPage() {
             </div>
           </div>
 
-          {/* Reference Video */}
+          {/* Reference Videos */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <span className="text-2xl">🎬</span> Reference Video (Goal)
+              <span className="text-2xl">🎬</span> Reference Videos
             </h2>
-            <p className="text-gray-600 mb-4">
-              Watch this video carefully. This is the quality standard you should aim to match or exceed.
+            <p className="text-gray-600 mb-6">
+              Watch both videos carefully. These demonstrate the quality standards you should aim to match or exceed.
             </p>
-            <div className="aspect-video bg-gray-900 rounded-lg overflow-hidden">
-              <iframe
-                src="https://www.youtube.com/embed/P7pH_1zFKbE"
-                title="Reference Video - Cinematic AI Ads"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full"
-              />
+
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Video 1 - Cinematic AI Ads */}
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-3">Cinematic AI Ads Tutorial</h3>
+                <div className="aspect-video bg-gray-900 rounded-lg overflow-hidden">
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src="https://www.youtube-nocookie.com/embed/P7pH_1zFKbE?rel=0&modestbranding=1"
+                    title="Reference Video - Cinematic AI Ads"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    className="w-full h-full"
+                  />
+                </div>
+                <p className="text-sm text-gray-500 mt-2">
+                  Cinematic sports ad production workflow
+                </p>
+              </div>
+
+              {/* Video 2 - UGC Content Examples */}
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-3">UGC Video Content Examples</h3>
+                <div className="aspect-video bg-gray-900 rounded-lg overflow-hidden">
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src="https://www.youtube-nocookie.com/embed/1e2THXih1Fo?rel=0&modestbranding=1"
+                    title="UGC Video Content Examples"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    className="w-full h-full"
+                  />
+                </div>
+                <p className="text-sm text-gray-500 mt-2">
+                  UGC-style video content examples
+                </p>
+              </div>
             </div>
-            <p className="text-sm text-gray-500 mt-3">
-              Source: YouTube tutorial demonstrating the final output quality
-            </p>
           </div>
 
           {/* Workflow Instructions */}
