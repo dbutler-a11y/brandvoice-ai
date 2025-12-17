@@ -7,8 +7,8 @@ export default function PricingPage() {
   const packages = [
     {
       name: 'AI Spokesperson Launch Kit',
-      price: '$1,500',
-      billing: 'One-Time',
+      price: '$1',
+      billing: '/month',
       description: 'Best for: One-time content package',
       features: [
         '1 Custom AI spokesperson avatar',
@@ -27,9 +27,8 @@ export default function PricingPage() {
     },
     {
       name: 'Content Engine Monthly',
-      price: '$997',
+      price: '$1',
       billing: '/month',
-      billingNote: '3-month minimum',
       description: 'Best for: Consistent monthly content',
       features: [
         'Everything in Launch Kit',
@@ -45,7 +44,7 @@ export default function PricingPage() {
     },
     {
       name: 'Content Engine PRO',
-      price: '$2,497',
+      price: '$1',
       billing: '/month',
       description: 'Best for: High-volume businesses',
       features: [
@@ -62,7 +61,7 @@ export default function PricingPage() {
     },
     {
       name: 'AUTHORITY Engine',
-      price: '$4,997',
+      price: '$1',
       billing: '/month',
       description: 'Best for: Serious brands & agencies',
       features: [
@@ -83,22 +82,22 @@ export default function PricingPage() {
   const addons = [
     {
       name: 'Custom Avatar',
-      price: '$500',
+      price: '$1',
       description: 'Additional custom AI spokesperson avatar',
     },
     {
       name: 'Custom Voice',
-      price: '$250',
+      price: '$1',
       description: 'Additional custom brand voice',
     },
     {
       name: 'Promo Campaign Pack',
-      price: '$1,500',
+      price: '$1',
       description: 'Complete promotional campaign package',
     },
     {
       name: 'Posting & Scheduling',
-      price: '$500/month',
+      price: '$1/month',
       description: 'Content scheduling and posting management',
     },
   ];
@@ -244,7 +243,7 @@ export default function PricingPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
-                    +$1,000
+                    +$1
                   </span>
                   <span className="text-gray-600 ml-2">/month</span>
                 </div>

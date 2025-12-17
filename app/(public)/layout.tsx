@@ -96,6 +96,17 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
                     Contact
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    href="/creator-markets"
+                    className="hover:text-white transition-colors flex items-center gap-1"
+                  >
+                    Creator Markets
+                    <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded-full">
+                      NEW
+                    </span>
+                  </Link>
+                </li>
               </ul>
             </div>
 

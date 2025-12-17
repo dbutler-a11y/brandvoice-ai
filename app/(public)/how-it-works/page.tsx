@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   PhoneIcon,
   UserGroupIcon,
@@ -72,9 +73,20 @@ const steps = [
 export default function HowItWorksPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/30 to-indigo-50/30">
-      {/* Header Section */}
-      <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      {/* Header Section with Background Image */}
+      <div className="relative text-white py-20 overflow-hidden">
+        {/* Background Image */}
+        <Image
+          src="/images/login-hero.png"
+          alt="Abstract liquid metal background"
+          fill
+          className="object-cover z-0"
+          priority
+        />
+        {/* Gradient overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-900/80 via-purple-800/70 to-indigo-900/80 z-10" />
+
+        <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
             How It Works
           </h1>

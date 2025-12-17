@@ -19,28 +19,43 @@ export default function SignInButton({
 
   const handleSignIn = async () => {
     setIsLoading(true)
+
+    // Always use www.brandvoice.studio for consistency with PKCE cookies
+    const getCallbackUrl = () => {
+      if (typeof window === 'undefined') return '/auth/callback'
+      const hostname = window.location.hostname
+      // In production, always use www.brandvoice.studio to match cookie domain
+      if (hostname.includes('brandvoice.studio')) {
+        return 'https://www.brandvoice.studio/auth/callback'
+      }
+      // For local development and other environments
+      return `${window.location.origin}/auth/callback`
+    }
+
     try {
+      // MUST call signInWithOAuth from CLIENT SIDE
+      // This ensures PKCE cookies are set in the browser before redirect
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback?next=${redirectTo}`,
+          redirectTo: getCallbackUrl(),
           queryParams: {
             prompt: 'select_account',
             access_type: 'offline',
           },
-          skipBrowserRedirect: false,
         },
       })
 
       if (error) {
-        console.error('Error signing in:', error.message)
-        alert('Error signing in. Please try again.')
+        console.error('OAuth error:', error)
+        setIsLoading(false)
+        alert('Failed to sign in. Please try again.')
       }
+      // Don't set loading to false on success - user will be redirected
     } catch (err) {
       console.error('Unexpected error:', err)
-      alert('An unexpected error occurred. Please try again.')
-    } finally {
       setIsLoading(false)
+      alert('An unexpected error occurred. Please try again.')
     }
   }
 

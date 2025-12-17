@@ -21,86 +21,82 @@ export default function HomePage() {
 
   return (
     <div className="bg-white">
-      {/* Hero Section - Premium CapCut-inspired design */}
-      <section className="relative min-h-screen overflow-hidden">
-        {/* Animated gradient background - soft lavender to pink to white */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#f8f4ff] via-[#fdf2f8] to-white">
-          {/* Subtle animated gradient orbs */}
-          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-gradient-to-br from-purple-200/40 to-pink-200/40 rounded-full blur-3xl animate-float-slow"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-gradient-to-br from-indigo-200/30 to-purple-200/30 rounded-full blur-3xl animate-float-slower"></div>
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-purple-50 via-indigo-50 to-white overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
         </div>
 
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
           <div className="text-center">
-            {/* Main Headline - Large, bold, Apple-style */}
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 mb-8 leading-[1.1] tracking-tight">
-              AI-Powered Video Content
-              <br />
-              <span className="bg-gradient-to-r from-purple-600 via-pink-500 to-indigo-600 bg-clip-text text-transparent">
-                for Everyone
+            {/* Badge */}
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-purple-100 text-purple-700 text-sm font-semibold mb-6">
+              <span className="w-2 h-2 bg-purple-500 rounded-full mr-2 animate-pulse"></span>
+              Done-For-You AI Content Service
+            </div>
+
+            {/* Main Headline */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+              Your Own AI Spokesperson +<br />
+              <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                30 Days of Content
               </span>
+              <br />
+              Done For You in 7 Days
             </h1>
 
-            {/* Subheadline - Clean, simple */}
-            <p className="text-xl sm:text-2xl text-gray-500 mb-12 max-w-2xl mx-auto leading-relaxed font-normal">
-              Get a custom AI spokesperson and 30 days of viral-ready content.
-              No filming required.
+            {/* Subheadline */}
+            <p className="text-xl sm:text-2xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
+              Never film yourself again. We create a custom AI spokesperson and
+              30 days of viral-ready video content for your business.
             </p>
 
-            {/* CTAs - Clean, minimal buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-20">
-              <Link
-                href="#book-call"
-                className="inline-flex items-center justify-center bg-black text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl hover:scale-105 transform w-full sm:w-auto"
-              >
-                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-                Book a Call
-              </Link>
+            {/* CTAs */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+              {/* Glowing CTA Button */}
+              <div className="relative group w-full sm:w-auto">
+                {/* Animated gradient border */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-pink-500 to-indigo-600 rounded-xl blur-sm opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-gradient-border"></div>
+                <Link
+                  href="#book-call"
+                  className="relative block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:from-purple-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 w-full sm:w-auto text-center"
+                >
+                  Book a Call
+                </Link>
+              </div>
               <Link
                 href="#pricing"
-                className="inline-flex items-center justify-center bg-white/80 backdrop-blur-sm text-gray-900 px-8 py-4 rounded-full font-semibold text-lg border border-gray-200 hover:bg-white hover:border-gray-300 transition-all w-full sm:w-auto"
+                className="bg-white text-purple-600 px-8 py-4 rounded-lg font-bold text-lg border-2 border-purple-600 hover:bg-purple-50 transition-all shadow-md hover:shadow-lg w-full sm:w-auto"
               >
                 See Pricing
               </Link>
             </div>
 
-            {/* Small tagline */}
-            <p className="text-sm text-gray-400 mb-12">
-              No credit card required
-            </p>
-
-            {/* Hero Video - Premium floating card effect */}
-            <div className="max-w-5xl mx-auto">
-              <div className="relative">
-                {/* Subtle shadow/glow underneath */}
-                <div className="absolute inset-x-8 -bottom-8 h-32 bg-gradient-to-t from-purple-500/10 to-transparent blur-2xl rounded-full"></div>
-
-                {/* Video container */}
-                <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br from-gray-900 to-gray-800 ring-1 ring-white/10">
-                  <div className="aspect-video">
-                    <video
-                      className="w-full h-full object-cover"
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                    >
-                      <source src="/videos/hero-avatar.mp4" type="video/mp4" />
-                    </video>
-                  </div>
+            {/* Hero Video */}
+            <div className="max-w-4xl mx-auto mt-12">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-gradient-to-br from-gray-900 to-gray-800">
+                <div className="aspect-video">
+                  <video
+                    className="w-full h-full object-cover"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                  >
+                    <source src="/videos/hero-avatar.mp4" type="video/mp4" />
+                  </video>
                 </div>
               </div>
-
               {/* View More Link */}
               <Link
                 href="/portfolio"
-                className="inline-flex items-center gap-2 mt-10 text-gray-500 hover:text-gray-900 font-medium transition-colors group"
+                className="inline-flex items-center gap-2 mt-6 text-purple-600 hover:text-purple-700 font-semibold transition-colors group"
               >
-                <span>View more examples</span>
+                <span>View More Examples</span>
                 <svg
-                  className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                  className="w-5 h-5 group-hover:translate-x-1 transition-transform"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -976,28 +972,6 @@ export default function HomePage() {
 
       {/* Add animation styles */}
       <style jsx>{`
-        @keyframes float-slow {
-          0%, 100% {
-            transform: translateY(0) translateX(0);
-          }
-          50% {
-            transform: translateY(-30px) translateX(20px);
-          }
-        }
-        @keyframes float-slower {
-          0%, 100% {
-            transform: translateY(0) translateX(0);
-          }
-          50% {
-            transform: translateY(20px) translateX(-30px);
-          }
-        }
-        .animate-float-slow {
-          animation: float-slow 20s ease-in-out infinite;
-        }
-        .animate-float-slower {
-          animation: float-slower 25s ease-in-out infinite;
-        }
         @keyframes blob {
           0% {
             transform: translate(0px, 0px) scale(1);
