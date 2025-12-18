@@ -123,16 +123,15 @@ export default function FreelancerTestPage() {
               {/* Video 1 - Cinematic AI Ads */}
               <div>
                 <h3 className="font-semibold text-gray-900 mb-3">Cinematic AI Ads Tutorial</h3>
-                <div className="aspect-video bg-gray-900 rounded-lg overflow-hidden">
+                <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
                   <iframe
-                    width="100%"
-                    height="100%"
-                    src="https://www.youtube-nocookie.com/embed/P7pH_1zFKbE?rel=0&modestbranding=1"
+                    src="https://www.youtube.com/embed/P7pH_1zFKbE"
                     title="Reference Video - Cinematic AI Ads"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
                     allowFullScreen
-                    className="w-full h-full"
+                    className="absolute top-0 left-0 w-full h-full rounded-lg"
                   />
                 </div>
                 <p className="text-sm text-gray-500 mt-2">
@@ -143,16 +142,15 @@ export default function FreelancerTestPage() {
               {/* Video 2 - UGC Content Examples */}
               <div>
                 <h3 className="font-semibold text-gray-900 mb-3">UGC Video Content Examples</h3>
-                <div className="aspect-video bg-gray-900 rounded-lg overflow-hidden">
+                <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
                   <iframe
-                    width="100%"
-                    height="100%"
-                    src="https://www.youtube-nocookie.com/embed/1e2THXih1Fo?rel=0&modestbranding=1"
+                    src="https://www.youtube.com/embed/1e2THXih1Fo"
                     title="UGC Video Content Examples"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
                     allowFullScreen
-                    className="w-full h-full"
+                    className="absolute top-0 left-0 w-full h-full rounded-lg"
                   />
                 </div>
                 <p className="text-sm text-gray-500 mt-2">
