@@ -28,6 +28,12 @@ export default function DevPortalLayout({ children }: DevPortalLayoutProps) {
 
   const navLinks = [
     { href: '/dev-portal', label: 'Dashboard' },
+    { href: '/dev-portal/deliverables', label: '30-Day Calendar' },
+    { href: '/dev-portal/ugc-prompts', label: 'UGC Prompts' },
+    { href: '/dev-portal/ugc-studio', label: 'UGC Studio' },
+    { href: '/dev-portal/wan-studio', label: 'Wan 2.6 Studio' },
+    { href: '/dev-portal/live-avatar-research', label: 'Live Avatar R&D' },
+    { href: '/dev-portal/research', label: 'Research Notes' },
     { href: '/dev-portal/videos', label: 'My Videos' },
     { href: '/dev-portal/scripts', label: 'My Scripts' },
     { href: '/dev-portal/freelancer-test', label: 'Freelancer Test' },

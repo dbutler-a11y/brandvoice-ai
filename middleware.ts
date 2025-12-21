@@ -78,11 +78,14 @@ export async function middleware(request: NextRequest) {
   // Check if the route starts with /intake/
   const isIntakeRoute = pathname.startsWith('/intake/')
 
+  // Check if the route is dev-portal (bypasses auth for development)
+  const isDevPortalRoute = pathname.startsWith('/dev-portal')
+
   // Check if the route is exactly /api/spokespersons and is a GET request
   const isPublicSpokespersonsRoute = pathname === '/api/spokespersons' && request.method === 'GET'
 
   // Allow public routes
-  if (publicRoutes.includes(pathname) || isIntakeRoute || isBlogRoute || isPublicSpokespersonsRoute) {
+  if (publicRoutes.includes(pathname) || isIntakeRoute || isBlogRoute || isDevPortalRoute || isPublicSpokespersonsRoute) {
     return supabaseResponse
   }
 
