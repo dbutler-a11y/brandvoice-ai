@@ -6,6 +6,7 @@ import { BookCallSection } from "@/components/calendly";
 import { VoicePreviewSection } from "@/components/voice-preview";
 import { TestimonialSection } from "@/components/testimonials/TestimonialSection";
 import { UseCaseCarousel } from "@/components/testimonials/UseCaseCarousel";
+import { HeroAnimation } from "@/components/HeroAnimation";
 
 export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
@@ -23,28 +24,35 @@ export default function HomePage() {
     <div className="bg-white">
       {/* Hero Section - Premium CapCut-inspired design */}
       <section className="relative min-h-screen overflow-hidden">
-        {/* Animated gradient background - soft lavender to pink to white */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#f8f4ff] via-[#fdf2f8] to-white">
-          {/* Subtle animated gradient orbs */}
-          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-gradient-to-br from-purple-200/40 to-pink-200/40 rounded-full blur-3xl animate-float-slow"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-gradient-to-br from-indigo-200/30 to-purple-200/30 rounded-full blur-3xl animate-float-slower"></div>
+        {/* Animated gradient background - more white base with intensified orbs */}
+        <div className="absolute inset-0 bg-white">
+          {/* Intensified animated gradient orbs - glassmorphism effect */}
+          {/* Purple orb - top left */}
+          <div className="absolute -top-20 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-purple-300/60 to-violet-400/50 rounded-full blur-3xl animate-orb-1"></div>
+          {/* Pink orb - top right */}
+          <div className="absolute top-20 right-1/5 w-[450px] h-[450px] bg-gradient-to-br from-pink-300/55 to-rose-400/45 rounded-full blur-3xl animate-orb-2"></div>
+          {/* Blue orb - middle left */}
+          <div className="absolute top-1/3 -left-20 w-[400px] h-[400px] bg-gradient-to-br from-blue-300/50 to-indigo-400/40 rounded-full blur-3xl animate-orb-3"></div>
+          {/* Orange orb - bottom center */}
+          <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 w-[350px] h-[350px] bg-gradient-to-br from-orange-200/45 to-amber-300/35 rounded-full blur-3xl animate-orb-4"></div>
+          {/* Indigo orb - bottom right */}
+          <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-gradient-to-br from-indigo-300/50 to-purple-300/40 rounded-full blur-3xl animate-orb-5"></div>
         </div>
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
           <div className="text-center">
             {/* Main Headline - Large, bold, Apple-style */}
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 mb-8 leading-[1.1] tracking-tight">
-              AI-Powered Video Content
+              Everything Your Brand Needs
               <br />
               <span className="bg-gradient-to-r from-purple-600 via-pink-500 to-indigo-600 bg-clip-text text-transparent">
-                for Everyone
+                to Grow
               </span>
             </h1>
 
             {/* Subheadline - Clean, simple */}
             <p className="text-xl sm:text-2xl text-gray-500 mb-12 max-w-2xl mx-auto leading-relaxed font-normal">
-              Get a custom AI spokesperson and 30 days of viral-ready content.
-              No filming required.
+              AI video content, voice cloning, ad creatives, and social media—all done for you in 7 days.
             </p>
 
             {/* CTAs - Clean, minimal buttons */}
@@ -71,27 +79,9 @@ export default function HomePage() {
               No credit card required
             </p>
 
-            {/* Hero Video - Premium floating card effect */}
+            {/* Hero Animation - Script to Video Transformation */}
             <div className="max-w-5xl mx-auto">
-              <div className="relative">
-                {/* Subtle shadow/glow underneath */}
-                <div className="absolute inset-x-8 -bottom-8 h-32 bg-gradient-to-t from-purple-500/10 to-transparent blur-2xl rounded-full"></div>
-
-                {/* Video container */}
-                <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br from-gray-900 to-gray-800 ring-1 ring-white/10">
-                  <div className="aspect-video">
-                    <video
-                      className="w-full h-full object-cover"
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                    >
-                      <source src="/videos/hero-avatar.mp4" type="video/mp4" />
-                    </video>
-                  </div>
-                </div>
-              </div>
+              <HeroAnimation />
 
               {/* View More Link */}
               <Link
@@ -976,27 +966,89 @@ export default function HomePage() {
 
       {/* Add animation styles */}
       <style jsx>{`
-        @keyframes float-slow {
+        /* Intensified orb animations - faster and more dynamic */
+        @keyframes orb-float-1 {
           0%, 100% {
-            transform: translateY(0) translateX(0);
+            transform: translateY(0) translateX(0) scale(1);
+          }
+          25% {
+            transform: translateY(-40px) translateX(30px) scale(1.05);
           }
           50% {
-            transform: translateY(-30px) translateX(20px);
+            transform: translateY(-20px) translateX(60px) scale(0.95);
+          }
+          75% {
+            transform: translateY(-50px) translateX(20px) scale(1.02);
           }
         }
-        @keyframes float-slower {
+        @keyframes orb-float-2 {
           0%, 100% {
-            transform: translateY(0) translateX(0);
+            transform: translateY(0) translateX(0) scale(1);
+          }
+          33% {
+            transform: translateY(30px) translateX(-40px) scale(1.08);
+          }
+          66% {
+            transform: translateY(-25px) translateX(-20px) scale(0.92);
+          }
+        }
+        @keyframes orb-float-3 {
+          0%, 100% {
+            transform: translateY(0) translateX(0) scale(1);
+          }
+          20% {
+            transform: translateY(-35px) translateX(25px) scale(1.1);
           }
           50% {
-            transform: translateY(20px) translateX(-30px);
+            transform: translateY(20px) translateX(50px) scale(0.9);
+          }
+          80% {
+            transform: translateY(-15px) translateX(35px) scale(1.05);
           }
         }
-        .animate-float-slow {
-          animation: float-slow 20s ease-in-out infinite;
+        @keyframes orb-float-4 {
+          0%, 100% {
+            transform: translateX(-50%) translateY(0) scale(1);
+          }
+          25% {
+            transform: translateX(-45%) translateY(-30px) scale(1.06);
+          }
+          50% {
+            transform: translateX(-55%) translateY(15px) scale(0.94);
+          }
+          75% {
+            transform: translateX(-48%) translateY(-20px) scale(1.03);
+          }
         }
-        .animate-float-slower {
-          animation: float-slower 25s ease-in-out infinite;
+        @keyframes orb-float-5 {
+          0%, 100% {
+            transform: translateY(0) translateX(0) scale(1);
+          }
+          40% {
+            transform: translateY(-45px) translateX(-35px) scale(1.07);
+          }
+          70% {
+            transform: translateY(25px) translateX(-50px) scale(0.93);
+          }
+        }
+        .animate-orb-1 {
+          animation: orb-float-1 8s ease-in-out infinite;
+        }
+        .animate-orb-2 {
+          animation: orb-float-2 10s ease-in-out infinite;
+          animation-delay: -2s;
+        }
+        .animate-orb-3 {
+          animation: orb-float-3 9s ease-in-out infinite;
+          animation-delay: -4s;
+        }
+        .animate-orb-4 {
+          animation: orb-float-4 7s ease-in-out infinite;
+          animation-delay: -1s;
+        }
+        .animate-orb-5 {
+          animation: orb-float-5 11s ease-in-out infinite;
+          animation-delay: -3s;
         }
         @keyframes blob {
           0% {
