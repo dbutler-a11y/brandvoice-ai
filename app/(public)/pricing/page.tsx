@@ -7,8 +7,9 @@ export default function PricingPage() {
   const packages = [
     {
       name: 'AI Spokesperson Launch Kit',
-      price: '$1',
-      billing: '/month',
+      price: '$1,497',
+      billing: ' one-time',
+      billingNote: 'No subscription required',
       description: 'Best for: One-time content package',
       features: [
         '1 Custom AI spokesperson avatar',
@@ -27,8 +28,9 @@ export default function PricingPage() {
     },
     {
       name: 'Content Engine Monthly',
-      price: '$1',
+      price: '$997',
       billing: '/month',
+      billingNote: '3-month minimum commitment',
       description: 'Best for: Consistent monthly content',
       features: [
         'Everything in Launch Kit',
@@ -44,8 +46,9 @@ export default function PricingPage() {
     },
     {
       name: 'Content Engine PRO',
-      price: '$1',
+      price: '$1,997',
       billing: '/month',
+      billingNote: '3-month minimum commitment',
       description: 'Best for: High-volume businesses',
       features: [
         '30-40 videos per month',
@@ -61,8 +64,9 @@ export default function PricingPage() {
     },
     {
       name: 'AUTHORITY Engine',
-      price: '$1',
+      price: '$3,997',
       billing: '/month',
+      billingNote: '3-month minimum commitment',
       description: 'Best for: Serious brands & agencies',
       features: [
         '60+ videos per month',
@@ -82,22 +86,22 @@ export default function PricingPage() {
   const addons = [
     {
       name: 'Custom Avatar',
-      price: '$1',
+      price: '$497',
       description: 'Additional custom AI spokesperson avatar',
     },
     {
       name: 'Custom Voice',
-      price: '$1',
+      price: '$297',
       description: 'Additional custom brand voice',
     },
     {
       name: 'Promo Campaign Pack',
-      price: '$1',
+      price: '$797',
       description: 'Complete promotional campaign package',
     },
     {
       name: 'Posting & Scheduling',
-      price: '$1/month',
+      price: '$297/month',
       description: 'Content scheduling and posting management',
     },
   ];
@@ -243,7 +247,7 @@ export default function PricingPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
-                    +$1
+                    +$1,497
                   </span>
                   <span className="text-gray-600 ml-2">/month</span>
                 </div>

@@ -343,11 +343,23 @@ const SAMPLE_ADS = [
   }
 ]
 
-type TabType = 'scripts' | 'emails' | 'ads'
+const SAMPLE_VIDEOS = [
+  {
+    id: 1,
+    title: 'AI Spokesperson Demo',
+    description: 'Example of our AI-generated spokesperson content - vertical format perfect for TikTok, Instagram Reels, and YouTube Shorts.',
+    videoUrl: '/videos/samples/example-content-1.mp4',
+    duration: '8 seconds',
+    format: '9:16 Vertical',
+    category: 'Demo'
+  }
+]
+
+type TabType = 'videos' | 'scripts' | 'emails' | 'ads'
 type ScriptType = 'FAQ' | 'Service' | 'Promo' | 'Testimonial' | 'Tip' | 'Brand' | 'All'
 
 export default function SamplesPage() {
-  const [activeTab, setActiveTab] = useState<TabType>('scripts')
+  const [activeTab, setActiveTab] = useState<TabType>('videos')
   const [selectedScriptType, setSelectedScriptType] = useState<ScriptType>('All')
   const [expandedScript, setExpandedScript] = useState<number | null>(null)
   const [expandedEmail, setExpandedEmail] = useState<number | null>(null)
@@ -432,6 +444,16 @@ export default function SamplesPage() {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-wrap justify-center gap-3 mb-8">
             <button
+              onClick={() => setActiveTab('videos')}
+              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+                activeTab === 'videos'
+                  ? 'bg-indigo-600 text-white shadow-lg'
+                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+              }`}
+            >
+              Video Examples
+            </button>
+            <button
               onClick={() => setActiveTab('scripts')}
               className={`px-6 py-3 rounded-lg font-semibold transition-all ${
                 activeTab === 'scripts'
@@ -462,6 +484,85 @@ export default function SamplesPage() {
               Facebook Ads
             </button>
           </div>
+
+          {/* Videos Tab */}
+          {activeTab === 'videos' && (
+            <div className="space-y-6">
+              <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  AI Spokesperson Video Examples
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  See real examples of the AI-generated spokesperson videos we create for our clients. These videos are ready for TikTok, Instagram Reels, YouTube Shorts, and paid ads.
+                </p>
+                <div className="flex flex-wrap gap-2 text-xs">
+                  <span className="px-2 py-1 bg-purple-50 text-purple-700 rounded border border-purple-200">
+                    9:16 Vertical
+                  </span>
+                  <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded border border-blue-200">
+                    Ad-Ready
+                  </span>
+                  <span className="px-2 py-1 bg-green-50 text-green-700 rounded border border-green-200">
+                    Caption-Ready
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {SAMPLE_VIDEOS.map((video) => (
+                  <div
+                    key={video.id}
+                    className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow"
+                  >
+                    {/* Video Player */}
+                    <div className="relative aspect-[9/16] bg-gradient-to-br from-gray-900 to-gray-800">
+                      <video
+                        className="w-full h-full object-cover"
+                        controls
+                        playsInline
+                        preload="metadata"
+                        poster=""
+                      >
+                        <source src={video.videoUrl} type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                    </div>
+
+                    {/* Video Info */}
+                    <div className="p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="px-2 py-1 bg-indigo-50 text-indigo-700 rounded text-xs font-medium">
+                          {video.category}
+                        </span>
+                        <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs">
+                          {video.format}
+                        </span>
+                      </div>
+                      <h4 className="font-semibold text-gray-900 mb-1">{video.title}</h4>
+                      <p className="text-sm text-gray-600 mb-2">{video.description}</p>
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>{video.duration}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* More videos coming soon */}
+              <div className="text-center py-8 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-100">
+                <svg className="w-12 h-12 mx-auto text-indigo-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                <h4 className="text-lg font-semibold text-gray-900 mb-2">More Examples Coming Soon</h4>
+                <p className="text-gray-600 max-w-md mx-auto">
+                  We&apos;re adding more video examples across different industries and styles. Check back soon!
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Scripts Tab */}
           {activeTab === 'scripts' && (
