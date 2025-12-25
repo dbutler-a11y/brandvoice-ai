@@ -84,6 +84,106 @@ body {
   .animate-scale-in {
     animation: scale-in 0.2s ease-out;
   }
+
+  /* Floating Orb Animations - More dynamic motion */
+  @keyframes orb-float-1 {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    25% {
+      transform: translate(60px, -40px) scale(1.1);
+    }
+    50% {
+      transform: translate(20px, 60px) scale(0.95);
+    }
+    75% {
+      transform: translate(-50px, 20px) scale(1.05);
+    }
+  }
+
+  @keyframes orb-float-2 {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    25% {
+      transform: translate(-70px, 50px) scale(1.08);
+    }
+    50% {
+      transform: translate(-30px, -60px) scale(0.92);
+    }
+    75% {
+      transform: translate(40px, -20px) scale(1.03);
+    }
+  }
+
+  @keyframes orb-float-3 {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    25% {
+      transform: translate(50px, 70px) scale(0.95);
+    }
+    50% {
+      transform: translate(-40px, 30px) scale(1.1);
+    }
+    75% {
+      transform: translate(30px, -50px) scale(1);
+    }
+  }
+
+  @keyframes orb-float-4 {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    25% {
+      transform: translate(-60px, -30px) scale(1.05);
+    }
+    50% {
+      transform: translate(50px, 40px) scale(0.9);
+    }
+    75% {
+      transform: translate(-20px, 60px) scale(1.08);
+    }
+  }
+
+  @keyframes orb-float-5 {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    25% {
+      transform: translate(40px, 50px) scale(1.07);
+    }
+    50% {
+      transform: translate(-60px, -20px) scale(0.93);
+    }
+    75% {
+      transform: translate(20px, -70px) scale(1.02);
+    }
+  }
+
+  .animate-orb-1 {
+    animation: orb-float-1 6s ease-in-out infinite;
+  }
+
+  .animate-orb-2 {
+    animation: orb-float-2 8s ease-in-out infinite;
+    animation-delay: -2s;
+  }
+
+  .animate-orb-3 {
+    animation: orb-float-3 7s ease-in-out infinite;
+    animation-delay: -4s;
+  }
+
+  .animate-orb-4 {
+    animation: orb-float-4 5s ease-in-out infinite;
+    animation-delay: -1s;
+  }
+
+  .animate-orb-5 {
+    animation: orb-float-5 9s ease-in-out infinite;
+    animation-delay: -3s;
+  }
 }
 
 /* Hide ElevenLabs native floating widget globally - we control when it shows */

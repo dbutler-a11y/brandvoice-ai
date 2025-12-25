@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import {
   PhoneIcon,
   UserGroupIcon,
@@ -72,25 +71,28 @@ const steps = [
 
 export default function HowItWorksPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/30 to-indigo-50/30">
-      {/* Header Section with Background Image */}
-      <div className="relative text-white py-20 overflow-hidden">
-        {/* Background Image */}
-        <Image
-          src="/images/login-hero.png"
-          alt="Abstract liquid metal background"
-          fill
-          className="object-cover z-0"
-          priority
-        />
-        {/* Gradient overlay for readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-900/80 via-purple-800/70 to-indigo-900/80 z-10" />
+    <div className="min-h-screen bg-white">
+      {/* Header Section with Animated Orbs */}
+      <div className="relative text-gray-900 py-24 overflow-hidden">
+        {/* Animated gradient orbs background */}
+        <div className="absolute inset-0 bg-white">
+          {/* Purple orb - top left */}
+          <div className="absolute -top-20 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-purple-300/60 to-violet-400/50 rounded-full blur-3xl animate-orb-1"></div>
+          {/* Pink orb - top right */}
+          <div className="absolute top-20 right-1/5 w-[450px] h-[450px] bg-gradient-to-br from-pink-300/55 to-rose-400/45 rounded-full blur-3xl animate-orb-2"></div>
+          {/* Blue orb - middle left */}
+          <div className="absolute top-1/3 -left-20 w-[400px] h-[400px] bg-gradient-to-br from-blue-300/50 to-indigo-400/40 rounded-full blur-3xl animate-orb-3"></div>
+          {/* Orange orb - bottom center */}
+          <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 w-[350px] h-[350px] bg-gradient-to-br from-orange-200/45 to-amber-300/35 rounded-full blur-3xl animate-orb-4"></div>
+          {/* Indigo orb - bottom right */}
+          <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-gradient-to-br from-indigo-300/50 to-purple-300/40 rounded-full blur-3xl animate-orb-5"></div>
+        </div>
 
         <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
             How It Works
           </h1>
-          <p className="text-xl md:text-2xl text-purple-100 max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto">
             Your journey from booking to brand transformation in 8 simple steps
           </p>
         </div>
@@ -242,7 +244,7 @@ export default function HowItWorksPage() {
       </div>
 
       {/* FAQ Teaser */}
-      <div className="bg-gradient-to-br from-purple-50 to-indigo-50 py-16">
+      <div className="py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
             Have Questions?
