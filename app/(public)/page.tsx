@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { BookCallSection } from "@/components/calendly";
 import { VoicePreviewSection } from "@/components/voice-preview";
 import { TestimonialSection } from "@/components/testimonials/TestimonialSection";
@@ -14,6 +14,15 @@ export default function HomePage() {
     title: string;
     niche: string;
   } | null>(null);
+  const [isMuted, setIsMuted] = useState(true);
+  const promoVideoRef = useRef<HTMLVideoElement>(null);
+
+  const toggleMute = () => {
+    if (promoVideoRef.current) {
+      promoVideoRef.current.muted = !promoVideoRef.current.muted;
+      setIsMuted(!isMuted);
+    }
+  };
 
   const handleVideoClick = (title: string, niche: string) => {
     setSelectedVideo({ title, niche });
@@ -98,6 +107,115 @@ export default function HomePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* AI-Generated Content Showcase */}
+      <section className="py-20 bg-gradient-to-b from-white to-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left: Video Player */}
+            <div className="relative flex justify-center lg:justify-end">
+              <div className="relative w-full max-w-[280px] sm:max-w-[320px]">
+                {/* Phone Frame Effect */}
+                <div className="relative aspect-[9/16] rounded-[2.5rem] overflow-hidden bg-black shadow-2xl ring-1 ring-gray-200">
+                  {/* Video */}
+                  <video
+                    ref={promoVideoRef}
+                    className="w-full h-full object-cover"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    poster="/images/brandvoice-logo.png"
+                  >
+                    <source src="/videos/brandvoice-promo.mp4" type="video/mp4" />
+                  </video>
+
+                  {/* Sound Toggle Button */}
+                  <button
+                    onClick={toggleMute}
+                    className="absolute top-4 right-4 w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-all z-10"
+                    aria-label={isMuted ? "Unmute video" : "Mute video"}
+                  >
+                    {isMuted ? (
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                      </svg>
+                    ) : (
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                      </svg>
+                    )}
+                  </button>
+
+                  {/* Subtle overlay gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
+                </div>
+
+                {/* Floating Badge */}
+                <div className="absolute -bottom-4 -right-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
+                  AI Generated
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Content */}
+            <div className="text-center lg:text-left">
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-100 text-purple-700 text-sm font-semibold mb-6">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+                Live Example
+              </span>
+
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                This Is What We
+                <span className="block bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                  Create For You
+                </span>
+              </h2>
+
+              <p className="text-xl text-gray-600 mb-8 max-w-xl mx-auto lg:mx-0">
+                Professional AI spokesperson videos ready for Instagram, TikTok, YouTube Shorts, and paid ads. No filming required.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <Link
+                  href="/portfolio"
+                  className="inline-flex items-center justify-center bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-4 rounded-full font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl"
+                >
+                  View More Examples
+                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </Link>
+                <Link
+                  href="#how-it-works"
+                  className="inline-flex items-center justify-center bg-white text-gray-900 px-8 py-4 rounded-full font-semibold border border-gray-200 hover:bg-gray-50 transition-all"
+                >
+                  How It Works
+                </Link>
+              </div>
+
+              {/* Stats Row */}
+              <div className="mt-10 grid grid-cols-3 gap-6 max-w-md mx-auto lg:mx-0">
+                <div className="text-center lg:text-left">
+                  <div className="text-2xl sm:text-3xl font-bold text-gray-900">7</div>
+                  <div className="text-sm text-gray-500">Day Delivery</div>
+                </div>
+                <div className="text-center lg:text-left">
+                  <div className="text-2xl sm:text-3xl font-bold text-gray-900">30+</div>
+                  <div className="text-sm text-gray-500">Videos/Month</div>
+                </div>
+                <div className="text-center lg:text-left">
+                  <div className="text-2xl sm:text-3xl font-bold text-gray-900">100%</div>
+                  <div className="text-sm text-gray-500">Done-For-You</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

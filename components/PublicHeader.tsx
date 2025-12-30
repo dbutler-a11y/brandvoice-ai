@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 
 export function PublicHeader() {
@@ -59,13 +60,15 @@ export function PublicHeader() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">BV</span>
-            </div>
-            <span className="text-xl font-bold text-gray-900">
-              BrandVoice<span className="text-purple-600">.AI</span>
-            </span>
+          <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+            <Image
+              src="/images/brandvoice-logo.png"
+              alt="BrandVoice Logo"
+              width={180}
+              height={55}
+              className="h-10 w-auto"
+              priority
+            />
           </Link>
 
           {/* Desktop Navigation */}
@@ -173,15 +176,16 @@ export function PublicHeader() {
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <Link
             href="/"
-            className="flex items-center space-x-2"
+            className="flex items-center hover:opacity-80 transition-opacity"
             onClick={handleLinkClick}
           >
-            <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">BV</span>
-            </div>
-            <span className="text-lg font-bold text-gray-900">
-              BrandVoice<span className="text-purple-600">.AI</span>
-            </span>
+            <Image
+              src="/images/brandvoice-logo.png"
+              alt="BrandVoice Logo"
+              width={150}
+              height={46}
+              className="h-8 w-auto"
+            />
           </Link>
           <button
             onClick={() => setIsMobileMenuOpen(false)}
