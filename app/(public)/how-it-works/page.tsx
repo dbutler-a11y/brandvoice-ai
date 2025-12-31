@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   PhoneIcon,
   UserGroupIcon,
@@ -206,8 +207,14 @@ export default function HowItWorksPage() {
 
         <div className="grid md:grid-cols-3 gap-8">
           <div className="bg-white rounded-xl p-8 shadow-lg border border-purple-100">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center mb-4">
-              <SparklesIcon className="w-6 h-6 text-white" />
+            <div className="w-14 h-14 mb-4">
+              <Image
+                src="/images/icons/brand/sparkle-stars.png"
+                alt="Professional Quality"
+                width={56}
+                height={56}
+                className="w-full h-full object-contain"
+              />
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-3">
               Professional Quality
@@ -218,8 +225,14 @@ export default function HowItWorksPage() {
           </div>
 
           <div className="bg-white rounded-xl p-8 shadow-lg border border-purple-100">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center mb-4">
-              <RocketLaunchIcon className="w-6 h-6 text-white" />
+            <div className="w-14 h-14 mb-4">
+              <Image
+                src="/images/icons/brand/play-sound.png"
+                alt="Fast Turnaround"
+                width={56}
+                height={56}
+                className="w-full h-full object-contain"
+              />
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-3">
               Fast Turnaround
@@ -230,8 +243,14 @@ export default function HowItWorksPage() {
           </div>
 
           <div className="bg-white rounded-xl p-8 shadow-lg border border-purple-100">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center mb-4">
-              <ArrowPathIcon className="w-6 h-6 text-white" />
+            <div className="w-14 h-14 mb-4">
+              <Image
+                src="/images/icons/brand/megaphone-icon.png"
+                alt="Continuous Support"
+                width={56}
+                height={56}
+                className="w-full h-full object-contain"
+              />
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-3">
               Continuous Support

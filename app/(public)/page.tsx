@@ -331,17 +331,37 @@ export default function HomePage() {
           </div>
 
           {/* Solution */}
-          <div className="bg-gradient-to-br from-purple-600 to-indigo-600 rounded-2xl p-8 sm:p-12 text-center text-white shadow-xl">
-            <h3 className="text-3xl sm:text-4xl font-bold mb-4">
+          <div className="relative bg-gradient-to-br from-purple-600 to-indigo-600 rounded-2xl p-8 sm:p-12 text-center text-white shadow-xl overflow-hidden">
+            {/* Decorative megaphone accent */}
+            <div className="absolute -top-4 -right-4 w-32 h-32 opacity-20 pointer-events-none">
+              <Image
+                src="/images/icons/brand/megaphone-sparkles.png"
+                alt=""
+                width={128}
+                height={128}
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <div className="absolute -bottom-6 -left-6 w-24 h-24 opacity-15 pointer-events-none rotate-12">
+              <Image
+                src="/images/icons/brand/megaphone-icon.png"
+                alt=""
+                width={96}
+                height={96}
+                className="w-full h-full object-contain"
+              />
+            </div>
+
+            <h3 className="relative text-3xl sm:text-4xl font-bold mb-4">
               We Handle Everything
             </h3>
-            <p className="text-xl mb-6 max-w-3xl mx-auto opacity-90">
+            <p className="relative text-xl mb-6 max-w-3xl mx-auto opacity-90">
               No more filming. No more editing. No more writer&apos;s block. Just 30
               days of professional content delivered to your door.
             </p>
             <Link
               href="#what-you-get"
-              className="inline-block bg-white text-purple-600 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors"
+              className="relative inline-block bg-white text-purple-600 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors"
             >
               See What You Get
             </Link>

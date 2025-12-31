@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Check, Star, Zap } from 'lucide-react';
 import { AIAssistantInlineCTA } from '@/components/ai-assistant-inline-cta';
 import { ContentPackageGrid } from '@/components/pricing/ContentPackageGrid';
@@ -109,21 +110,25 @@ export default function PricingPage() {
       name: 'Custom Avatar',
       price: '$497',
       description: 'Additional custom AI spokesperson avatar',
+      icon: '/images/icons/brand/user-avatar.png',
     },
     {
       name: 'Custom Voice',
       price: '$297',
       description: 'Additional custom brand voice',
+      icon: '/images/icons/brand/microphone.png',
     },
     {
       name: 'Promo Campaign Pack',
       price: '$797',
       description: 'Complete promotional campaign package',
+      icon: '/images/icons/brand/megaphone-sparkles.png',
     },
     {
       name: 'Posting & Scheduling',
       price: '$297/month',
       description: 'Content scheduling and posting management',
+      icon: '/images/icons/brand/document.png',
     },
   ];
 
@@ -243,6 +248,15 @@ export default function PricingPage() {
                 key={index}
                 className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-200"
               >
+                <div className="w-12 h-12 mb-4">
+                  <Image
+                    src={addon.icon}
+                    alt={addon.name}
+                    width={48}
+                    height={48}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-2">{addon.name}</h3>
                 <p className="text-2xl font-bold text-purple-600 mb-3">{addon.price}</p>
                 <p className="text-sm text-gray-600">{addon.description}</p>
