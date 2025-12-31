@@ -1,8 +1,15 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
-import { ChevronDown, MessageCircle } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
+
+// Brand icons
+const ICONS = {
+  speech: '/images/icons/brand/speech-bubble.png',
+  check: '/images/icons/brand/checkmark.png',
+};
 
 interface FAQItem {
   question: string;
@@ -163,7 +170,7 @@ export default function FAQPage() {
           <div className="text-center">
             {/* Badge */}
             <div className="inline-flex items-center px-4 py-2 rounded-full bg-purple-100 text-purple-700 text-sm font-semibold mb-6">
-              <MessageCircle className="w-4 h-4 mr-2" />
+              <Image src={ICONS.speech} alt="" width={16} height={16} className="w-4 h-4 mr-2" />
               Everything You Need to Know
             </div>
 
@@ -271,45 +278,15 @@ export default function FAQPage() {
 
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-6 text-white text-sm">
             <div className="flex items-center">
-              <svg
-                className="w-5 h-5 mr-2"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              <Image src={ICONS.check} alt="" width={20} height={20} className="w-5 h-5 mr-2" />
               <span>No obligation</span>
             </div>
             <div className="flex items-center">
-              <svg
-                className="w-5 h-5 mr-2"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              <Image src={ICONS.check} alt="" width={20} height={20} className="w-5 h-5 mr-2" />
               <span>15 minutes</span>
             </div>
             <div className="flex items-center">
-              <svg
-                className="w-5 h-5 mr-2"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              <Image src={ICONS.check} alt="" width={20} height={20} className="w-5 h-5 mr-2" />
               <span>Free strategy session</span>
             </div>
           </div>

@@ -4,6 +4,15 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 
+// Brand icons paths
+const ICONS = {
+  play: '/images/icons/brand/play-sound.png',
+  video: '/images/icons/brand/video-camera.png',
+  user: '/images/icons/brand/user-avatar.png',
+  check: '/images/icons/brand/checkmark.png',
+  sparkle: '/images/icons/brand/sparkle-stars.png',
+};
+
 type Spokesperson = {
   id: string
   name: string
@@ -193,13 +202,13 @@ export default function PortfolioPage() {
                   {/* Play Button Overlay */}
                   <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-40 transition-all flex items-center justify-center">
                     <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-xl transform group-hover:scale-110 transition-transform">
-                      <svg
-                        className="w-10 h-10 text-purple-600 ml-1"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
+                      <Image
+                        src={ICONS.play}
+                        alt="Play"
+                        width={40}
+                        height={40}
+                        className="w-10 h-10 object-contain"
+                      />
                     </div>
                   </div>
 
@@ -220,19 +229,13 @@ export default function PortfolioPage() {
                     {video.title}
                   </h3>
                   <div className="flex items-center text-sm text-gray-600">
-                    <svg
-                      className="w-4 h-4 mr-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                      />
-                    </svg>
+                    <Image
+                      src={ICONS.video}
+                      alt=""
+                      width={16}
+                      height={16}
+                      className="w-4 h-4 mr-2 opacity-60"
+                    />
                     <span>Click to preview</span>
                   </div>
                 </div>
@@ -284,19 +287,13 @@ export default function PortfolioPage() {
                       />
                     ) : (
                       <div className="w-full aspect-square bg-gradient-to-br from-purple-400 to-indigo-500 rounded-lg flex items-center justify-center">
-                        <svg
-                          className="w-20 h-20 text-white opacity-50"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                          />
-                        </svg>
+                        <Image
+                          src={ICONS.user}
+                          alt=""
+                          width={80}
+                          height={80}
+                          className="w-20 h-20 opacity-50"
+                        />
                       </div>
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
@@ -357,45 +354,15 @@ export default function PortfolioPage() {
 
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-8 text-white">
             <div className="flex items-center">
-              <svg
-                className="w-5 h-5 mr-2"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              <Image src={ICONS.check} alt="" width={20} height={20} className="w-5 h-5 mr-2" />
               <span>7-Day Delivery</span>
             </div>
             <div className="flex items-center">
-              <svg
-                className="w-5 h-5 mr-2"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              <Image src={ICONS.check} alt="" width={20} height={20} className="w-5 h-5 mr-2" />
               <span>No Filming Required</span>
             </div>
             <div className="flex items-center">
-              <svg
-                className="w-5 h-5 mr-2"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              <Image src={ICONS.check} alt="" width={20} height={20} className="w-5 h-5 mr-2" />
               <span>Money-Back Guarantee</span>
             </div>
           </div>

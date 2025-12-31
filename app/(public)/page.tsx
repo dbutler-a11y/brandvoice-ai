@@ -250,28 +250,16 @@ export default function HomePage() {
           </div>
 
           {/* Pain Points Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            <div className="bg-red-50 border border-red-100 rounded-xl p-6 text-center">
-              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg
-                  className="w-6 h-6 text-red-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  />
-                </svg>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+            <div className="bg-gradient-to-br from-red-50 to-orange-50 border border-red-100/50 rounded-2xl p-8 text-center">
+              <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-sm">
+                <Image
+                  src="/images/icons/brand/video-camera.png"
+                  alt="Camera"
+                  width={28}
+                  height={28}
+                  className="w-7 h-7 opacity-60"
+                />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">
                 Tired of Filming Yourself?
@@ -281,21 +269,15 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="bg-red-50 border border-red-100 rounded-xl p-6 text-center">
-              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg
-                  className="w-6 h-6 text-red-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
+            <div className="bg-gradient-to-br from-red-50 to-orange-50 border border-red-100/50 rounded-2xl p-8 text-center">
+              <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-sm">
+                <Image
+                  src="/images/icons/brand/sparkle-stars.png"
+                  alt="Time"
+                  width={28}
+                  height={28}
+                  className="w-7 h-7 opacity-60"
+                />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">
                 No Time for Content?
@@ -305,21 +287,15 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="bg-red-50 border border-red-100 rounded-xl p-6 text-center">
-              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg
-                  className="w-6 h-6 text-red-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                  />
-                </svg>
+            <div className="bg-gradient-to-br from-red-50 to-orange-50 border border-red-100/50 rounded-2xl p-8 text-center">
+              <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-sm">
+                <Image
+                  src="/images/icons/brand/megaphone-sparkles.png"
+                  alt="Posting"
+                  width={28}
+                  height={28}
+                  className="w-7 h-7 opacity-60"
+                />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">
                 Inconsistent Posting?
@@ -803,27 +779,35 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {[
-              { icon: "💆", label: "Med Spas" },
-              { icon: "🏠", label: "Real Estate" },
-              { icon: "💼", label: "Business Coaches" },
-              { icon: "💪", label: "Fitness Trainers" },
-              { icon: "📊", label: "Marketing Agencies" },
-              { icon: "⚖️", label: "Lawyers & Law Firms" },
-              { icon: "🏥", label: "Healthcare Providers" },
-              { icon: "💰", label: "Financial Advisors" },
-              { icon: "🎨", label: "Creative Agencies" },
-              { icon: "🏗️", label: "Contractors" },
-              { icon: "🍽️", label: "Restaurants" },
-              { icon: "📚", label: "Course Creators" },
-            ].map((item, index) => (
+              "Med Spas",
+              "Real Estate",
+              "Business Coaches",
+              "Fitness Trainers",
+              "Marketing Agencies",
+              "Lawyers & Law Firms",
+              "Healthcare Providers",
+              "Financial Advisors",
+              "Creative Agencies",
+              "Contractors",
+              "Restaurants",
+              "Course Creators",
+            ].map((label, index) => (
               <div
                 key={index}
-                className="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-xl transition-all hover:-translate-y-1"
+                className="bg-white rounded-xl p-5 text-center shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 border border-gray-100 group"
               >
-                <div className="text-4xl mb-3">{item.icon}</div>
-                <h3 className="font-semibold text-gray-900">{item.label}</h3>
+                <div className="w-10 h-10 mx-auto mb-3 bg-gradient-to-br from-purple-100 to-indigo-100 rounded-xl flex items-center justify-center group-hover:from-purple-200 group-hover:to-indigo-200 transition-colors">
+                  <Image
+                    src="/images/icons/brand/megaphone-sparkles.png"
+                    alt=""
+                    width={20}
+                    height={20}
+                    className="w-5 h-5 opacity-70"
+                  />
+                </div>
+                <h3 className="font-semibold text-gray-900">{label}</h3>
               </div>
             ))}
           </div>
@@ -834,9 +818,12 @@ export default function HomePage() {
             </p>
             <Link
               href="#book-call"
-              className="inline-block text-purple-600 font-bold hover:text-purple-700 text-lg underline"
+              className="inline-flex items-center gap-2 text-purple-600 font-bold hover:text-purple-700 text-lg group"
             >
               Let&apos;s talk and find out
+              <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
             </Link>
           </div>
         </div>

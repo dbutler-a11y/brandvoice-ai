@@ -36,6 +36,30 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
     title: "BrandVoice.AI",
   },
+  // Open Graph metadata (for social sharing previews)
+  openGraph: {
+    title: "BrandVoice.AI - Custom AI Spokespersons & Done-For-You Video Content",
+    description: "Your custom AI spokesperson and 30 days of viral-ready content, delivered in just 7 days. Never film yourself again.",
+    url: "https://brandvoice.studio",
+    siteName: "BrandVoice.AI",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "BrandVoice.AI - AI Spokesperson Videos",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  // Twitter Card metadata
+  twitter: {
+    card: "summary_large_image",
+    title: "BrandVoice.AI - Custom AI Spokespersons & Done-For-You Video Content",
+    description: "Your custom AI spokesperson and 30 days of viral-ready content, delivered in just 7 days. Never film yourself again.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({

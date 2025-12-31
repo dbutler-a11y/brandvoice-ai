@@ -1,0 +1,28 @@
+{
+  "name": "brandvoice-sales-bots",
+  "version": "1.0.0",
+  "description": "BrandVoice AI Sales Bots for Telegram and Discord with Claude AI",
+  "type": "commonjs",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "start:telegram": "ts-node telegram/bot.ts",
+    "start:discord": "ts-node discord/bot.ts",
+    "dev": "ts-node index.ts",
+    "dev:telegram": "nodemon --exec ts-node telegram/bot.ts",
+    "dev:discord": "nodemon --exec ts-node discord/bot.ts"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "dotenv": "^17.2.3",
+    "node-telegram-bot-api": "^0.64.0",
+    "openai": "^4.73.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/node-telegram-bot-api": "^0.64.0",
+    "nodemon": "^3.0.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.2"
+  }
+}

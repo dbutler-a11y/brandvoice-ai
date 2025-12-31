@@ -1,13 +1,17 @@
 import CalendlyEmbed from '@/components/calendly/CalendlyEmbed';
 import CalendlyButton from '@/components/calendly/CalendlyButton';
-import {
-  PhoneIcon,
-  EnvelopeIcon,
-  ClockIcon,
-  ChatBubbleLeftRightIcon,
-  QuestionMarkCircleIcon,
-  CalendarDaysIcon
-} from '@heroicons/react/24/outline';
+import Image from 'next/image';
+
+// Brand icons
+const ICONS = {
+  calendar: '/images/icons/brand/megaphone-sparkles.png',
+  email: '/images/icons/brand/speech-bubble.png',
+  question: '/images/icons/brand/megaphone-icon.png',
+  clock: '/images/icons/brand/sparkle-stars.png',
+  chat: '/images/icons/brand/speech-bubble.png',
+  video: '/images/icons/brand/video-camera.png',
+  document: '/images/icons/brand/document.png',
+};
 
 export const metadata = {
   title: 'Contact Us | BrandVoice Studio',
@@ -38,7 +42,7 @@ export default function ContactPage() {
           {/* Schedule a Call */}
           <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-purple-100 hover:shadow-xl transition-shadow duration-300">
             <div className="w-14 h-14 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center mb-4">
-              <CalendarDaysIcon className="w-7 h-7 text-white" />
+              <Image src={ICONS.calendar} alt="" width={28} height={28} className="w-7 h-7" />
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-3">
               Schedule a Call
@@ -55,7 +59,7 @@ export default function ContactPage() {
           {/* Email Us */}
           <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-purple-100 hover:shadow-xl transition-shadow duration-300">
             <div className="w-14 h-14 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center mb-4">
-              <EnvelopeIcon className="w-7 h-7 text-white" />
+              <Image src={ICONS.email} alt="" width={28} height={28} className="w-7 h-7" />
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-3">
               Email Us
@@ -67,7 +71,7 @@ export default function ContactPage() {
               href="mailto:hello@brandvoice.studio"
               className="text-purple-600 hover:text-purple-700 font-semibold flex items-center gap-2 group"
             >
-              <EnvelopeIcon className="w-5 h-5" />
+              <Image src={ICONS.email} alt="" width={20} height={20} className="w-5 h-5 opacity-70" />
               <span className="group-hover:underline">hello@brandvoice.studio</span>
             </a>
           </div>
@@ -75,7 +79,7 @@ export default function ContactPage() {
           {/* FAQ */}
           <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-purple-100 hover:shadow-xl transition-shadow duration-300">
             <div className="w-14 h-14 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center mb-4">
-              <QuestionMarkCircleIcon className="w-7 h-7 text-white" />
+              <Image src={ICONS.question} alt="" width={28} height={28} className="w-7 h-7" />
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-3">
               Browse FAQ
@@ -100,7 +104,7 @@ export default function ContactPage() {
             <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl p-6 md:p-8 border border-purple-200">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-full flex items-center justify-center">
-                  <ClockIcon className="w-6 h-6 text-white" />
+                  <Image src={ICONS.clock} alt="" width={24} height={24} className="w-6 h-6" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">
                   Quick Response Time
@@ -179,14 +183,14 @@ export default function ContactPage() {
                   className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200 group"
                 >
                   <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center">
-                    <ChatBubbleLeftRightIcon className="w-5 h-5 text-white" />
+                    <Image src={ICONS.chat} alt="" width={20} height={20} className="w-5 h-5" />
                   </div>
                   <div className="flex-1">
                     <p className="font-semibold text-gray-900 group-hover:text-purple-600">
                       See How It Works
                     </p>
                     <p className="text-sm text-gray-600">
-                      Our 8-step process explained
+                      Our simple 3-step process
                     </p>
                   </div>
                   <svg className="w-5 h-5 text-gray-400 group-hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -199,9 +203,7 @@ export default function ContactPage() {
                   className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200 group"
                 >
                   <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center">
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    <Image src={ICONS.document} alt="" width={20} height={20} className="w-5 h-5" />
                   </div>
                   <div className="flex-1">
                     <p className="font-semibold text-gray-900 group-hover:text-purple-600">
@@ -221,7 +223,7 @@ export default function ContactPage() {
                   className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200 group"
                 >
                   <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center">
-                    <PhoneIcon className="w-5 h-5 text-white" />
+                    <Image src={ICONS.video} alt="" width={20} height={20} className="w-5 h-5" />
                   </div>
                   <div className="flex-1">
                     <p className="font-semibold text-gray-900 group-hover:text-purple-600">
@@ -335,7 +337,7 @@ export default function ContactPage() {
               href="mailto:hello@brandvoice.studio"
               className="inline-flex items-center justify-center px-8 py-4 bg-purple-700 text-white font-semibold rounded-lg hover:bg-purple-800 transition-colors duration-200 border-2 border-white/30 text-lg"
             >
-              <EnvelopeIcon className="w-5 h-5 mr-2" />
+              <Image src={ICONS.email} alt="" width={20} height={20} className="w-5 h-5 mr-2" />
               Send Email
             </a>
           </div>

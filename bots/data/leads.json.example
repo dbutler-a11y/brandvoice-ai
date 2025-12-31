@@ -1,0 +1,24 @@
+[
+  {
+    "id": "lead_1704067200000_abc123xyz",
+    "oddy": "123456789",
+    "platform": "telegram",
+    "username": "example_user",
+    "currentFlow": "launch",
+    "currentStep": "calendly_pitch",
+    "businessStage": null,
+    "industry": "Real Estate",
+    "currentVideoVolume": "5-15",
+    "painPoint": "camera_shy",
+    "budget": null,
+    "status": "calendly_sent",
+    "messagesReceived": 8,
+    "lastMessageAt": "2025-01-02T15:30:00.000Z",
+    "createdAt": "2025-01-02T14:00:00.000Z",
+    "updatedAt": "2025-01-02T15:30:00.000Z",
+    "calendarlyLinkSent": true,
+    "checkoutLinkSent": false,
+    "convertedAt": null,
+    "convertedProduct": null
+  }
+]
