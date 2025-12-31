@@ -2,31 +2,15 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
-// Simple toast notification component
-const Toast = ({ message, onClose }: { message: string; onClose: () => void }) => {
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onClose();
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
-
-  return (
-    <div className="fixed top-4 right-4 z-50 animate-slide-in">
-      <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-4 rounded-lg shadow-2xl flex items-center gap-3 max-w-md">
-        <svg className="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <p className="font-medium">{message}</p>
-        <button onClick={onClose} className="ml-auto hover:bg-white/20 rounded p-1 transition-colors">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-    </div>
-  );
+// Brand icons
+const ICONS = {
+  waveform: '/images/icons/brand/waveform.png',
+  microphone: '/images/icons/brand/microphone.png',
+  sparkle: '/images/icons/brand/sparkle-stars.png',
+  check: '/images/icons/brand/checkmark.png',
+  megaphone: '/images/icons/brand/megaphone-sparkles.png',
 };
 
 interface Voice {
@@ -34,74 +18,74 @@ interface Voice {
   name: string;
   displayName: string;
   gender: 'Male' | 'Female';
-  characteristics: string[];
+  ageRange: string;
+  style: string;
+  description: string;
   industries: string[];
-  category: string[];
-  sampleText: string;
   audioUrl?: string;
 }
 
-const VoiceCard = ({ voice, isPlaying, onPlay }: {
+const VoiceCard = ({
+  voice,
+  isPlaying,
+  onPlay
+}: {
   voice: Voice;
   isPlaying: boolean;
   onPlay: (voiceId: string) => void;
 }) => {
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 border border-gray-200">
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <h3 className="text-xl font-bold text-gray-900">{voice.displayName}</h3>
-          <span className="inline-block mt-1 px-3 py-1 bg-purple-100 text-purple-700 text-sm rounded-full">
-            {voice.gender}
+    <div className="group relative bg-white rounded-2xl p-6 transition-all duration-300 hover:shadow-xl border border-gray-100 hover:border-purple-200">
+      {/* Top Row - Avatar & Info */}
+      <div className="flex items-start gap-4 mb-5">
+        {/* Initial Circle */}
+        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-purple-100 to-indigo-100 flex items-center justify-center flex-shrink-0 group-hover:from-purple-200 group-hover:to-indigo-200 transition-colors">
+          <span className="text-xl font-bold text-purple-600">
+            {voice.displayName.charAt(0)}
           </span>
+        </div>
+
+        {/* Name & Meta */}
+        <div className="flex-1 min-w-0">
+          <h3 className="text-lg font-semibold text-gray-900 mb-1">
+            {voice.displayName}
+          </h3>
+          <div className="flex items-center gap-2 text-sm text-gray-500">
+            <span>{voice.ageRange}</span>
+            <span className="w-1 h-1 bg-gray-300 rounded-full" />
+            <span className="text-purple-600 font-medium">{voice.style}</span>
+          </div>
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-4">
-        {voice.characteristics.map((char) => (
-          <span
-            key={char}
-            className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full"
-          >
-            {char}
-          </span>
-        ))}
-      </div>
+      {/* Description */}
+      <p className="text-gray-600 text-sm leading-relaxed mb-5">
+        {voice.description}
+      </p>
 
-      <div className="mb-4">
-        <p className="text-sm text-gray-600 font-semibold mb-1">Great for:</p>
-        <p className="text-sm text-gray-700">{voice.industries.join(', ')}</p>
-      </div>
-
-      <div className="bg-gray-50 rounded-lg p-4 mb-4">
-        <p className="text-sm text-gray-700 italic">
-          &quot;{voice.sampleText}&quot;
-        </p>
-      </div>
-
+      {/* Play Button */}
       <button
         onClick={() => onPlay(voice.id)}
-        className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-semibold transition-colors duration-200 ${
+        className={`w-full flex items-center justify-center gap-3 py-3.5 rounded-xl font-medium transition-all duration-200 ${
           isPlaying
-            ? 'bg-purple-600 text-white hover:bg-purple-700'
-            : 'bg-indigo-600 text-white hover:bg-indigo-700'
+            ? 'bg-purple-600 text-white'
+            : 'bg-gray-50 text-gray-700 hover:bg-purple-50 hover:text-purple-700'
         }`}
       >
-        {isPlaying ? (
-          <>
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
+          isPlaying ? 'bg-white/20' : 'bg-purple-100'
+        }`}>
+          {isPlaying ? (
+            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
             </svg>
-            {voice.audioUrl ? 'Pause' : 'Playing...'}
-          </>
-        ) : (
-          <>
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+          ) : (
+            <svg className="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
             </svg>
-            {voice.audioUrl ? 'Play Sample' : 'Preview Voice'}
-          </>
-        )}
+          )}
+        </div>
+        <span>{isPlaying ? 'Playing...' : 'Play Preview'}</span>
       </button>
     </div>
   );
@@ -109,20 +93,10 @@ const VoiceCard = ({ voice, isPlaying, onPlay }: {
 
 export default function VoicePreviewPage() {
   const [voices, setVoices] = useState<Voice[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('All Voices');
+  const [activeGender, setActiveGender] = useState<'Female' | 'Male'>('Female');
   const [playingVoiceId, setPlayingVoiceId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
   const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  const categories = [
-    'All Voices',
-    'Warm & Friendly',
-    'Professional & Authoritative',
-    'Energetic & Motivating',
-    'Calm & Reassuring',
-  ];
 
   useEffect(() => {
     fetchVoices();
@@ -132,9 +106,32 @@ export default function VoicePreviewPage() {
     try {
       const response = await fetch('/api/voices');
       const data = await response.json();
-      setVoices(data.voices);
+      // Transform API data to match our interface
+      const transformedVoices = data.voices.map((v: {
+        id: string;
+        name: string;
+        displayName: string;
+        gender: 'Male' | 'Female';
+        characteristics: string[];
+        industries: string[];
+        sampleText: string;
+        audioUrl?: string;
+      }) => ({
+        id: v.id,
+        name: v.name,
+        displayName: v.displayName,
+        gender: v.gender,
+        ageRange: getAgeRange(v.displayName),
+        style: v.characteristics[0] || 'Professional',
+        description: getDescription(v.displayName, v.characteristics, v.industries),
+        industries: v.industries,
+        audioUrl: v.audioUrl,
+      }));
+      setVoices(transformedVoices);
     } catch (error) {
       console.error('Failed to fetch voices:', error);
+      // Use fallback data
+      setVoices(getFallbackVoices());
     } finally {
       setLoading(false);
     }
@@ -143,112 +140,98 @@ export default function VoicePreviewPage() {
   const handlePlayVoice = (voiceId: string) => {
     const voice = voices.find(v => v.id === voiceId);
     if (playingVoiceId === voiceId) {
-      // Stop playing
       setPlayingVoiceId(null);
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
       }
     } else {
-      // Check if voice has an audio URL
       if (voice?.audioUrl) {
-        // Play actual audio
         if (audioRef.current) {
           audioRef.current.src = voice.audioUrl;
           audioRef.current.play();
           setPlayingVoiceId(voiceId);
         }
       } else {
-        // Show info toast that this voice's sample is being prepared
-        setToastMessage(`${voice?.displayName || 'This voice'} - Sample audio coming soon! Book a call to hear live demos.`);
-        setShowToast(true);
-        // Brief visual feedback
+        // Visual feedback for demo
         setPlayingVoiceId(voiceId);
-        setTimeout(() => {
-          setPlayingVoiceId(null);
-        }, 1500);
+        setTimeout(() => setPlayingVoiceId(null), 2000);
       }
     }
   };
 
-  const filteredVoices = selectedCategory === 'All Voices'
-    ? voices
-    : voices.filter((voice) => voice.category.includes(selectedCategory));
+  const filteredVoices = voices.filter(v => v.gender === activeGender);
+  const femaleCount = voices.filter(v => v.gender === 'Female').length;
+  const maleCount = voices.filter(v => v.gender === 'Male').length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50">
-      {/* Toast Notification */}
-      {showToast && (
-        <Toast
-          message={toastMessage}
-          onClose={() => setShowToast(false)}
-        />
-      )}
-
-      {/* Hidden audio element for future use */}
+    <div className="min-h-screen bg-white">
+      {/* Hidden audio element */}
       <audio
         ref={audioRef}
         onEnded={() => setPlayingVoiceId(null)}
         className="hidden"
       />
 
-      {/* Hero Section */}
-      <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-            Preview Your{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">
-              AI Voice
-            </span>
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
-            Preview our AI voices below. Full audio samples coming soon!
-          </p>
-          {/* Info Banner */}
-          <div className="max-w-2xl mx-auto mt-6 bg-gradient-to-r from-purple-100 to-indigo-100 border border-purple-200 rounded-lg p-4">
-            <div className="flex items-center justify-center gap-3">
-              <svg className="w-6 h-6 text-purple-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-              </svg>
-              <p className="text-purple-800 font-medium">
-                Audio samples are being prepared. Click any voice to explore their characteristics!
-              </p>
-            </div>
+      {/* Hero Section - Minimal */}
+      <section className="pt-24 pb-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-50 text-purple-700 text-sm font-medium mb-6">
+            <Image src={ICONS.waveform} alt="" width={16} height={16} className="w-4 h-4" />
+            Voice Library
           </div>
+
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+            Preview AI Voices
+          </h1>
+
+          <p className="text-xl text-gray-500 max-w-2xl mx-auto">
+            Listen to sample voices and find the perfect match for your brand
+          </p>
         </div>
       </section>
 
-      {/* Voice Categories/Filters */}
-      <section className="pb-8 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-wrap justify-center gap-3">
-            {categories.map((category) => (
+      {/* Gender Tabs */}
+      <section className="pb-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-center">
+            <div className="inline-flex p-1.5 bg-gray-100 rounded-full">
               <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-6 py-3 rounded-full font-semibold transition-all duration-200 ${
-                  selectedCategory === category
-                    ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg scale-105'
-                    : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md hover:shadow-lg'
+                onClick={() => setActiveGender('Female')}
+                className={`px-8 py-3 rounded-full font-medium text-sm transition-all duration-200 ${
+                  activeGender === 'Female'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
-                {category}
+                Female Voices
+                <span className="ml-2 text-gray-400">{femaleCount}</span>
               </button>
-            ))}
+              <button
+                onClick={() => setActiveGender('Male')}
+                className={`px-8 py-3 rounded-full font-medium text-sm transition-all duration-200 ${
+                  activeGender === 'Male'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Male Voices
+                <span className="ml-2 text-gray-400">{maleCount}</span>
+              </button>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Voice Selection Grid */}
-      <section className="pb-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+      {/* Voice Grid */}
+      <section className="pb-24">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {loading ? (
-            <div className="text-center py-12">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
-              <p className="mt-4 text-gray-600">Loading voices...</p>
+            <div className="flex justify-center py-20">
+              <div className="w-8 h-8 border-2 border-purple-600 border-t-transparent rounded-full animate-spin" />
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
               {filteredVoices.map((voice) => (
                 <VoiceCard
                   key={voice.id}
@@ -261,75 +244,97 @@ export default function VoicePreviewPage() {
           )}
 
           {!loading && filteredVoices.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-600 text-lg">No voices found in this category.</p>
+            <div className="text-center py-20">
+              <p className="text-gray-500">No voices found.</p>
             </div>
           )}
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              How It Works
+      {/* Features Section */}
+      <section className="py-24 bg-gray-50">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              Voice Cloning Options
             </h2>
+            <p className="text-xl text-gray-500">
+              Choose from our library or clone your own voice
+            </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl p-8 border border-purple-200">
-              <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                </svg>
+            <div className="bg-white rounded-2xl p-8 border border-gray-100">
+              <div className="w-14 h-14 rounded-2xl bg-purple-50 flex items-center justify-center mb-6">
+                <Image src={ICONS.waveform} alt="" width={28} height={28} className="w-7 h-7" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Consistent Voice Across All Videos
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                Pre-Built Voices
               </h3>
-              <p className="text-gray-700">
-                Your selected voice will be used for all 30 videos in your campaign, ensuring brand consistency and recognition.
+              <p className="text-gray-600 leading-relaxed mb-4">
+                Select from our curated library of professional voices. Each voice is optimized for clarity, engagement, and brand consistency across all your videos.
               </p>
+              <ul className="space-y-2">
+                {['16+ voice options', 'Instant availability', 'No extra cost'].map((item) => (
+                  <li key={item} className="flex items-center gap-2 text-sm text-gray-600">
+                    <Image src={ICONS.check} alt="" width={16} height={16} className="w-4 h-4" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-8 border border-indigo-200">
-              <div className="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                </svg>
+            <div className="bg-white rounded-2xl p-8 border border-gray-100">
+              <div className="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center mb-6">
+                <Image src={ICONS.microphone} alt="" width={28} height={28} className="w-7 h-7" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Custom Voice Clone Available
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                Custom Voice Clone
               </h3>
-              <p className="text-gray-700">
-                Want a custom voice clone that sounds exactly like you or your spokesperson? Ask about our Custom Voice add-on during your consultation.
+              <p className="text-gray-600 leading-relaxed mb-4">
+                Want your AI spokesperson to sound exactly like you? We can clone your voice with just 2-5 minutes of audio for authentic brand representation.
               </p>
+              <ul className="space-y-2">
+                {['85-95% voice accuracy', 'Your authentic sound', 'Add-on service'].map((item) => (
+                  <li key={item} className="flex items-center gap-2 text-sm text-gray-600">
+                    <Image src={ICONS.check} alt="" width={16} height={16} className="w-4 h-4" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-purple-600 to-indigo-600">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+      <section className="py-24 bg-gradient-to-br from-gray-900 to-gray-800">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="w-16 h-16 mx-auto mb-8 rounded-2xl bg-white/10 flex items-center justify-center">
+            <Image src={ICONS.megaphone} alt="" width={32} height={32} className="w-8 h-8" />
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
             Ready to Choose Your Voice?
           </h2>
-          <p className="text-xl text-purple-100 mb-8">
-            Book a call and we&apos;ll help you pick the perfect voice for your brand.
+
+          <p className="text-xl text-gray-400 mb-10 max-w-xl mx-auto">
+            Book a discovery call and we'll help you select the perfect voice for your brand.
           </p>
+
           <Link
-            href="/booking"
-            className="inline-flex items-center gap-2 bg-white text-purple-600 px-8 py-4 rounded-full text-lg font-bold hover:bg-gray-100 transition-colors duration-200 shadow-xl hover:shadow-2xl transform hover:scale-105"
+            href="/#book-call"
+            className="inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-colors"
           >
             Book a Call
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </Link>
-          <p className="mt-6 text-purple-100">
-            Or continue exploring our{' '}
-            <Link href="/pricing" className="underline hover:text-white">
+
+          <p className="mt-8 text-gray-500">
+            Or explore our{' '}
+            <Link href="/pricing" className="text-purple-400 hover:text-purple-300 underline underline-offset-2">
               pricing options
             </Link>
           </p>
@@ -337,4 +342,58 @@ export default function VoicePreviewPage() {
       </section>
     </div>
   );
+}
+
+// Helper functions
+function getAgeRange(name: string): string {
+  const ageMap: Record<string, string> = {
+    'Sarah': '30s', 'Rachel': '30s', 'Charlotte': '40s', 'Lily': '20s',
+    'Olivia': '30s', 'Sophia': '30s', 'Jessica': '30s', 'Emily': '20s',
+    'Charlie': '20s', 'Liam': '40s', 'Michael': '40s', 'David': '40s',
+    'James': '30s', 'Alex': '20s', 'Marcus': '40s', 'Chris': '30s',
+  };
+  return ageMap[name] || '30s';
+}
+
+function getDescription(name: string, characteristics: string[], industries: string[]): string {
+  const descMap: Record<string, string> = {
+    'Sarah': 'Friendly and approachable, perfect for coaching and wellness brands',
+    'Rachel': 'Refined and elegant, ideal for luxury and high-end brands',
+    'Charlotte': 'Sophisticated and polished, great for professional services',
+    'Lily': 'Casual and relatable, perfect for social media content',
+    'Olivia': 'Caring and compassionate, ideal for healthcare and non-profits',
+    'Sophia': 'Natural and authentic, perfect for sustainability and wellness',
+    'Jessica': 'Friendly and conversational, ideal for hospitality and real estate',
+    'Emily': 'Energetic and upbeat, great for fitness, retail, and events',
+    'Charlie': 'Dynamic and energetic, great for fitness and tech brands',
+    'Liam': 'Deep and reassuring, perfect for finance and healthcare',
+    'Michael': 'Clear and authoritative, perfect for professional services and B2B',
+    'David': 'Calm and reassuring, ideal for healthcare and education',
+    'James': 'Motivating and inspiring, great for coaching and personal development',
+    'Alex': 'Modern and tech-savvy, ideal for startups and innovation',
+    'Marcus': 'Powerful and commanding, great for automotive and sports',
+    'Chris': 'Versatile and adaptable, perfect for tech and general business',
+  };
+  return descMap[name] || `${characteristics.join(' and ')}, great for ${industries.slice(0, 2).join(' and ')}`;
+}
+
+function getFallbackVoices(): Voice[] {
+  return [
+    { id: '1', name: 'sarah', displayName: 'Sarah', gender: 'Female', ageRange: '30s', style: 'Warm & Professional', description: 'Friendly and approachable, perfect for coaching and wellness brands', industries: ['Coaching', 'Wellness'] },
+    { id: '2', name: 'rachel', displayName: 'Rachel', gender: 'Female', ageRange: '30s', style: 'Sophisticated & Elegant', description: 'Refined and elegant, ideal for luxury and high-end brands', industries: ['Luxury', 'Fashion'] },
+    { id: '3', name: 'charlotte', displayName: 'Charlotte', gender: 'Female', ageRange: '40s', style: 'Sophisticated & Elegant', description: 'Sophisticated and polished, great for professional services', industries: ['Professional', 'Finance'] },
+    { id: '4', name: 'lily', displayName: 'Lily', gender: 'Female', ageRange: '20s', style: 'Warm & Conversational', description: 'Casual and relatable, perfect for social media content', industries: ['Social Media', 'Lifestyle'] },
+    { id: '5', name: 'olivia', displayName: 'Olivia', gender: 'Female', ageRange: '30s', style: 'Caring & Compassionate', description: 'Caring and compassionate, ideal for healthcare and non-profits', industries: ['Healthcare', 'Non-profit'] },
+    { id: '6', name: 'sophia', displayName: 'Sophia', gender: 'Female', ageRange: '30s', style: 'Natural & Authentic', description: 'Natural and authentic, perfect for sustainability and wellness', industries: ['Sustainability', 'Wellness'] },
+    { id: '7', name: 'jessica', displayName: 'Jessica', gender: 'Female', ageRange: '30s', style: 'Friendly & Conversational', description: 'Friendly and conversational, ideal for hospitality and real estate', industries: ['Hospitality', 'Real Estate'] },
+    { id: '8', name: 'emily', displayName: 'Emily', gender: 'Female', ageRange: '20s', style: 'Energetic & Upbeat', description: 'Energetic and upbeat, great for fitness, retail, and events', industries: ['Fitness', 'Retail'] },
+    { id: '9', name: 'charlie', displayName: 'Charlie', gender: 'Male', ageRange: '20s', style: 'Energetic & Youthful', description: 'Dynamic and energetic, great for fitness and tech brands', industries: ['Fitness', 'Tech'] },
+    { id: '10', name: 'liam', displayName: 'Liam', gender: 'Male', ageRange: '40s', style: 'Deep & Trustworthy', description: 'Deep and reassuring, perfect for finance and healthcare', industries: ['Finance', 'Healthcare'] },
+    { id: '11', name: 'michael', displayName: 'Michael', gender: 'Male', ageRange: '40s', style: 'Authoritative & Clear', description: 'Clear and authoritative, perfect for professional services and B2B', industries: ['B2B', 'Professional'] },
+    { id: '12', name: 'david', displayName: 'David', gender: 'Male', ageRange: '40s', style: 'Calm & Reassuring', description: 'Calm and reassuring, ideal for healthcare and education', industries: ['Healthcare', 'Education'] },
+    { id: '13', name: 'james', displayName: 'James', gender: 'Male', ageRange: '30s', style: 'Motivating & Inspiring', description: 'Motivating and inspiring, great for coaching and personal development', industries: ['Coaching', 'Personal Development'] },
+    { id: '14', name: 'alex', displayName: 'Alex', gender: 'Male', ageRange: '20s', style: 'Modern & Tech-Savvy', description: 'Modern and tech-savvy, ideal for startups and innovation', industries: ['Startups', 'Tech'] },
+    { id: '15', name: 'marcus', displayName: 'Marcus', gender: 'Male', ageRange: '40s', style: 'Powerful & Commanding', description: 'Powerful and commanding, great for automotive and sports', industries: ['Automotive', 'Sports'] },
+    { id: '16', name: 'chris', displayName: 'Chris', gender: 'Male', ageRange: '30s', style: 'Versatile & Adaptable', description: 'Versatile and adaptable, perfect for tech and general business', industries: ['Tech', 'Business'] },
+  ];
 }
