@@ -6,6 +6,27 @@ import { ContentPackageGrid } from '@/components/pricing/ContentPackageGrid';
 export default function PricingPage() {
   const packages = [
     {
+      name: 'Brand Starter Kit',
+      price: '$497',
+      billing: ' one-time',
+      billingNote: 'Perfect entry point',
+      description: 'Best for: New brands & growing businesses',
+      features: [
+        'Logo & brand colors',
+        'Icons & graphics package',
+        'Ready-to-use files',
+        'Custom website design',
+        'Mobile-friendly layout',
+        '30 days of social content',
+        'Scripts & captions',
+        'Telegram or Discord bot setup',
+        'Auto-response templates',
+      ],
+      cta: 'Get Started',
+      popular: false,
+      checkoutUrl: '/checkout?package=starter-kit',
+    },
+    {
       name: 'AI Spokesperson Launch Kit',
       price: '$1,497',
       billing: ' one-time',

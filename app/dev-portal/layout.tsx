@@ -28,6 +28,7 @@ export default function DevPortalLayout({ children }: DevPortalLayoutProps) {
 
   const navLinks = [
     { href: '/dev-portal', label: 'Dashboard' },
+    { href: '/dev-portal/icon-processor', label: 'Icon Processor' },
     { href: '/dev-portal/automation', label: 'Automation' },
     { href: '/dev-portal/deliverables', label: '30-Day Calendar' },
     { href: '/dev-portal/ugc-prompts', label: 'UGC Prompts' },

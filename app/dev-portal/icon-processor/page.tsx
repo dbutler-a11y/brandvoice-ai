@@ -346,7 +346,7 @@ export default function IconProcessorPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="cols-input" className="block text-sm font-medium text-gray-300 mb-2">
+                  <label htmlFor="cols-input" className="block text-sm font-medium text-white mb-2">
                     Columns
                   </label>
                   <input
@@ -360,7 +360,7 @@ export default function IconProcessorPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="rows-input" className="block text-sm font-medium text-gray-300 mb-2">
+                  <label htmlFor="rows-input" className="block text-sm font-medium text-white mb-2">
                     Rows
                   </label>
                   <input
@@ -376,7 +376,7 @@ export default function IconProcessorPage() {
               </div>
 
               <div>
-                <label htmlFor="prefix-input" className="block text-sm font-medium text-gray-300 mb-2">
+                <label htmlFor="prefix-input" className="block text-sm font-medium text-white mb-2">
                   File Prefix
                 </label>
                 <input
@@ -387,14 +387,14 @@ export default function IconProcessorPage() {
                   placeholder="brandvoice"
                   className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-300 mt-1">
                   Output: {prefix}_00.{outputFormat}, {prefix}_01.{outputFormat}, ...
                 </p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="format-select" className="block text-sm font-medium text-gray-300 mb-2">
+                  <label htmlFor="format-select" className="block text-sm font-medium text-white mb-2">
                     Format
                   </label>
                   <select
@@ -408,7 +408,7 @@ export default function IconProcessorPage() {
                   </select>
                 </div>
                 <div>
-                  <span className="block text-sm font-medium text-gray-300 mb-2">
+                  <span className="block text-sm font-medium text-white mb-2">
                     Background
                   </span>
                   <button
@@ -594,7 +594,7 @@ export default function IconProcessorPage() {
                 <h3 className="text-xl font-semibold text-gray-400 mb-2">
                   No results yet
                 </h3>
-                <p className="text-gray-500 max-w-sm">
+                <p className="text-gray-400 max-w-sm">
                   Upload an icon grid image and configure your settings, then click
                   &quot;Split&quot; to process your icons.
                 </p>
@@ -632,16 +632,16 @@ export default function IconProcessorPage() {
                 <Wand2 className="w-5 h-5 text-green-400" />
                 Free Background Removal
               </h3>
-              <p className="text-sm text-gray-400 mb-4">
+              <p className="text-sm text-gray-300 mb-4">
                 Remove backgrounds locally for free using our Python script with Rembg:
               </p>
               <div className="bg-black/40 rounded-lg p-4 font-mono text-sm text-green-400 overflow-x-auto">
-                <div className="text-gray-500 mb-2"># After downloading your split icons:</div>
+                <div className="text-gray-400 mb-2"># After downloading your split icons:</div>
                 <div>cd ~/Downloads</div>
                 <div>unzip icons.zip -d icons</div>
                 <div className="mt-2">python3 scripts/remove-backgrounds.py ./icons</div>
               </div>
-              <p className="text-xs text-gray-500 mt-3">
+              <p className="text-xs text-gray-300 mt-3">
                 Requires: pip3 install rembg onnxruntime pillow --user
               </p>
             </div>
