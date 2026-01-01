@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Creator Markets | BrandVoice.AI",
+  title: "Creator Markets | BrandVoice Studio",
   description:
     "Predict creator growth, analyze influencer performance, and discover emerging talent with AI-powered analytics.",
   openGraph: {

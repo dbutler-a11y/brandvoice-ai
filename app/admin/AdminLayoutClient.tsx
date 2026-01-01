@@ -76,7 +76,7 @@ export default function AdminLayoutClient({ children }: AdminLayoutClientProps) 
 
               {/* Logo */}
               <Link href="/admin" className="text-xl font-bold text-gray-900 flex-shrink-0">
-                BrandVoice.AI
+                BrandVoice Studio
               </Link>
 
               {/* Desktop Navigation */}

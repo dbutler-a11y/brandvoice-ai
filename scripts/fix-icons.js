@@ -2,7 +2,7 @@ const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
 
-const gridPath = '/Users/brittanymurphy/Downloads/20251230_1847_BrandVoice.AI Icon Grid_simple_compose_01kdrxxvhweb6a8h43r1dtydvk.png';
+const gridPath = '/Users/brittanymurphy/Downloads/20251230_1847_BrandVoice Studio Icon Grid_simple_compose_01kdrxxvhweb6a8h43r1dtydvk.png';
 const outputDir = '/Users/brittanymurphy/Desktop/Butler/Projects/ai-spokesperson-studio/public/images/icons';
 
 // Grid is 6 columns x 5 rows = 30 icons

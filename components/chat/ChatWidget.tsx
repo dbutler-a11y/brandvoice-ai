@@ -12,7 +12,7 @@ interface Message {
 const INITIAL_MESSAGE: Message = {
   id: 'welcome',
   role: 'assistant',
-  content: "Hi! I'm your BrandVoice.AI assistant. I can help answer questions about our AI spokesperson service, pricing, how it works, or help you get started. What would you like to know?",
+  content: "Hi! I'm your BrandVoice Studio assistant. I can help answer questions about our AI spokesperson service, pricing, how it works, or help you get started. What would you like to know?",
   timestamp: new Date(),
 };
 

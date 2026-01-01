@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * BrandVoice.AI - Launch Readiness Check
+ * BrandVoice Studio - Launch Readiness Check
  *
  * Runs comprehensive checks:
  * 1. Playwright E2E tests (Does it work?)
@@ -327,7 +327,7 @@ async function main() {
 ${colors.bright}${colors.magenta}
 ╔═══════════════════════════════════════════════════════════╗
 ║                                                           ║
-║   🚀 BrandVoice.AI - Launch Readiness Check              ║
+║   🚀 BrandVoice Studio - Launch Readiness Check              ║
 ║                                                           ║
 ╚═══════════════════════════════════════════════════════════╝
 ${colors.reset}`);

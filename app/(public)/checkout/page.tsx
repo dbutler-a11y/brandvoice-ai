@@ -494,7 +494,7 @@ function CheckoutContent() {
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
                 Questions?{' '}
-                <a href="mailto:support@brandvoice.ai" className="text-purple-600 hover:text-purple-700 font-medium">
+                <a href="mailto:support@brandvoice.studio" className="text-purple-600 hover:text-purple-700 font-medium">
                   Contact Support
                 </a>
               </p>

@@ -301,7 +301,7 @@ export function HeroAnimation() {
                   <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
                 </div>
                 <div className="flex-1 text-center">
-                  <span className="text-gray-400 text-sm font-mono">brandvoice.ai</span>
+                  <span className="text-gray-400 text-sm font-mono">brandvoice.studio</span>
                 </div>
                 {/* Service indicator dots */}
                 <div className="flex gap-1.5">

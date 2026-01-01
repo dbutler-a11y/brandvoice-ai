@@ -117,7 +117,7 @@ export default function PayPalCheckoutButton({
               },
             ],
             application_context: {
-              brand_name: 'BrandVoice.AI',
+              brand_name: 'BrandVoice Studio',
               landing_page: 'BILLING',
               user_action: 'PAY_NOW',
               return_url: `${window.location.origin}/checkout/success`,

@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Privacy Policy | BrandVoice.AI',
-  description: 'Privacy Policy for BrandVoice.AI services provided by Eula Properties LLC',
+  title: 'Privacy Policy | BrandVoice Studio',
+  description: 'Privacy Policy for BrandVoice Studio services provided by Eula Properties LLC',
 };
 
 export default function PrivacyPolicyPage() {
@@ -25,7 +25,7 @@ export default function PrivacyPolicyPage() {
           <section className="mb-10">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Introduction</h2>
             <p className="text-gray-700 leading-relaxed">
-              <strong>Eula Properties LLC</strong>, operating as <strong>BrandVoice.AI</strong> (&quot;Company,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;), respects your privacy and is committed to protecting your personal data. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.
+              <strong>Eula Properties LLC</strong>, operating as <strong>BrandVoice Studio</strong> (&quot;Company,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;), respects your privacy and is committed to protecting your personal data. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.
             </p>
           </section>
 
@@ -150,7 +150,7 @@ export default function PrivacyPolicyPage() {
               <li><strong>Withdraw Consent:</strong> Withdraw consent where processing is based on consent</li>
             </ul>
             <p className="text-gray-700 leading-relaxed mt-4">
-              To exercise these rights, contact us at <a href="mailto:privacy@brandvoice.ai" className="text-purple-600 hover:text-purple-700">privacy@brandvoice.ai</a>.
+              To exercise these rights, contact us at <a href="mailto:privacy@brandvoice.studio" className="text-purple-600 hover:text-purple-700">privacy@brandvoice.studio</a>.
             </p>
           </section>
 
@@ -198,12 +198,12 @@ export default function PrivacyPolicyPage() {
             </p>
             <div className="bg-gray-50 rounded-lg p-6 mt-4">
               <p className="text-gray-700"><strong>Eula Properties LLC</strong></p>
-              <p className="text-gray-700">Operating as BrandVoice.AI</p>
+              <p className="text-gray-700">Operating as BrandVoice Studio</p>
               <p className="text-gray-700 mt-2">
-                Privacy Inquiries: <a href="mailto:privacy@brandvoice.ai" className="text-purple-600 hover:text-purple-700">privacy@brandvoice.ai</a>
+                Privacy Inquiries: <a href="mailto:privacy@brandvoice.studio" className="text-purple-600 hover:text-purple-700">privacy@brandvoice.studio</a>
               </p>
               <p className="text-gray-700">
-                General Support: <a href="mailto:support@brandvoice.ai" className="text-purple-600 hover:text-purple-700">support@brandvoice.ai</a>
+                General Support: <a href="mailto:support@brandvoice.studio" className="text-purple-600 hover:text-purple-700">support@brandvoice.studio</a>
               </p>
             </div>
           </section>

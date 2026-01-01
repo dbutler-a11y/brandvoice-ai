@@ -70,7 +70,7 @@ function AuthCodeErrorContent() {
             <p className="text-center text-sm text-gray-600">
               Need help?{' '}
               <a
-                href="mailto:support@brandvoice.ai"
+                href="mailto:support@brandvoice.studio"
                 className="text-blue-600 hover:text-blue-800 font-medium"
               >
                 Contact Support

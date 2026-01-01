@@ -1,5 +1,5 @@
 /**
- * Email Notification System for BrandVoice.AI
+ * Email Notification System for BrandVoice Studio
  * Using Resend for reliable email delivery
  */
 
@@ -23,8 +23,8 @@ function getResendClient(): Resend {
 }
 
 // Email configuration
-const EMAIL_FROM = process.env.EMAIL_FROM || 'BrandVoice.AI <hello@brandvoice.ai>';
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@brandvoice.ai';
+const EMAIL_FROM = process.env.EMAIL_FROM || 'BrandVoice Studio <hello@brandvoice.studio>';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@brandvoice.studio';
 
 // Type definitions
 interface EmailResponse {
@@ -49,7 +49,7 @@ export async function sendWelcomeEmail(
     const { data, error } = await getResendClient().emails.send({
       from: EMAIL_FROM,
       to: [to],
-      subject: `Welcome to BrandVoice.AI, ${clientName}!`,
+      subject: `Welcome to BrandVoice Studio, ${clientName}!`,
       html: getWelcomeEmailTemplate(clientName, packageName),
     });
 
@@ -237,7 +237,7 @@ export async function sendTestEmail(testEmail: string): Promise<EmailResponse> {
     const { data, error } = await getResendClient().emails.send({
       from: EMAIL_FROM,
       to: [testEmail],
-      subject: 'BrandVoice.AI Email System Test',
+      subject: 'BrandVoice Studio Email System Test',
       html: `
         <!DOCTYPE html>
         <html>
@@ -250,7 +250,7 @@ export async function sendTestEmail(testEmail: string): Promise<EmailResponse> {
             <div style="max-width: 600px; margin: 40px auto; padding: 20px; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px;">
               <h1 style="color: #2563eb; margin-bottom: 20px;">Email System Test</h1>
               <p style="color: #333333; line-height: 1.6;">
-                Your BrandVoice.AI email notification system is configured correctly and working!
+                Your BrandVoice Studio email notification system is configured correctly and working!
               </p>
               <p style="color: #666666; font-size: 14px; margin-top: 30px;">
                 Timestamp: ${new Date().toISOString()}

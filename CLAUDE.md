@@ -1,4 +1,4 @@
-# BrandVoice.AI - Project Guidelines
+# BrandVoice Studio - Project Guidelines
 
 This documentation is automatically loaded when working on the BrandVoice project.
 
@@ -6,7 +6,7 @@ This documentation is automatically loaded when working on the BrandVoice projec
 
 ## Project Overview
 
-**BrandVoice.AI** is a done-for-you AI video spokesperson production platform. We help businesses create professional AI-generated spokesperson videos for marketing, training, and communication.
+**BrandVoice Studio** is a done-for-you AI video spokesperson production platform. We help businesses create professional AI-generated spokesperson videos for marketing, training, and communication.
 
 - **Live Site**: https://brandvoice.studio
 - **GitHub**: dbutler-a11y/brandvoice-ai

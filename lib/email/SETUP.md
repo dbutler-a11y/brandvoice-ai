@@ -1,6 +1,6 @@
 # Complete Email System Setup Guide
 
-This guide walks you through the complete setup of the BrandVoice.AI email notification system.
+This guide walks you through the complete setup of the BrandVoice Studio email notification system.
 
 ## Table of Contents
 
@@ -17,7 +17,7 @@ This guide walks you through the complete setup of the BrandVoice.AI email notif
 ## Prerequisites
 
 - Node.js 18+ installed
-- BrandVoice.AI application set up
+- BrandVoice Studio application set up
 - A domain you control (for production)
 - 10 minutes of your time
 
@@ -83,7 +83,7 @@ types.ts          # TypeScript types
 
 1. In Resend dashboard, click **"API Keys"** in the sidebar
 2. Click **"Create API Key"**
-3. Name it: `BrandVoice.AI Development`
+3. Name it: `BrandVoice Studio Development`
 4. Permission: Select **"Sending access"**
 5. Click **"Add"**
 6. **IMPORTANT:** Copy the API key immediately (starts with `re_`)
@@ -99,7 +99,7 @@ Create or edit your `.env` file in the project root:
 ```bash
 # Email Configuration (Resend)
 RESEND_API_KEY="re_your_actual_api_key_here"
-EMAIL_FROM="BrandVoice.AI <onboarding@resend.dev>"
+EMAIL_FROM="BrandVoice Studio <onboarding@resend.dev>"
 ADMIN_EMAIL="your-email@example.com"
 ```
 
@@ -115,8 +115,8 @@ For production, you'll use your verified domain:
 ```bash
 # Email Configuration (Resend)
 RESEND_API_KEY="re_your_production_api_key"
-EMAIL_FROM="BrandVoice.AI <hello@brandvoice.ai>"
-ADMIN_EMAIL="admin@brandvoice.ai"
+EMAIL_FROM="BrandVoice Studio <hello@brandvoice.studio>"
+ADMIN_EMAIL="admin@brandvoice.studio"
 ```
 
 ### Step 4: Verify Configuration
@@ -211,7 +211,7 @@ curl -X POST http://localhost:3000/api/email/test \
     "type": "payment-failed",
     "email": "your-email@example.com",
     "clientName": "John Doe",
-    "updatePaymentLink": "https://brandvoice.ai/billing/update"
+    "updatePaymentLink": "https://brandvoice.studio/billing/update"
   }'
 
 # 4. Payment received
@@ -502,7 +502,7 @@ To send emails from your domain in production:
 1. **Add Your Domain in Resend**
    - Go to Resend dashboard
    - Click "Domains" → "Add Domain"
-   - Enter your domain: `brandvoice.ai`
+   - Enter your domain: `brandvoice.studio`
 
 2. **Add DNS Records**
 
@@ -522,7 +522,7 @@ To send emails from your domain in production:
    # DMARC Record (for email policy)
    Type: TXT
    Name: _dmarc
-   Value: v=DMARC1; p=none; rua=mailto:admin@brandvoice.ai
+   Value: v=DMARC1; p=none; rua=mailto:admin@brandvoice.studio
    ```
 
 3. **Add Records to Your DNS Provider**
@@ -543,9 +543,9 @@ On Vercel, Railway, or your hosting platform:
 
 ```bash
 RESEND_API_KEY="re_your_production_key"
-EMAIL_FROM="BrandVoice.AI <hello@brandvoice.ai>"
-ADMIN_EMAIL="admin@brandvoice.ai"
-NEXT_PUBLIC_BASE_URL="https://brandvoice.ai"
+EMAIL_FROM="BrandVoice Studio <hello@brandvoice.studio>"
+ADMIN_EMAIL="admin@brandvoice.studio"
+NEXT_PUBLIC_BASE_URL="https://brandvoice.studio"
 ```
 
 ### Step 3: Test Production Setup
@@ -554,7 +554,7 @@ After deploying:
 
 ```bash
 # Test via your production API
-curl -X POST https://brandvoice.ai/api/email/test \
+curl -X POST https://brandvoice.studio/api/email/test \
   -H "Content-Type: application/json" \
   -d '{
     "type": "test",
@@ -596,7 +596,7 @@ if (result.success) {
 Resend can notify you of bounces, complaints, and deliveries:
 
 1. In Resend dashboard, go to "Webhooks"
-2. Add webhook endpoint: `https://brandvoice.ai/api/webhooks/resend`
+2. Add webhook endpoint: `https://brandvoice.studio/api/webhooks/resend`
 3. Select events: `email.delivered`, `email.bounced`, `email.complained`
 4. Save the webhook signing secret
 

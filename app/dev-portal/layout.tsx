@@ -78,7 +78,7 @@ export default function DevPortalLayout({ children }: DevPortalLayoutProps) {
                 </svg>
               </div>
               <div className="hidden sm:block">
-                <h1 className="text-lg font-bold text-gray-900">BrandVoice.AI</h1>
+                <h1 className="text-lg font-bold text-gray-900">BrandVoice Studio</h1>
                 <p className="text-xs text-gray-500">Dev Portal</p>
               </div>
             </Link>

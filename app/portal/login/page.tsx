@@ -244,7 +244,7 @@ export default function PortalLoginPage() {
           <div className="pt-8 border-t border-gray-200">
             <p className="text-sm text-gray-500">
               Need help?{' '}
-              <a href="mailto:support@brandvoice.ai" className="text-purple-600 hover:text-purple-700 font-medium">
+              <a href="mailto:support@brandvoice.studio" className="text-purple-600 hover:text-purple-700 font-medium">
                 Contact Support
               </a>
             </p>

@@ -1,8 +1,8 @@
-# BrandVoice.AI Email Notification System - Implementation Summary
+# BrandVoice Studio Email Notification System - Implementation Summary
 
 ## Overview
 
-A complete, production-ready email notification system has been implemented for BrandVoice.AI using Resend's API. The system is simple, free (generous free tier), and fully integrated with TypeScript for type safety.
+A complete, production-ready email notification system has been implemented for BrandVoice Studio using Resend's API. The system is simple, free (generous free tier), and fully integrated with TypeScript for type safety.
 
 ## What Was Built
 
@@ -19,7 +19,7 @@ A complete, production-ready email notification system has been implemented for 
 
 #### 2. Email Templates (`/lib/email/templates.ts` - 22KB)
 All templates feature:
-- Professional HTML/CSS design with BrandVoice.AI branding
+- Professional HTML/CSS design with BrandVoice Studio branding
 - Inline styles for maximum email client compatibility
 - Mobile-responsive layouts
 - Clear call-to-action buttons
@@ -117,8 +117,8 @@ Added email configuration section:
 # Email Configuration (Resend)
 # Sign up at https://resend.com for free tier (3,000 emails/month)
 RESEND_API_KEY="re_your_api_key_here"
-EMAIL_FROM="BrandVoice.AI <hello@brandvoice.ai>"
-ADMIN_EMAIL="admin@brandvoice.ai"
+EMAIL_FROM="BrandVoice Studio <hello@brandvoice.studio>"
+ADMIN_EMAIL="admin@brandvoice.studio"
 ```
 
 #### `package.json`
@@ -139,7 +139,7 @@ Added dependency:
 ## File Structure
 
 ```
-BrandVoice.AI Project
+BrandVoice Studio Project
 │
 ├── lib/email/                          # Email system directory
 │   ├── index.ts                        # Main email functions (8KB)
@@ -179,7 +179,7 @@ BrandVoice.AI Project
    ```bash
    # Add to .env file
    RESEND_API_KEY="re_your_actual_key"
-   EMAIL_FROM="BrandVoice.AI <onboarding@resend.dev>"
+   EMAIL_FROM="BrandVoice Studio <onboarding@resend.dev>"
    ADMIN_EMAIL="your-email@example.com"
    ```
 
@@ -339,7 +339,7 @@ if (isEmailConfigured()) {
 - Detailed error messages
 
 ### Professional Templates
-- BrandVoice.AI branding
+- BrandVoice Studio branding
 - Inline CSS (email compatible)
 - Clear CTAs
 - Personalization
@@ -380,7 +380,7 @@ if (isEmailConfigured()) {
 
 1. **Add Domain in Resend**
    - Dashboard → Domains → Add Domain
-   - Enter: `brandvoice.ai`
+   - Enter: `brandvoice.studio`
 
 2. **Add DNS Records**
    - DKIM record (authentication)
@@ -389,13 +389,13 @@ if (isEmailConfigured()) {
 
 3. **Update Email From**
    ```env
-   EMAIL_FROM="BrandVoice.AI <hello@brandvoice.ai>"
+   EMAIL_FROM="BrandVoice Studio <hello@brandvoice.studio>"
    ```
 
 4. **Deploy & Test**
    ```bash
    # Test production
-   curl -X POST https://brandvoice.ai/api/email/test \
+   curl -X POST https://brandvoice.studio/api/email/test \
      -H "Content-Type: application/json" \
      -d '{"type": "test", "email": "your-email@example.com"}'
    ```

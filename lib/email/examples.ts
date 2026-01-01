@@ -1,5 +1,5 @@
 /**
- * Example usage patterns for BrandVoice.AI Email System
+ * Example usage patterns for BrandVoice Studio Email System
  * These examples show how to integrate emails into your application
  */
 
@@ -195,7 +195,7 @@ export async function handlePaymentDispute(
   console.log(`URGENT: Payment dispute from ${clientName}`);
 
   // Send alert to admin
-  const adminEmail = process.env.ADMIN_EMAIL || 'admin@brandvoice.ai';
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@brandvoice.studio';
 
   const emailResult = await sendDisputeAlertEmail(
     adminEmail,

@@ -44,7 +44,7 @@ const nudgeConfigs: Record<string, NudgeConfig> = {
   howItWorks: {
     id: 'howItWorks',
     title: 'Want a Personalized Walkthrough?',
-    message: 'Our voice AI can explain exactly how BrandVoice.AI works for your specific business.',
+    message: 'Our voice AI can explain exactly how BrandVoice Studio works for your specific business.',
     highlightVoice: true,
     icon: 'mic',
     gradient: 'from-blue-500 to-cyan-500',

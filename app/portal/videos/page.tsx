@@ -189,7 +189,7 @@ export default function PortalVideosPage() {
             Your videos will appear here once they are generated and ready for download.
           </p>
           <p className="text-sm text-gray-500">
-            Need help? <a href="mailto:support@brandvoice.ai" className="text-blue-600 hover:text-blue-800">Contact Support</a>
+            Need help? <a href="mailto:support@brandvoice.studio" className="text-blue-600 hover:text-blue-800">Contact Support</a>
           </p>
         </div>
       ) : (

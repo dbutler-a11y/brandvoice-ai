@@ -49,9 +49,9 @@ async function seedBlog() {
       name: 'BrandVoice Team',
       slug: 'brandvoice-team',
       email: 'team@brandvoice.studio',
-      bio: 'The BrandVoice.AI team specializes in AI-powered video content creation, helping businesses create engaging spokesperson videos without appearing on camera.',
+      bio: 'The BrandVoice Studio team specializes in AI-powered video content creation, helping businesses create engaging spokesperson videos without appearing on camera.',
       title: 'Content Team',
-      company: 'BrandVoice.AI',
+      company: 'BrandVoice Studio',
     },
   });
 
@@ -62,7 +62,7 @@ async function seedBlog() {
     {
       slug: 'why-ai-spokespersons-are-the-future-of-video-marketing',
       title: 'Why AI Spokespersons Are the Future of Video Marketing',
-      metaTitle: 'AI Spokespersons: The Future of Video Marketing | BrandVoice.AI',
+      metaTitle: 'AI Spokespersons: The Future of Video Marketing | BrandVoice Studio',
       metaDescription: 'Discover how AI spokespersons are revolutionizing video marketing. Learn why businesses are switching to AI-powered video content for consistent, scalable marketing.',
       excerpt: 'Video marketing is essential, but creating consistent content is hard. AI spokespersons solve this by delivering professional videos without the hassle of filming.',
       content: `
@@ -114,7 +114,7 @@ async function seedBlog() {
 <p>The technology isn't meant to replace human connection entirely—it's meant to handle the heavy lifting of consistent content creation so you can focus on running your business.</p>
 
 <h2>Getting Started</h2>
-<p>The best way to understand AI spokesperson videos is to see them in action. At BrandVoice.AI, we create custom AI spokespersons and produce 30 days of content in just 7 days. Book a call to see examples and discuss how AI video can transform your marketing.</p>
+<p>The best way to understand AI spokesperson videos is to see them in action. At BrandVoice Studio, we create custom AI spokespersons and produce 30 days of content in just 7 days. Book a call to see examples and discuss how AI video can transform your marketing.</p>
 `,
       categoryId: categories[0].id,
       authorId: author.id,
@@ -125,7 +125,7 @@ async function seedBlog() {
     {
       slug: '30-video-content-ideas-for-service-businesses',
       title: '30 Video Content Ideas for Service-Based Businesses',
-      metaTitle: '30 Video Content Ideas for Service Businesses | BrandVoice.AI',
+      metaTitle: '30 Video Content Ideas for Service Businesses | BrandVoice Studio',
       metaDescription: 'Struggling with video content ideas? Here are 30 proven video topics for med spas, real estate agents, coaches, and other service-based businesses.',
       excerpt: 'Running out of video content ideas? Here are 30 proven topics that work for med spas, real estate agents, coaches, and other service-based businesses.',
       content: `
@@ -189,7 +189,7 @@ async function seedBlog() {
 </ul>
 
 <h2>Want These Videos Done For You?</h2>
-<p>At BrandVoice.AI, we don't just give you ideas—we create all 30 videos for you. Custom AI spokesperson, professional scripts, and polished editing. All delivered in 7 days. Book a call to learn more.</p>
+<p>At BrandVoice Studio, we don't just give you ideas—we create all 30 videos for you. Custom AI spokesperson, professional scripts, and polished editing. All delivered in 7 days. Book a call to learn more.</p>
 `,
       categoryId: categories[1].id,
       authorId: author.id,
@@ -200,7 +200,7 @@ async function seedBlog() {
     {
       slug: 'instagram-reels-vs-tiktok-where-should-you-post',
       title: 'Instagram Reels vs TikTok: Where Should Your Business Post?',
-      metaTitle: 'Instagram Reels vs TikTok for Business | BrandVoice.AI',
+      metaTitle: 'Instagram Reels vs TikTok for Business | BrandVoice Studio',
       metaDescription: 'Instagram Reels or TikTok? Learn which platform is better for your business, the key differences, and how to create content that works on both.',
       excerpt: 'Should your business focus on Instagram Reels or TikTok? We break down the differences, audience demographics, and how to maximize both platforms.',
       content: `
@@ -288,7 +288,7 @@ async function seedBlog() {
 </ul>
 
 <h2>The Best of Both Worlds</h2>
-<p>At BrandVoice.AI, we create AI spokesperson videos optimized for both platforms. Our 9:16 vertical format works perfectly on TikTok, Instagram Reels, and YouTube Shorts. You get 30 videos ready to post across all platforms—maximizing your reach without multiplying your workload.</p>
+<p>At BrandVoice Studio, we create AI spokesperson videos optimized for both platforms. Our 9:16 vertical format works perfectly on TikTok, Instagram Reels, and YouTube Shorts. You get 30 videos ready to post across all platforms—maximizing your reach without multiplying your workload.</p>
 
 <p>Ready to dominate short-form video on every platform? Book a call to see how we can help.</p>
 `,

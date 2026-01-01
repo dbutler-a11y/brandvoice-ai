@@ -1,6 +1,6 @@
 # Email System Quick Start Guide
 
-Get your BrandVoice.AI email notifications up and running in 5 minutes.
+Get your BrandVoice Studio email notifications up and running in 5 minutes.
 
 ## Step 1: Sign Up for Resend (2 minutes)
 
@@ -13,7 +13,7 @@ Get your BrandVoice.AI email notifications up and running in 5 minutes.
 
 1. In Resend dashboard, click "API Keys"
 2. Click "Create API Key"
-3. Give it a name (e.g., "BrandVoice.AI Production")
+3. Give it a name (e.g., "BrandVoice Studio Production")
 4. Copy the API key (starts with `re_`)
 
 ## Step 3: Configure Environment Variables (1 minute)
@@ -22,7 +22,7 @@ Add to your `.env` file:
 
 ```env
 RESEND_API_KEY="re_your_actual_api_key_here"
-EMAIL_FROM="BrandVoice.AI <hello@brandvoice.ai>"
+EMAIL_FROM="BrandVoice Studio <hello@brandvoice.studio>"
 ADMIN_EMAIL="your-email@yourdomain.com"
 ```
 
@@ -50,7 +50,7 @@ For production, verify your domain:
 
 1. In Resend dashboard, go to "Domains"
 2. Click "Add Domain"
-3. Enter your domain (e.g., `brandvoice.ai`)
+3. Enter your domain (e.g., `brandvoice.studio`)
 4. Add the DNS records to your domain registrar:
    - DKIM record (for authentication)
    - SPF record (for sender verification)
@@ -58,7 +58,7 @@ For production, verify your domain:
 5. Wait for verification (usually 5-10 minutes)
 6. Update your `EMAIL_FROM` to use your domain:
    ```env
-   EMAIL_FROM="BrandVoice.AI <hello@yourdomain.com>"
+   EMAIL_FROM="BrandVoice Studio <hello@yourdomain.com>"
    ```
 
 ## Quick Integration Examples
@@ -99,7 +99,7 @@ import { sendPaymentFailedEmail } from '@/lib/email';
 await sendPaymentFailedEmail(
   customer.email,
   customer.name,
-  'https://brandvoice.ai/billing/update'
+  'https://brandvoice.studio/billing/update'
 );
 ```
 

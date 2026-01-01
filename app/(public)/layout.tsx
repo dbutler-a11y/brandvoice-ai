@@ -194,7 +194,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
           {/* Bottom Bar */}
           <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-gray-500 text-sm">
-              &copy; {new Date().getFullYear()} BrandVoice.AI by Eula Properties LLC. All rights reserved.
+              &copy; {new Date().getFullYear()} BrandVoice Studio by Eula Properties LLC. All rights reserved.
             </p>
             <div className="flex items-center gap-1 text-gray-500 text-sm">
               <span>Made with</span>

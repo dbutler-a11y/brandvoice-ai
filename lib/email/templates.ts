@@ -1,5 +1,5 @@
 /**
- * Email Templates for BrandVoice.AI
+ * Email Templates for BrandVoice Studio
  * All templates use inline styles for maximum email client compatibility
  */
 
@@ -38,12 +38,12 @@ export function getWelcomeEmailTemplate(
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to BrandVoice.AI</title>
+  <title>Welcome to BrandVoice Studio</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #f9fafb;">
   <div style="${emailStyles.container}">
     <div style="${emailStyles.card}">
-      <h1 style="${emailStyles.header}">Welcome to BrandVoice.AI, ${clientName}! 🎉</h1>
+      <h1 style="${emailStyles.header}">Welcome to BrandVoice Studio, ${clientName}! 🎉</h1>
 
       <p style="${emailStyles.text}">
         We're thrilled to have you on board! You've just taken the first step towards transforming your brand's digital presence with AI-powered spokesperson videos.
@@ -102,13 +102,13 @@ export function getWelcomeEmailTemplate(
 
       <p style="${emailStyles.text}">
         Best regards,<br />
-        <strong>The BrandVoice.AI Team</strong>
+        <strong>The BrandVoice Studio Team</strong>
       </p>
     </div>
 
     <div style="${emailStyles.footer}">
-      <p>BrandVoice.AI - Amplify Your Brand with AI-Powered Video</p>
-      <p>You're receiving this email because you signed up for BrandVoice.AI</p>
+      <p>BrandVoice Studio - Amplify Your Brand with AI-Powered Video</p>
+      <p>You're receiving this email because you signed up for BrandVoice Studio</p>
     </div>
   </div>
 </body>
@@ -187,12 +187,12 @@ export function getPaymentFailedEmailTemplate(
 
       <p style="${emailStyles.text}">
         Best regards,<br />
-        <strong>The BrandVoice.AI Team</strong>
+        <strong>The BrandVoice Studio Team</strong>
       </p>
     </div>
 
     <div style="${emailStyles.footer}">
-      <p>BrandVoice.AI - Amplify Your Brand with AI-Powered Video</p>
+      <p>BrandVoice Studio - Amplify Your Brand with AI-Powered Video</p>
       <p>Questions? Reply to this email or visit our <a href="${BASE_URL}/support" style="color: #6b7280;">support center</a></p>
     </div>
   </div>
@@ -224,7 +224,7 @@ export function getWinBackEmailTemplate(
       <h1 style="${emailStyles.header}">We Miss You, ${clientName}! 💙</h1>
 
       <p style="${emailStyles.text}">
-        It's been a while since we've seen you on BrandVoice.AI, and we wanted to reach out to see how you're doing.
+        It's been a while since we've seen you on BrandVoice Studio, and we wanted to reach out to see how you're doing.
       </p>
 
       <p style="${emailStyles.text}">
@@ -296,12 +296,12 @@ export function getWinBackEmailTemplate(
 
       <p style="${emailStyles.text}">
         Best regards,<br />
-        <strong>The BrandVoice.AI Team</strong>
+        <strong>The BrandVoice Studio Team</strong>
       </p>
     </div>
 
     <div style="${emailStyles.footer}">
-      <p>BrandVoice.AI - Amplify Your Brand with AI-Powered Video</p>
+      <p>BrandVoice Studio - Amplify Your Brand with AI-Powered Video</p>
       <p>Not interested? <a href="${BASE_URL}/unsubscribe" style="color: #6b7280;">Unsubscribe from win-back emails</a></p>
     </div>
   </div>
@@ -432,7 +432,7 @@ export function getDisputeAlertEmailTemplate(
     </div>
 
     <div style="${emailStyles.footer}">
-      <p>BrandVoice.AI - Admin Alert System</p>
+      <p>BrandVoice Studio - Admin Alert System</p>
       <p style="color: #dc2626;">This is an automated alert. Do not reply to this email.</p>
     </div>
   </div>
@@ -562,17 +562,17 @@ export function getPaymentReceivedEmailTemplate(
       </ul>
 
       <p style="${emailStyles.text}; margin-top: 30px;">
-        Thank you for being a valued BrandVoice.AI customer!
+        Thank you for being a valued BrandVoice Studio customer!
       </p>
 
       <p style="${emailStyles.text}">
         Best regards,<br />
-        <strong>The BrandVoice.AI Team</strong>
+        <strong>The BrandVoice Studio Team</strong>
       </p>
     </div>
 
     <div style="${emailStyles.footer}">
-      <p>BrandVoice.AI - Amplify Your Brand with AI-Powered Video</p>
+      <p>BrandVoice Studio - Amplify Your Brand with AI-Powered Video</p>
       <p>Questions about this payment? Reply to this email or visit our <a href="${BASE_URL}/support" style="color: #6b7280;">support center</a></p>
     </div>
   </div>

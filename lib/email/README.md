@@ -1,6 +1,6 @@
 # Email Notification System
 
-Email notification system for BrandVoice.AI using Resend for reliable, transactional email delivery.
+Email notification system for BrandVoice Studio using Resend for reliable, transactional email delivery.
 
 ## Features
 
@@ -31,8 +31,8 @@ Add to your `.env` file:
 
 ```env
 RESEND_API_KEY="re_your_api_key_here"
-EMAIL_FROM="BrandVoice.AI <hello@brandvoice.ai>"
-ADMIN_EMAIL="admin@brandvoice.ai"
+EMAIL_FROM="BrandVoice Studio <hello@brandvoice.studio>"
+ADMIN_EMAIL="admin@brandvoice.studio"
 ```
 
 ### 4. Domain Verification (Production)
@@ -40,7 +40,7 @@ ADMIN_EMAIL="admin@brandvoice.ai"
 For production, you'll need to verify your domain:
 
 1. Go to Resend dashboard > Domains
-2. Add your domain (e.g., brandvoice.ai)
+2. Add your domain (e.g., brandvoice.studio)
 3. Add the provided DNS records to your domain registrar
 4. Wait for verification (usually a few minutes)
 5. Update `EMAIL_FROM` to use your verified domain
@@ -85,7 +85,7 @@ if (result.success) {
 const result = await sendPaymentFailedEmail(
   'client@example.com',
   'John Smith',
-  'https://brandvoice.ai/billing/update-payment'
+  'https://brandvoice.studio/billing/update-payment'
 );
 ```
 
@@ -105,7 +105,7 @@ const result = await sendWinBackEmail(
 ```typescript
 // Alert admin about payment disputes
 const result = await sendDisputeAlertEmail(
-  'admin@brandvoice.ai', // or use default from env
+  'admin@brandvoice.studio', // or use default from env
   'John Smith',
   'PP-D-12345',
   297.00
@@ -231,7 +231,7 @@ All email templates are located in `templates.ts` and use:
 
 - Inline CSS for maximum email client compatibility
 - Responsive design that works on mobile and desktop
-- Professional branding with BrandVoice.AI colors
+- Professional branding with BrandVoice Studio colors
 - Clear call-to-action buttons
 - Helpful links and next steps
 
@@ -362,4 +362,4 @@ console.log('Test result:', test);
 
 ## License
 
-Part of BrandVoice.AI project.
+Part of BrandVoice Studio project.

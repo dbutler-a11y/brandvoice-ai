@@ -926,7 +926,7 @@ PROSPECT INFO:
 
 YOUR PERSONA:
 - Name: [Your name]
-- Company: BrandVoice.AI
+- Company: BrandVoice Studio
 - Offering: AI spokesperson video production for businesses
 
 SCRIPT STRUCTURE (exactly 5 minutes):

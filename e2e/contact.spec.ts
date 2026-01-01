@@ -27,7 +27,7 @@ test.describe('Footer Navigation', () => {
 
     // Check copyright text
     await expect(page.locator('footer')).toContainText('2025');
-    await expect(page.locator('footer')).toContainText('BrandVoice.AI');
+    await expect(page.locator('footer')).toContainText('BrandVoice Studio');
   });
 
   test('footer has Book a Call button', async ({ page }) => {

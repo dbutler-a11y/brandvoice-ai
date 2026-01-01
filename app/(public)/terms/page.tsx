@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Terms of Service | BrandVoice.AI',
-  description: 'Terms of Service for BrandVoice.AI services provided by Eula Properties LLC',
+  title: 'Terms of Service | BrandVoice Studio',
+  description: 'Terms of Service for BrandVoice Studio services provided by Eula Properties LLC',
 };
 
 export default function TermsOfServicePage() {
@@ -25,7 +25,7 @@ export default function TermsOfServicePage() {
           <section className="mb-10">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Agreement to Terms</h2>
             <p className="text-gray-700 leading-relaxed">
-              These Terms of Service (&quot;Terms&quot;) constitute a legally binding agreement between you and <strong>Eula Properties LLC</strong>, operating as <strong>BrandVoice.AI</strong> (&quot;Company,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;), concerning your access to and use of the BrandVoice.AI website and services.
+              These Terms of Service (&quot;Terms&quot;) constitute a legally binding agreement between you and <strong>Eula Properties LLC</strong>, operating as <strong>BrandVoice Studio</strong> (&quot;Company,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;), concerning your access to and use of the BrandVoice Studio website and services.
             </p>
             <p className="text-gray-700 leading-relaxed mt-4">
               By accessing or using our services, you agree to be bound by these Terms. If you disagree with any part of these Terms, you may not access our services.
@@ -35,7 +35,7 @@ export default function TermsOfServicePage() {
           <section className="mb-10">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Services Description</h2>
             <p className="text-gray-700 leading-relaxed">
-              BrandVoice.AI provides done-for-you AI spokesperson video production services, including but not limited to:
+              BrandVoice Studio provides done-for-you AI spokesperson video production services, including but not limited to:
             </p>
             <ul className="list-disc pl-6 text-gray-700 space-y-2 mt-4">
               <li>Custom AI spokesperson avatar creation</li>
@@ -86,7 +86,7 @@ export default function TermsOfServicePage() {
               <strong>5.2 Deliverables:</strong> Upon full payment, you receive full commercial usage rights to the videos we create for you. You may use the videos for organic posts, paid advertising, email marketing, website content, and any other business purpose.
             </p>
             <p className="text-gray-700 leading-relaxed mt-4">
-              <strong>5.3 Our Technology:</strong> The AI technology, methods, and systems used to create your content remain the exclusive property of BrandVoice.AI and its technology partners.
+              <strong>5.3 Our Technology:</strong> The AI technology, methods, and systems used to create your content remain the exclusive property of BrandVoice Studio and its technology partners.
             </p>
           </section>
 
@@ -121,7 +121,7 @@ export default function TermsOfServicePage() {
           <section className="mb-10">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Limitation of Liability</h2>
             <p className="text-gray-700 leading-relaxed">
-              To the maximum extent permitted by law, Eula Properties LLC and BrandVoice.AI shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, data, or business opportunities, arising from your use of our services.
+              To the maximum extent permitted by law, Eula Properties LLC and BrandVoice Studio shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, data, or business opportunities, arising from your use of our services.
             </p>
             <p className="text-gray-700 leading-relaxed mt-4">
               Our total liability shall not exceed the amount you paid for the specific service giving rise to the claim.
@@ -156,12 +156,12 @@ export default function TermsOfServicePage() {
             </p>
             <div className="bg-gray-50 rounded-lg p-6 mt-4">
               <p className="text-gray-700"><strong>Eula Properties LLC</strong></p>
-              <p className="text-gray-700">Operating as BrandVoice.AI</p>
+              <p className="text-gray-700">Operating as BrandVoice Studio</p>
               <p className="text-gray-700 mt-2">
-                Email: <a href="mailto:legal@brandvoice.ai" className="text-purple-600 hover:text-purple-700">legal@brandvoice.ai</a>
+                Email: <a href="mailto:legal@brandvoice.studio" className="text-purple-600 hover:text-purple-700">legal@brandvoice.studio</a>
               </p>
               <p className="text-gray-700">
-                Support: <a href="mailto:support@brandvoice.ai" className="text-purple-600 hover:text-purple-700">support@brandvoice.ai</a>
+                Support: <a href="mailto:support@brandvoice.studio" className="text-purple-600 hover:text-purple-700">support@brandvoice.studio</a>
               </p>
             </div>
           </section>

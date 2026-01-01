@@ -31,7 +31,7 @@ function log(message: string, color: keyof typeof colors = 'reset') {
 }
 
 async function testEmailSystem() {
-  log('\n=== BrandVoice.AI Email System Test ===\n', 'cyan');
+  log('\n=== BrandVoice Studio Email System Test ===\n', 'cyan');
 
   // Check configuration
   log('Checking email configuration...', 'blue');
@@ -79,7 +79,7 @@ async function testEmailSystem() {
   const test3 = await sendPaymentFailedEmail(
     testEmail,
     'Test Client',
-    'https://brandvoice.ai/billing/update'
+    'https://brandvoice.studio/billing/update'
   );
   if (test3.success) {
     log(`✓ Payment failed email sent! Message ID: ${test3.messageId}`, 'green');

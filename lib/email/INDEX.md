@@ -1,6 +1,6 @@
 # Email Notification System - Complete Index
 
-Welcome to the BrandVoice.AI Email Notification System! This index helps you navigate all the documentation and code files.
+Welcome to the BrandVoice Studio Email Notification System! This index helps you navigate all the documentation and code files.
 
 ## Quick Start
 
@@ -145,8 +145,8 @@ Features:
 
 ```env
 RESEND_API_KEY="re_your_api_key"
-EMAIL_FROM="BrandVoice.AI <hello@brandvoice.ai>"
-ADMIN_EMAIL="admin@brandvoice.ai"
+EMAIL_FROM="BrandVoice Studio <hello@brandvoice.studio>"
+ADMIN_EMAIL="admin@brandvoice.studio"
 ```
 
 ### Import & Use

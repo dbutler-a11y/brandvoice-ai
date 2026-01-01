@@ -48,7 +48,7 @@ sendPaymentFailedEmail(
 await sendPaymentFailedEmail(
   'john@example.com',
   'John Doe',
-  'https://brandvoice.ai/billing/update'
+  'https://brandvoice.studio/billing/update'
 );
 ```
 
@@ -103,7 +103,7 @@ sendDisputeAlertEmail(
 **Example:**
 ```typescript
 await sendDisputeAlertEmail(
-  'admin@brandvoice.ai',
+  'admin@brandvoice.studio',
   'John Doe',
   'PP-D-12345',
   297.00
@@ -164,11 +164,11 @@ if (result.success) {
 ```env
 # Required
 RESEND_API_KEY="re_your_api_key"
-EMAIL_FROM="BrandVoice.AI <hello@brandvoice.ai>"
+EMAIL_FROM="BrandVoice Studio <hello@brandvoice.studio>"
 
 # Optional (has defaults)
-ADMIN_EMAIL="admin@brandvoice.ai"
-NEXT_PUBLIC_BASE_URL="https://brandvoice.ai"
+ADMIN_EMAIL="admin@brandvoice.studio"
+NEXT_PUBLIC_BASE_URL="https://brandvoice.studio"
 NEXT_PUBLIC_CALENDLY_URL="https://calendly.com/..."
 ```
 

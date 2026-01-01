@@ -2,13 +2,13 @@
 
 ## Overview
 
-The BrandVoice.AI email notification system is designed to be simple, reliable, and scalable. It uses Resend for email delivery and provides a clean API for sending transactional emails.
+The BrandVoice Studio email notification system is designed to be simple, reliable, and scalable. It uses Resend for email delivery and provides a clean API for sending transactional emails.
 
 ## Architecture Diagram
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    BrandVoice.AI Application                 │
+│                    BrandVoice Studio Application                 │
 ├─────────────────────────────────────────────────────────────┤
 │                                                               │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
@@ -434,4 +434,4 @@ Test on:
 
 ## License
 
-Part of BrandVoice.AI project.
+Part of BrandVoice Studio project.

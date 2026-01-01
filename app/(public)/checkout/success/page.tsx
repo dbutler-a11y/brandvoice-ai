@@ -44,7 +44,7 @@ function SuccessContent() {
             Payment Successful!
           </h1>
           <p className="text-xl text-gray-600">
-            Thank you for choosing BrandVoice.AI
+            Thank you for choosing BrandVoice Studio
           </p>
         </div>
 
@@ -166,7 +166,7 @@ function SuccessContent() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="mailto:support@brandvoice.ai"
+              href="mailto:support@brandvoice.studio"
               className="bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200"
             >
               Contact Support

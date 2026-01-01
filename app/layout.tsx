@@ -15,7 +15,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "BrandVoice.AI - Custom AI Spokespersons & Done-For-You Video Content",
+  title: "BrandVoice Studio - Custom AI Spokespersons & Done-For-You Video Content",
   description: "Your custom AI spokesperson and 30 days of viral-ready content, delivered in just 7 days. Never film yourself again.",
   // Cross-platform icon configuration (centralized here - do not duplicate elsewhere)
   icons: {
@@ -34,20 +34,20 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "BrandVoice.AI",
+    title: "BrandVoice Studio",
   },
   // Open Graph metadata (for social sharing previews)
   openGraph: {
-    title: "BrandVoice.AI - Custom AI Spokespersons & Done-For-You Video Content",
+    title: "BrandVoice Studio - Custom AI Spokespersons & Done-For-You Video Content",
     description: "Your custom AI spokesperson and 30 days of viral-ready content, delivered in just 7 days. Never film yourself again.",
     url: "https://brandvoice.studio",
-    siteName: "BrandVoice.AI",
+    siteName: "BrandVoice Studio",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "BrandVoice.AI - AI Spokesperson Videos",
+        alt: "BrandVoice Studio - AI Spokesperson Videos",
       },
     ],
     locale: "en_US",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
   // Twitter Card metadata
   twitter: {
     card: "summary_large_image",
-    title: "BrandVoice.AI - Custom AI Spokespersons & Done-For-You Video Content",
+    title: "BrandVoice Studio - Custom AI Spokespersons & Done-For-You Video Content",
     description: "Your custom AI spokesperson and 30 days of viral-ready content, delivered in just 7 days. Never film yourself again.",
     images: ["/og-image.png"],
   },
