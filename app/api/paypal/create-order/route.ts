@@ -43,7 +43,7 @@ async function generateAccessToken(): Promise<string> {
 export async function POST(request: NextRequest) {
   // Apply rate limiting to prevent abuse
   const rateLimitResult = rateLimit(request, RateLimitTier.STRICT);
-  if (!rateLimitResult.allowed) {
+  if (!rateLimitResult.success) {
     return NextResponse.json(
       { error: 'Too many requests. Please try again later.' },
       { status: 429 }

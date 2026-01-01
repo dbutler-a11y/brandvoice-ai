@@ -69,7 +69,7 @@ export async function POST(request: Request) {
     }
 
     // Generate speech
-    console.log(`[TTS API] Generating speech: ${text.substring(0, 50)}... (voice: ${voiceId})`);
+    console.log(`[TTS API] Generating speech: ${text!.substring(0, 50)}... (voice: ${voiceId})`);
 
     const audioBuffer = await textToSpeech({
       text: text!,

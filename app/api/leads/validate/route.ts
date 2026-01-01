@@ -28,8 +28,8 @@ const IMPORTANT_FIELDS = [
   { field: 'targetAudience', label: 'Target Audience' },
 ];
 
-// Optional fields for validation guidance - exported for reference
-export const OPTIONAL_FIELDS = [
+// Optional fields for validation guidance
+const OPTIONAL_FIELDS = [
   { field: 'website', label: 'Website URL' },
   { field: 'productsServices', label: 'Products/Services' },
   { field: 'currentVideoStrategy', label: 'Current Video Strategy' },
