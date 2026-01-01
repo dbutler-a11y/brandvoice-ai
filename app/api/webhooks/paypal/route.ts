@@ -41,6 +41,7 @@ interface PayPalWebhookPayload {
     rel: string;
     method: string;
   }>;
+  [key: string]: unknown;
 }
 
 /**

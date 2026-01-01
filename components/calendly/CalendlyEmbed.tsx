@@ -6,6 +6,7 @@ interface CalendlyEmbedProps {
   url?: string;
   className?: string;
   height?: string;
+  hideHeader?: boolean;
 }
 
 declare global {
@@ -17,6 +18,8 @@ declare global {
         prefill?: Record<string, string>;
         utm?: Record<string, string>;
       }) => void;
+      initPopupWidget: (options: { url: string; prefill?: Record<string, unknown> }) => void;
+      showPopupWidget: (url: string) => void;
     };
   }
 }
@@ -25,8 +28,11 @@ export default function CalendlyEmbed({
   url,
   className = '',
   height = '950px',
+  hideHeader = false,
 }: CalendlyEmbedProps) {
-  const calendlyUrl = url || process.env.NEXT_PUBLIC_CALENDLY_URL || '';
+  const baseUrl = url || process.env.NEXT_PUBLIC_CALENDLY_URL || '';
+  // Add parameters to hide Calendly branding/header for cleaner embed
+  const calendlyUrl = baseUrl ? `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}hide_gdpr_banner=1${hideHeader ? '&hide_event_type_details=1' : ''}` : '';
 
   useEffect(() => {
     // Load Calendly script
@@ -46,7 +52,7 @@ export default function CalendlyEmbed({
     };
   }, []);
 
-  if (!calendlyUrl) {
+  if (!baseUrl) {
     return (
       <div className={`flex items-center justify-center bg-gray-50 rounded-xl p-8 ${className}`} style={{ minHeight: height }}>
         <div className="text-center">

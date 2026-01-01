@@ -91,8 +91,8 @@ export default function BookCallSection({
           </div>
 
           {/* Calendly Embed */}
-          <div className="bg-white rounded-2xl shadow-xl">
-            <CalendlyEmbed height="700px" />
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <CalendlyEmbed height="750px" hideHeader />
           </div>
         </div>
       </div>

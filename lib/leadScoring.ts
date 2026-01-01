@@ -325,7 +325,7 @@ export async function updateLeadScore(leadId: string): Promise<Lead> {
     where: { id: leadId },
     data: {
       score: scoreBreakdown.total,
-      scoreBreakdown: scoreBreakdown as unknown as Record<string, unknown>, // Prisma Json type
+      scoreBreakdown: JSON.parse(JSON.stringify(scoreBreakdown)), // Prisma Json type
       lastScoredAt: new Date(),
       isQualified: shouldQualify,
       qualifiedAt: shouldQualify && !lead.isQualified ? new Date() : lead.qualifiedAt,

@@ -391,7 +391,7 @@ export default function DeliverablesPage() {
   const [copiedField, setCopiedField] = useState<string | null>(null)
   const [filterAvatar, setFilterAvatar] = useState<string>('all')
 
-  const avatars = [...new Set(thirtyDayContent.map(c => c.avatar))]
+  const avatars = Array.from(new Set(thirtyDayContent.map(c => c.avatar)))
 
   const filteredContent = filterAvatar === 'all'
     ? thirtyDayContent

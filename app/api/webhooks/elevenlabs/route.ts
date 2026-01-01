@@ -80,6 +80,7 @@ interface ElevenLabsWebhookPayload {
   transcript?: TranscriptEntry[];
   metadata?: Record<string, unknown>;
   collected_data?: Record<string, string>;
+  [key: string]: unknown;
 }
 
 interface TranscriptEntry {

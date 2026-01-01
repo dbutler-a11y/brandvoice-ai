@@ -13,14 +13,7 @@ interface CalendlyButtonProps {
   };
 }
 
-declare global {
-  interface Window {
-    Calendly?: {
-      initPopupWidget: (options: { url: string; prefill?: Record<string, unknown> }) => void;
-      showPopupWidget: (url: string) => void;
-    };
-  }
-}
+// Calendly types are declared in CalendlyEmbed.tsx
 
 export default function CalendlyButton({
   url,

@@ -56,11 +56,12 @@ export async function POST(req: NextRequest) {
     const result = await handlePayPalWebhook(eventType, body);
 
     if (result) {
-      console.log(`[PayPal Webhook API] ✓ Successfully processed event for client ${result.id}`);
-      return NextResponse.json({ 
-        success: true, 
+      const clientId = 'id' in result ? result.id : undefined;
+      console.log(`[PayPal Webhook API] ✓ Successfully processed event${clientId ? ` for client ${clientId}` : ''}`);
+      return NextResponse.json({
+        success: true,
         message: 'Webhook processed successfully',
-        clientId: result.id 
+        clientId
       });
     }
 

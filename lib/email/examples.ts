@@ -290,11 +290,24 @@ export async function sendBulkEmails(
 /**
  * Example 7: Integration with Next.js API route
  */
-export async function handleWebhookEmailTrigger(webhookData: { event_type: string; resource: { subscriber?: { email_address: string; name: { given_name: string; surname: string } }; plan?: { name: string }; payer?: { email_address: string; name: { given_name: string } }; amount?: { value: string }; reason?: string; dispute_amount?: { value: string }; disputed_transactions?: { seller_transaction_id: string }[] } }) {
+interface WebhookResource {
+  id?: string;
+  dispute_id?: string;
+  subscriber?: { email_address: string; name: { given_name: string; surname: string } };
+  plan?: { name: string };
+  payer?: { email_address: string; name: { given_name: string }; payer_info?: { first_name: string; last_name: string } };
+  amount?: { value: string; total?: string };
+  reason?: string;
+  dispute_amount?: { value: string };
+  disputed_transactions?: { seller_transaction_id: string; buyer?: { email: string; name: string } }[];
+}
+
+export async function handleWebhookEmailTrigger(webhookData: { event_type: string; resource: WebhookResource }) {
   const { event_type, resource } = webhookData;
 
   switch (event_type) {
     case 'BILLING.SUBSCRIPTION.CREATED':
+      if (!resource.subscriber || !resource.plan) return null;
       return await handleNewSubscription(
         resource.subscriber.email_address,
         resource.subscriber.name.given_name + ' ' + resource.subscriber.name.surname,
@@ -302,25 +315,28 @@ export async function handleWebhookEmailTrigger(webhookData: { event_type: strin
       );
 
     case 'PAYMENT.SALE.COMPLETED':
+      if (!resource.payer || !resource.amount) return null;
       return await handlePaymentReceived(
         resource.payer.email_address,
-        resource.payer.payer_info.first_name + ' ' + resource.payer.payer_info.last_name,
-        parseFloat(resource.amount.total),
-        resource.id
+        resource.payer.payer_info?.first_name + ' ' + resource.payer.payer_info?.last_name,
+        parseFloat(resource.amount.total || resource.amount.value),
+        resource.id || 'unknown'
       );
 
     case 'BILLING.SUBSCRIPTION.PAYMENT.FAILED':
+      if (!resource.subscriber) return null;
       return await handlePaymentFailure(
         resource.subscriber.email_address,
         resource.subscriber.name.given_name + ' ' + resource.subscriber.name.surname,
-        resource.id
+        resource.id || 'unknown'
       );
 
     case 'CUSTOMER.DISPUTE.CREATED':
+      if (!resource.disputed_transactions?.[0]?.buyer || !resource.dispute_amount) return null;
       return await handlePaymentDispute(
         resource.disputed_transactions[0].buyer.email,
         resource.disputed_transactions[0].buyer.name,
-        resource.dispute_id,
+        resource.dispute_id || 'unknown',
         parseFloat(resource.dispute_amount.value)
       );
 

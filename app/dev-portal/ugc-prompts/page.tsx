@@ -1112,7 +1112,7 @@ export default function UGCPromptsPage() {
     notes: ''
   })
 
-  const avatars = [...new Set(prompts.map(p => p.avatar))]
+  const avatars = Array.from(new Set(prompts.map(p => p.avatar)))
 
   const filteredPrompts = prompts.filter(p => {
     if (filterAvatar !== 'all' && p.avatar !== filterAvatar) return false

@@ -65,7 +65,7 @@ export function getOrCreateLead(platform: Platform, oddy: string, username?: str
   const key = getLeadKey(platform, oddy);
 
   // Check if lead exists
-  for (const lead of leads.values()) {
+  for (const lead of Array.from(leads.values())) {
     if (lead.platform === platform && lead.oddy === oddy) {
       return lead;
     }

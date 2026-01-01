@@ -53,7 +53,7 @@ async function testEmailSystem() {
   if (test1.success) {
     log(`✓ Test email sent! Message ID: ${test1.messageId}`, 'green');
   } else {
-    log(`❌ Test email failed: ${test1.error}`, 'red');
+    log(`❌ Test email failed: ${(test1 as { error?: string }).error ?? 'Unknown error'}`, 'red');
   }
 
   // Wait a bit between emails
@@ -69,7 +69,7 @@ async function testEmailSystem() {
   if (test2.success) {
     log(`✓ Welcome email sent! Message ID: ${test2.messageId}`, 'green');
   } else {
-    log(`❌ Welcome email failed: ${test2.error}`, 'red');
+    log(`❌ Welcome email failed: ${(test2 as { error?: string }).error ?? 'Unknown error'}`, 'red');
   }
 
   await delay(2000);
@@ -84,7 +84,7 @@ async function testEmailSystem() {
   if (test3.success) {
     log(`✓ Payment failed email sent! Message ID: ${test3.messageId}`, 'green');
   } else {
-    log(`❌ Payment failed email failed: ${test3.error}`, 'red');
+    log(`❌ Payment failed email failed: ${(test3 as { error?: string }).error ?? 'Unknown error'}`, 'red');
   }
 
   await delay(2000);
@@ -100,7 +100,7 @@ async function testEmailSystem() {
   if (test4.success) {
     log(`✓ Payment received email sent! Message ID: ${test4.messageId}`, 'green');
   } else {
-    log(`❌ Payment received email failed: ${test4.error}`, 'red');
+    log(`❌ Payment received email failed: ${(test4 as { error?: string }).error ?? 'Unknown error'}`, 'red');
   }
 
   await delay(2000);
@@ -115,7 +115,7 @@ async function testEmailSystem() {
   if (test5.success) {
     log(`✓ Win-back email sent! Message ID: ${test5.messageId}`, 'green');
   } else {
-    log(`❌ Win-back email failed: ${test5.error}`, 'red');
+    log(`❌ Win-back email failed: ${(test5 as { error?: string }).error ?? 'Unknown error'}`, 'red');
   }
 
   await delay(2000);
@@ -131,7 +131,7 @@ async function testEmailSystem() {
   if (test6.success) {
     log(`✓ Dispute alert email sent! Message ID: ${test6.messageId}`, 'green');
   } else {
-    log(`❌ Dispute alert email failed: ${test6.error}`, 'red');
+    log(`❌ Dispute alert email failed: ${(test6 as { error?: string }).error ?? 'Unknown error'}`, 'red');
   }
 
   // Summary

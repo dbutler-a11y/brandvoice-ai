@@ -200,7 +200,7 @@ export default function RevenueAnalytics() {
         {/* Bar Chart */}
         <div className="space-y-2">
           {chartData.map((item, index) => {
-            const label = chartView === 'daily'
+            const label = 'date' in item
               ? formatShortDate(item.date)
               : item.month
             const revenue = item.revenue

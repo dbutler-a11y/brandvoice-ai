@@ -412,6 +412,7 @@ export async function handleDisputeResolved(payload: any) {
       await prisma.dispute.create({
         data: {
           disputeId,
+          reason: 'unknown',
           status: 'resolved',
           outcome: outcome || 'unknown',
           resolvedAt: new Date(payload.update_time || payload.resource?.update_time || Date.now()),

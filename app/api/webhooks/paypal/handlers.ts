@@ -224,6 +224,11 @@ export async function handlePaymentRefunded(payload: PayPalWebhookPayload) {
 
   const { resource } = payload;
   const refundId = resource.id;
+
+  if (!refundId) {
+    throw new Error('Refund ID not found in webhook payload');
+  }
+
   const amount = amountToCents(resource.amount);
   const saleId = (resource as Record<string, unknown>).sale_id as string;
   const refundAmount = amount / 100;
@@ -654,6 +659,11 @@ export async function handleDisputeCreated(payload: PayPalWebhookPayload) {
 
   const { resource } = payload;
   const disputeId = resource.id;
+
+  if (!disputeId) {
+    throw new Error('Dispute ID not found in webhook payload');
+  }
+
   const reason = (resource as Record<string, unknown>).reason as string;
   const amount = amountToCents(resource.amount);
   const currency = resource.amount?.currency_code || 'USD';
@@ -793,6 +803,11 @@ export async function handleDisputeResolved(payload: PayPalWebhookPayload) {
 
   const { resource } = payload;
   const disputeId = resource.id;
+
+  if (!disputeId) {
+    throw new Error('Dispute ID not found in webhook payload');
+  }
+
   const outcome = (resource as Record<string, unknown>).dispute_outcome as {
     outcome_code?: string;
   };

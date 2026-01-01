@@ -162,7 +162,7 @@ export async function GET() {
           if (Array.isArray(addOns) && addOns.length > 0) {
             ordersWithAddOns++
             addOns.forEach((addon: { name?: string; id?: string; price: number; quantity: number }) => {
-              const name = addon.name || addon.id
+              const name = addon.name || addon.id || 'Unknown Add-on'
               addOnCounts.set(name, (addOnCounts.get(name) || 0) + 1)
               addOnRevenue.set(name, (addOnRevenue.get(name) || 0) + (addon.price * addon.quantity * 100))
             })
