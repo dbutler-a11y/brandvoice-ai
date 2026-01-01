@@ -39,70 +39,86 @@ interface BlogPageProps {
 }
 
 async function getCategories() {
-  return prisma.blogCategory.findMany({
-    include: {
-      _count: {
-        select: { posts: true },
+  try {
+    return await prisma.blogCategory.findMany({
+      include: {
+        _count: {
+          select: { posts: true },
+        },
       },
-    },
-    orderBy: { name: 'asc' },
-  });
+      orderBy: { name: 'asc' },
+    });
+  } catch (error) {
+    console.error('Failed to fetch categories:', error);
+    return [];
+  }
 }
 
 async function getPosts(categorySlug?: string, page = 1, search?: string) {
-  const perPage = 9;
-  const skip = (page - 1) * perPage;
+  try {
+    const perPage = 9;
+    const skip = (page - 1) * perPage;
 
-  const where = {
-    status: 'PUBLISHED' as const,
-    ...(categorySlug && {
-      category: { slug: categorySlug },
-    }),
-    ...(search && {
-      OR: [
-        { title: { contains: search, mode: 'insensitive' as const } },
-        { excerpt: { contains: search, mode: 'insensitive' as const } },
-      ],
-    }),
-  };
+    const where = {
+      status: 'PUBLISHED' as const,
+      ...(categorySlug && {
+        category: { slug: categorySlug },
+      }),
+      ...(search && {
+        OR: [
+          { title: { contains: search, mode: 'insensitive' as const } },
+          { excerpt: { contains: search, mode: 'insensitive' as const } },
+        ],
+      }),
+    };
 
-  const [posts, totalCount, featuredPost] = await Promise.all([
-    prisma.blogPost.findMany({
-      where: {
-        ...where,
-        featured: false,
-      },
-      include: {
-        category: true,
-        author: true,
-      },
-      orderBy: { publishedAt: 'desc' },
-      skip,
-      take: perPage,
-    }),
-    prisma.blogPost.count({ where }),
-    page === 1 && !search
-      ? prisma.blogPost.findFirst({
-          where: {
-            ...where,
-            featured: true,
-          },
-          include: {
-            category: true,
-            author: true,
-          },
-          orderBy: { publishedAt: 'desc' },
-        })
-      : null,
-  ]);
+    const [posts, totalCount, featuredPost] = await Promise.all([
+      prisma.blogPost.findMany({
+        where: {
+          ...where,
+          featured: false,
+        },
+        include: {
+          category: true,
+          author: true,
+        },
+        orderBy: { publishedAt: 'desc' },
+        skip,
+        take: perPage,
+      }),
+      prisma.blogPost.count({ where }),
+      page === 1 && !search
+        ? prisma.blogPost.findFirst({
+            where: {
+              ...where,
+              featured: true,
+            },
+            include: {
+              category: true,
+              author: true,
+            },
+            orderBy: { publishedAt: 'desc' },
+          })
+        : null,
+    ]);
 
-  return {
-    posts,
-    featuredPost,
-    totalCount,
-    totalPages: Math.ceil(totalCount / perPage),
-    currentPage: page,
-  };
+    return {
+      posts,
+      featuredPost,
+      totalCount,
+      totalPages: Math.ceil(totalCount / perPage),
+      currentPage: page,
+    };
+  } catch (error) {
+    console.error('Failed to fetch posts:', error);
+    return {
+      posts: [],
+      featuredPost: null,
+      totalCount: 0,
+      totalPages: 0,
+      currentPage: page,
+    };
+  }
 }
 
 function BlogSkeleton() {
