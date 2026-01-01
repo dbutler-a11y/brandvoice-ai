@@ -835,215 +835,236 @@ export default function HomePage() {
       {/* Pricing Section */}
       <section id="pricing" className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-100 text-purple-700 text-sm font-medium mb-6">
+              <Image src="/images/icons/brand/sparkle-stars.png" alt="" width={16} height={16} className="w-4 h-4" />
+              50% OFF — Limited Time
+            </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
               Choose Your Package
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              From one-time launches to full-scale content engines
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+              From brand launches to full-scale content engines
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Package 1: AI Spokesperson Launch Kit */}
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow">
-              <div className="p-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                  AI Spokesperson Launch Kit
-                </h3>
-                <div className="mb-6">
-                  <span className="text-4xl font-bold text-gray-900">
-                    $1,500
-                  </span>
-                  <span className="text-gray-600 text-lg block mt-1">One-Time</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Package 1: Brand Starter Kit - $497 */}
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+              <div className="p-6">
+                {/* Icon */}
+                <div className="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center mb-4">
+                  <Image src="/images/icons/brand/sparkle-stars.png" alt="" width={24} height={24} className="w-6 h-6" />
                 </div>
 
-                <ul className="space-y-3 mb-8">
+                <h3 className="text-xl font-bold text-gray-900 mb-1">Brand Starter Kit</h3>
+                <p className="text-gray-500 text-sm mb-4">Launch your brand with everything you need</p>
+
+                {/* Price */}
+                <div className="mb-4">
+                  <span className="text-3xl font-bold text-gray-900">$497</span>
+                  <span className="text-gray-500 ml-1">one-time</span>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-gray-400 line-through text-sm">$997</span>
+                    <span className="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">50% OFF</span>
+                  </div>
+                </div>
+
+                <p className="text-purple-600 text-sm font-medium mb-4">Best for: New businesses starting fresh</p>
+
+                {/* Features */}
+                <ul className="space-y-2.5 mb-6">
                   {[
-                    "1 Custom AI spokesperson avatar",
-                    "1 Brand voice",
-                    "30 scripts",
-                    "30 short-form videos",
-                    "Viral-style captions",
-                    "Delivered in 7 days",
+                    { text: 'Logo & complete brand identity', icon: '/images/icons/brand/sparkle-stars.png' },
+                    { text: 'Custom website (mobile-ready)', icon: '/images/icons/brand/document.png' },
+                    { text: '30 days of social content', icon: '/images/icons/brand/megaphone-sparkles.png' },
+                    { text: 'Telegram or Discord sales bot', icon: '/images/icons/brand/speech-bubble.png' },
+                    { text: 'Auto-response templates', icon: '/images/icons/brand/checkmark.png' },
                   ].map((feature, index) => (
-                    <li key={index} className="flex items-start text-sm">
-                      <svg
-                        className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                      <span className="text-gray-700">{feature}</span>
+                    <li key={index} className="flex items-start gap-2 text-sm">
+                      <Image src={feature.icon} alt="" width={16} height={16} className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-700">{feature.text}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <Link
+                  href="/checkout?package=starter-kit"
+                  className="block w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-center px-4 py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all"
+                >
+                  Get Started
+                </Link>
+              </div>
+            </div>
+
+            {/* Package 2: Content Engine - $997/mo (POPULAR) */}
+            <div className="bg-white rounded-2xl shadow-2xl overflow-hidden ring-4 ring-purple-500 hover:-translate-y-1 transition-all duration-300 lg:scale-105">
+              {/* Popular Badge */}
+              <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-center py-2.5 font-bold text-sm flex items-center justify-center gap-2">
+                <Image src="/images/icons/brand/sparkle-stars.png" alt="" width={14} height={14} className="w-3.5 h-3.5" />
+                MOST POPULAR
+                <Image src="/images/icons/brand/sparkle-stars.png" alt="" width={14} height={14} className="w-3.5 h-3.5" />
+              </div>
+
+              <div className="p-6">
+                {/* Icon */}
+                <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center mb-4">
+                  <Image src="/images/icons/brand/megaphone-sparkles.png" alt="" width={24} height={24} className="w-6 h-6" />
+                </div>
+
+                <h3 className="text-xl font-bold text-gray-900 mb-1">Content Engine</h3>
+                <p className="text-gray-500 text-sm mb-4">30 fresh videos every single month</p>
+
+                {/* Price */}
+                <div className="mb-4">
+                  <span className="text-3xl font-bold text-gray-900">$997</span>
+                  <span className="text-gray-500 ml-1">/month</span>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-gray-400 line-through text-sm">$1,997</span>
+                    <span className="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">50% OFF</span>
+                  </div>
+                  <span className="text-xs text-gray-500">3-month minimum</span>
+                </div>
+
+                <p className="text-purple-600 text-sm font-medium mb-4">Best for: Growing brands</p>
+
+                {/* Features */}
+                <ul className="space-y-2.5 mb-6">
+                  {[
+                    { text: 'Everything in Launch Kit', icon: '/images/icons/brand/checkmark.png' },
+                    { text: '30 new videos monthly', icon: '/images/icons/brand/video-camera.png' },
+                    { text: 'Monthly strategy call', icon: '/images/icons/brand/speech-bubble.png' },
+                    { text: 'Priority 5-day delivery', icon: '/images/icons/brand/sparkle-stars.png' },
+                    { text: 'All ad-ready formats', icon: '/images/icons/brand/megaphone-sparkles.png' },
+                  ].map((feature, index) => (
+                    <li key={index} className="flex items-start gap-2 text-sm">
+                      <Image src={feature.icon} alt="" width={16} height={16} className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-700">{feature.text}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <Link
+                  href="/checkout?package=content-engine"
+                  className="block w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-center px-4 py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all shadow-lg"
+                >
+                  Get Started
+                </Link>
+              </div>
+            </div>
+
+            {/* Package 3: AI Spokesperson Launch Kit - $1,497 */}
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+              <div className="p-6">
+                {/* Icon */}
+                <div className="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center mb-4">
+                  <Image src="/images/icons/brand/video-camera.png" alt="" width={24} height={24} className="w-6 h-6" />
+                </div>
+
+                <h3 className="text-xl font-bold text-gray-900 mb-1">AI Spokesperson Launch Kit</h3>
+                <p className="text-gray-500 text-sm mb-4">30 AI videos delivered in 7 days</p>
+
+                {/* Price */}
+                <div className="mb-4">
+                  <span className="text-3xl font-bold text-gray-900">$1,497</span>
+                  <span className="text-gray-500 ml-1">one-time</span>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-gray-400 line-through text-sm">$2,997</span>
+                    <span className="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">50% OFF</span>
+                  </div>
+                </div>
+
+                <p className="text-purple-600 text-sm font-medium mb-4">Best for: One-time video projects</p>
+
+                {/* Features */}
+                <ul className="space-y-2.5 mb-6">
+                  {[
+                    { text: 'Custom AI spokesperson avatar', icon: '/images/icons/brand/user-avatar.png' },
+                    { text: 'Cloned brand voice', icon: '/images/icons/brand/waveform.png' },
+                    { text: '30 professional video scripts', icon: '/images/icons/brand/document.png' },
+                    { text: '30 short-form videos', icon: '/images/icons/brand/video-camera.png' },
+                    { text: 'Viral-style captions included', icon: '/images/icons/brand/speech-bubble.png' },
+                    { text: '2 revision rounds', icon: '/images/icons/brand/checkmark.png' },
+                  ].map((feature, index) => (
+                    <li key={index} className="flex items-start gap-2 text-sm">
+                      <Image src={feature.icon} alt="" width={16} height={16} className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-700">{feature.text}</span>
                     </li>
                   ))}
                 </ul>
 
                 <Link
                   href="/checkout?package=launch-kit"
-                  className="block w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-center px-6 py-3 rounded-lg font-bold hover:from-purple-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg"
+                  className="block w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-center px-4 py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all"
                 >
                   Get Started
                 </Link>
               </div>
             </div>
 
-            {/* Package 2: Content Engine Monthly */}
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow">
-              <div className="p-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                  Content Engine Monthly
-                </h3>
-                <div className="mb-6">
-                  <span className="text-4xl font-bold text-gray-900">
-                    $997
-                  </span>
-                  <span className="text-gray-600 text-lg block mt-1">/month</span>
-                  <span className="text-sm text-gray-500">3-month minimum</span>
+            {/* Package 4: Authority Engine - $3,997/mo */}
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+              <div className="p-6">
+                {/* Icon */}
+                <div className="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center mb-4">
+                  <Image src="/images/icons/brand/megaphone-geometric.png" alt="" width={24} height={24} className="w-6 h-6" />
                 </div>
 
-                <ul className="space-y-3 mb-8">
+                <h3 className="text-xl font-bold text-gray-900 mb-1">Authority Engine</h3>
+                <p className="text-gray-500 text-sm mb-4">60+ videos for serious scale</p>
+
+                {/* Price */}
+                <div className="mb-4">
+                  <span className="text-3xl font-bold text-gray-900">$3,997</span>
+                  <span className="text-gray-500 ml-1">/month</span>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-gray-400 line-through text-sm">$7,997</span>
+                    <span className="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">50% OFF</span>
+                  </div>
+                  <span className="text-xs text-gray-500">3-month minimum</span>
+                </div>
+
+                <p className="text-purple-600 text-sm font-medium mb-4">Best for: Agencies & enterprises</p>
+
+                {/* Features */}
+                <ul className="space-y-2.5 mb-6">
                   {[
-                    "Everything in Launch Kit",
-                    "30 new videos every 30 days",
-                    "Monthly strategy call",
-                    "Priority delivery",
+                    { text: '60+ videos per month', icon: '/images/icons/brand/video-camera.png' },
+                    { text: 'Up to 3 AI spokespersons', icon: '/images/icons/brand/user-avatar.png' },
+                    { text: 'Up to 3 brand voices', icon: '/images/icons/brand/waveform.png' },
+                    { text: 'Multi-language versions', icon: '/images/icons/brand/speech-bubble.png' },
+                    { text: 'Full funnel scripting', icon: '/images/icons/brand/document.png' },
+                    { text: 'Campaign variations', icon: '/images/icons/brand/megaphone-geometric.png' },
                   ].map((feature, index) => (
-                    <li key={index} className="flex items-start text-sm">
-                      <svg
-                        className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                      <span className="text-gray-700">{feature}</span>
+                    <li key={index} className="flex items-start gap-2 text-sm">
+                      <Image src={feature.icon} alt="" width={16} height={16} className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-700">{feature.text}</span>
                     </li>
                   ))}
                 </ul>
 
                 <Link
-                  href="/checkout?package=content-engine-monthly"
-                  className="block w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-center px-6 py-3 rounded-lg font-bold hover:from-purple-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg"
+                  href="#book-call"
+                  className="block w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-center px-4 py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all"
                 >
-                  Get Started
+                  Book a Call
                 </Link>
               </div>
             </div>
+          </div>
 
-            {/* Package 3: Content Engine PRO */}
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow">
-              <div className="p-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                  Content Engine PRO
-                </h3>
-                <div className="mb-6">
-                  <span className="text-4xl font-bold text-gray-900">
-                    $2,497
-                  </span>
-                  <span className="text-gray-600 text-lg block mt-1">/month</span>
-                </div>
-
-                <ul className="space-y-3 mb-8">
-                  {[
-                    "30-40 videos per month",
-                    "Up to 2 custom AI avatars",
-                    "Up to 2 custom brand voices",
-                    "Hook & CTA variations",
-                  ].map((feature, index) => (
-                    <li key={index} className="flex items-start text-sm">
-                      <svg
-                        className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                      <span className="text-gray-700">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Link
-                  href="/checkout?package=content-engine-pro"
-                  className="block w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-center px-6 py-3 rounded-lg font-bold hover:from-purple-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg"
-                >
-                  Get Started
-                </Link>
-              </div>
-            </div>
-
-            {/* Package 4: AUTHORITY Engine - MOST POPULAR */}
-            <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border-4 border-purple-500 hover:shadow-3xl transition-shadow transform lg:-translate-y-2">
-              {/* Most Popular Badge */}
-              <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-center py-3 font-bold text-sm">
-                MOST POPULAR
-              </div>
-
-              <div className="p-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                  AUTHORITY Engine
-                </h3>
-                <div className="mb-6">
-                  <span className="text-4xl font-bold text-gray-900">
-                    $4,997
-                  </span>
-                  <span className="text-gray-600 text-lg block mt-1">/month</span>
-                </div>
-
-                <ul className="space-y-3 mb-8">
-                  {[
-                    "60+ videos per month",
-                    "Up to 3 custom AI avatars",
-                    "Up to 3 custom voices",
-                    "Full funnel scripting",
-                  ].map((feature, index) => (
-                    <li key={index} className="flex items-start text-sm">
-                      <svg
-                        className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                      <span className="text-gray-700">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Link
-                  href="/checkout?package=authority-engine"
-                  className="block w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-center px-6 py-3 rounded-lg font-bold hover:from-purple-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl"
-                >
-                  Get Started
-                </Link>
-              </div>
-            </div>
+          {/* View Full Comparison Link */}
+          <div className="text-center mt-10">
+            <Link
+              href="/pricing"
+              className="inline-flex items-center gap-2 text-purple-600 font-medium hover:text-purple-700 transition-colors"
+            >
+              <Image src="/images/icons/brand/document.png" alt="" width={16} height={16} className="w-4 h-4" />
+              View full comparison
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </Link>
           </div>
         </div>
       </section>
