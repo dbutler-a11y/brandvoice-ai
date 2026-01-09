@@ -2,9 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Lazy initialization to avoid build-time errors
+function getOpenAIClient() {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY is not configured');
+  }
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+}
 
 // Helper to generate slug from title
 function generateSlug(title: string): string {
@@ -138,7 +144,7 @@ STYLE GUIDELINES:
 
 Return ONLY the HTML content (starting with <h2>, no <html> or <body> tags).`;
 
-  const completion = await openai.chat.completions.create({
+  const completion = await getOpenAIClient().chat.completions.create({
     model: 'gpt-4o',
     messages: [{ role: 'user', content: prompt }],
     temperature: 0.7,
@@ -150,7 +156,7 @@ Return ONLY the HTML content (starting with <h2>, no <html> or <body> tags).`;
 
 // Generate meta description
 async function generateMetaDescription(title: string, primaryKeyword: string) {
-  const completion = await openai.chat.completions.create({
+  const completion = await getOpenAIClient().chat.completions.create({
     model: 'gpt-4o-mini',
     messages: [{
       role: 'user',
@@ -165,7 +171,7 @@ async function generateMetaDescription(title: string, primaryKeyword: string) {
 
 // Generate excerpt
 async function generateExcerpt(title: string, content: string) {
-  const completion = await openai.chat.completions.create({
+  const completion = await getOpenAIClient().chat.completions.create({
     model: 'gpt-4o-mini',
     messages: [{
       role: 'user',
