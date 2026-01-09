@@ -31,6 +31,8 @@ type SampleVideo = {
   niche: string
   duration: string
   thumbnail: string
+  videoUrl?: string
+  featured?: boolean
 }
 
 const sampleVideos: SampleVideo[] = [
@@ -96,6 +98,31 @@ const sampleVideos: SampleVideo[] = [
     niche: 'Coaching',
     duration: '0:48',
     thumbnail: 'from-yellow-400 to-amber-400'
+  },
+  {
+    id: '10',
+    title: 'Credit Repair - $2 Million in Deleted Debt',
+    niche: 'Credit Repair',
+    duration: '0:45',
+    thumbnail: 'from-emerald-400 to-teal-400',
+    videoUrl: '/videos/samples/credit-repair-2milli.mp4'
+  },
+  {
+    id: '11',
+    title: 'Credit Repair - Client Success Story',
+    niche: 'Credit Repair',
+    duration: '0:40',
+    thumbnail: 'from-teal-400 to-cyan-400',
+    videoUrl: '/videos/samples/credit-repair-results.mp4'
+  },
+  {
+    id: '12',
+    title: 'Tax Services - $2 Million in Client Savings',
+    niche: 'Tax Services',
+    duration: '0:42',
+    thumbnail: 'from-blue-500 to-indigo-500',
+    videoUrl: '/videos/samples/tax-services-2milli.mp4',
+    featured: true
   }
 ]
 
@@ -105,7 +132,9 @@ const filterCategories = [
   'Real Estate',
   'Fitness',
   'Coaching',
-  'Local Services'
+  'Local Services',
+  'Credit Repair',
+  'Tax Services'
 ]
 
 export default function PortfolioPage() {
@@ -136,32 +165,117 @@ export default function PortfolioPage() {
     ? sampleVideos
     : sampleVideos.filter(video => video.niche === activeFilter)
 
+  const featuredVideos = sampleVideos.filter(video => video.videoUrl)
+  const [hoveredVideo, setHoveredVideo] = useState<string | null>(null)
+
   return (
     <div className="bg-white min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-purple-50 via-indigo-50 to-white overflow-hidden">
+      <section className="relative bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+          <div className="absolute -top-40 -right-40 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-purple-600/20 to-indigo-600/20 rounded-full blur-3xl"></div>
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <div className="text-center">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-purple-100 text-purple-700 text-sm font-semibold mb-6">
-              <span className="w-2 h-2 bg-purple-500 rounded-full mr-2 animate-pulse"></span>
-              Our Portfolio
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-purple-300 text-sm font-semibold mb-6 border border-white/20">
+              <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+              Real Client Content
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              See Our Work in{' '}
-              <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-                Action
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+              Content That{' '}
+              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Converts
               </span>
             </h1>
 
-            <p className="text-xl sm:text-2xl text-gray-600 mb-10 max-w-3xl mx-auto">
-              Browse sample videos created for businesses like yours
+            <p className="text-xl sm:text-2xl text-gray-300 mb-10 max-w-3xl mx-auto">
+              See real examples of viral-ready content we create for businesses
             </p>
+          </div>
+
+          {/* Featured Phone Showcase */}
+          <div className="flex justify-center items-end gap-4 sm:gap-8 pb-8">
+            {featuredVideos.slice(0, 3).map((video, index) => (
+              <div
+                key={video.id}
+                className={`relative transition-all duration-500 cursor-pointer ${
+                  index === 1 ? 'z-20 scale-110' : 'z-10 opacity-80 hover:opacity-100'
+                } ${hoveredVideo === video.id ? 'scale-115 z-30' : ''}`}
+                onMouseEnter={() => setHoveredVideo(video.id)}
+                onMouseLeave={() => setHoveredVideo(null)}
+                onClick={() => setSelectedVideo(video)}
+              >
+                {/* Phone Frame */}
+                <div className={`relative bg-black rounded-[2.5rem] p-2 shadow-2xl ${
+                  index === 1 ? 'w-48 sm:w-56' : 'w-36 sm:w-44 hidden sm:block'
+                }`}>
+                  {/* Phone Notch */}
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 bg-black rounded-b-2xl z-10"></div>
+
+                  {/* Screen */}
+                  <div className="relative rounded-[2rem] overflow-hidden bg-gray-900 aspect-[9/19.5]">
+                    {video.videoUrl ? (
+                      <video
+                        className="w-full h-full object-cover"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                      >
+                        <source src={video.videoUrl} type="video/mp4" />
+                      </video>
+                    ) : (
+                      <div className={`w-full h-full bg-gradient-to-br ${video.thumbnail}`}></div>
+                    )}
+
+                    {/* Overlay on hover */}
+                    <div className={`absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity ${
+                      hoveredVideo === video.id ? 'opacity-100' : 'opacity-0'
+                    }`}>
+                      <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-xl">
+                        <svg className="w-6 h-6 text-purple-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                      </div>
+                    </div>
+
+                    {/* Niche Tag */}
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-purple-600 whitespace-nowrap">
+                      {video.niche}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Glow Effect */}
+                <div className={`absolute -inset-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-[3rem] blur-xl opacity-0 transition-opacity -z-10 ${
+                  hoveredVideo === video.id ? 'opacity-40' : ''
+                }`}></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Bar */}
+      <section className="bg-gradient-to-r from-purple-600 to-indigo-600 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap justify-center gap-8 sm:gap-16 text-white">
+            <div className="text-center">
+              <div className="text-3xl sm:text-4xl font-bold">500+</div>
+              <div className="text-purple-200 text-sm">Videos Created</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl sm:text-4xl font-bold">50M+</div>
+              <div className="text-purple-200 text-sm">Views Generated</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl sm:text-4xl font-bold">12+</div>
+              <div className="text-purple-200 text-sm">Industries Served</div>
+            </div>
           </div>
         </div>
       </section>
@@ -187,56 +301,86 @@ export default function PortfolioPage() {
         </div>
       </section>
 
-      {/* Video Grid */}
+      {/* Video Grid - Redesigned */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">All Content Examples</h2>
+            <p className="text-gray-600">Click any video to watch the full preview</p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
             {filteredVideos.map((video) => (
               <div
                 key={video.id}
-                className="group bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-2"
+                className="group relative cursor-pointer"
                 onClick={() => setSelectedVideo(video)}
               >
-                {/* Thumbnail */}
-                <div className={`relative aspect-[9/16] bg-gradient-to-br ${video.thumbnail} flex items-center justify-center`}>
-                  {/* Play Button Overlay */}
-                  <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-40 transition-all flex items-center justify-center">
-                    <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-xl transform group-hover:scale-110 transition-transform">
-                      <Image
-                        src={ICONS.play}
-                        alt="Play"
-                        width={40}
-                        height={40}
-                        className="w-10 h-10 object-contain"
-                      />
+                {/* Card with Phone-like styling */}
+                <div className="relative bg-gray-900 rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 hover:scale-[1.02]">
+                  {/* Video/Thumbnail */}
+                  <div className={`relative aspect-[9/16] bg-gradient-to-br ${video.thumbnail}`}>
+                    {video.videoUrl ? (
+                      <video
+                        className="w-full h-full object-cover"
+                        muted
+                        playsInline
+                        loop
+                        onMouseEnter={(e) => e.currentTarget.play()}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.pause()
+                          e.currentTarget.currentTime = 0
+                        }}
+                      >
+                        <source src={video.videoUrl} type="video/mp4" />
+                      </video>
+                    ) : null}
+
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
+
+                    {/* Play Button */}
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-xl transform group-hover:scale-110 transition-transform">
+                        <svg className="w-6 h-6 sm:w-7 sm:h-7 text-purple-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Duration Badge */}
-                  <div className="absolute bottom-4 right-4 bg-black bg-opacity-75 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    {video.duration}
-                  </div>
+                    {/* Featured Badge */}
+                    {video.featured && (
+                      <div className="absolute top-3 right-3 bg-gradient-to-r from-amber-400 to-orange-500 text-white px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        Featured
+                      </div>
+                    )}
 
-                  {/* Niche Tag */}
-                  <div className="absolute top-4 left-4 bg-white bg-opacity-90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-semibold text-purple-600">
-                    {video.niche}
-                  </div>
-                </div>
+                    {/* Has Video Indicator */}
+                    {video.videoUrl && (
+                      <div className="absolute top-3 left-3 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                        <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
+                        Live
+                      </div>
+                    )}
 
-                {/* Video Info */}
-                <div className="p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-purple-600 transition-colors">
-                    {video.title}
-                  </h3>
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Image
-                      src={ICONS.video}
-                      alt=""
-                      width={16}
-                      height={16}
-                      className="w-4 h-4 mr-2 opacity-60"
-                    />
-                    <span>Click to preview</span>
+                    {/* Bottom Info */}
+                    <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="bg-white/20 backdrop-blur-sm text-white px-2 py-0.5 rounded-full text-xs font-medium">
+                          {video.niche}
+                        </span>
+                        <span className="bg-black/50 text-white px-2 py-0.5 rounded-full text-xs font-medium">
+                          {video.duration}
+                        </span>
+                      </div>
+                      <h3 className="text-white text-sm sm:text-base font-bold line-clamp-2 group-hover:text-purple-300 transition-colors">
+                        {video.title}
+                      </h3>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -402,11 +546,25 @@ export default function PortfolioPage() {
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
                 {selectedVideo.title}
               </h3>
-              <div className={`aspect-[9/16] bg-gradient-to-br ${selectedVideo.thumbnail} rounded-lg mb-4 flex items-center justify-center max-h-[60vh] mx-auto`}>
-                <div className="text-white text-lg font-semibold">
-                  Video Preview Coming Soon
+              {selectedVideo.videoUrl ? (
+                <div className="aspect-[9/16] rounded-lg mb-4 max-h-[60vh] mx-auto overflow-hidden bg-black">
+                  <video
+                    className="w-full h-full object-contain"
+                    controls
+                    autoPlay
+                    playsInline
+                  >
+                    <source src={selectedVideo.videoUrl} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
                 </div>
-              </div>
+              ) : (
+                <div className={`aspect-[9/16] bg-gradient-to-br ${selectedVideo.thumbnail} rounded-lg mb-4 flex items-center justify-center max-h-[60vh] mx-auto`}>
+                  <div className="text-white text-lg font-semibold">
+                    Video Preview Coming Soon
+                  </div>
+                </div>
+              )}
               <div className="flex items-center justify-center space-x-4 text-gray-600">
                 <span className="flex items-center">
                   <svg
