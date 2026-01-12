@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import VideoCarousel from '@/components/VideoCarousel'
 
 // Brand icons paths
 const ICONS = {
@@ -35,72 +36,10 @@ type SampleVideo = {
   featured?: boolean
 }
 
+// Only videos with actual content
 const sampleVideos: SampleVideo[] = [
   {
     id: '1',
-    title: 'Med Spa - FAQ: How long does Botox last?',
-    niche: 'Med Spa',
-    duration: '0:32',
-    thumbnail: 'from-purple-400 to-pink-400'
-  },
-  {
-    id: '2',
-    title: 'Real Estate - Property Tour Highlight',
-    niche: 'Real Estate',
-    duration: '0:45',
-    thumbnail: 'from-blue-400 to-cyan-400'
-  },
-  {
-    id: '3',
-    title: 'Fitness - Quick Morning Routine',
-    niche: 'Fitness',
-    duration: '0:38',
-    thumbnail: 'from-green-400 to-teal-400'
-  },
-  {
-    id: '4',
-    title: 'Coaching - Overcoming Limiting Beliefs',
-    niche: 'Coaching',
-    duration: '0:42',
-    thumbnail: 'from-amber-400 to-orange-400'
-  },
-  {
-    id: '5',
-    title: 'Med Spa - Before & After Results',
-    niche: 'Med Spa',
-    duration: '0:35',
-    thumbnail: 'from-purple-400 to-indigo-400'
-  },
-  {
-    id: '6',
-    title: 'Local Services - Customer Testimonial',
-    niche: 'Local Services',
-    duration: '0:40',
-    thumbnail: 'from-rose-400 to-red-400'
-  },
-  {
-    id: '7',
-    title: 'Real Estate - Market Update',
-    niche: 'Real Estate',
-    duration: '0:50',
-    thumbnail: 'from-sky-400 to-blue-400'
-  },
-  {
-    id: '8',
-    title: 'Fitness - Nutrition Tips',
-    niche: 'Fitness',
-    duration: '0:33',
-    thumbnail: 'from-lime-400 to-green-400'
-  },
-  {
-    id: '9',
-    title: 'Coaching - Goal Setting Strategy',
-    niche: 'Coaching',
-    duration: '0:48',
-    thumbnail: 'from-yellow-400 to-amber-400'
-  },
-  {
-    id: '10',
     title: 'Credit Repair - $2 Million in Deleted Debt',
     niche: 'Credit Repair',
     duration: '0:45',
@@ -108,7 +47,7 @@ const sampleVideos: SampleVideo[] = [
     videoUrl: '/videos/samples/credit-repair-2milli.mp4'
   },
   {
-    id: '11',
+    id: '2',
     title: 'Credit Repair - Client Success Story',
     niche: 'Credit Repair',
     duration: '0:40',
@@ -116,25 +55,41 @@ const sampleVideos: SampleVideo[] = [
     videoUrl: '/videos/samples/credit-repair-results.mp4'
   },
   {
-    id: '12',
+    id: '3',
     title: 'Tax Services - $2 Million in Client Savings',
     niche: 'Tax Services',
     duration: '0:42',
     thumbnail: 'from-blue-500 to-indigo-500',
     videoUrl: '/videos/samples/tax-services-2milli.mp4',
     featured: true
+  },
+  {
+    id: '4',
+    title: 'Therapy - Creating a Calm Space',
+    niche: 'Therapy & Counseling',
+    duration: '0:06',
+    thumbnail: 'from-teal-400 to-emerald-500',
+    videoUrl: '/videos/samples/sofa-showcase.mp4',
+    featured: true
+  },
+  {
+    id: '5',
+    title: 'Lifestyle - Premium Content Creation',
+    niche: 'Lifestyle',
+    duration: '0:08',
+    thumbnail: 'from-pink-400 to-purple-500',
+    videoUrl: '/videos/samples/lifestyle-content.mp4',
+    featured: true
   }
 ]
 
+// Only include categories that have actual video content
 const filterCategories = [
   'All',
-  'Med Spa',
-  'Real Estate',
-  'Fitness',
-  'Coaching',
-  'Local Services',
   'Credit Repair',
-  'Tax Services'
+  'Tax Services',
+  'Therapy & Counseling',
+  'Lifestyle'
 ]
 
 export default function PortfolioPage() {
@@ -165,9 +120,6 @@ export default function PortfolioPage() {
     ? sampleVideos
     : sampleVideos.filter(video => video.niche === activeFilter)
 
-  const featuredVideos = sampleVideos.filter(video => video.videoUrl)
-  const [hoveredVideo, setHoveredVideo] = useState<string | null>(null)
-
   return (
     <div className="bg-white min-h-screen">
       {/* Hero Section */}
@@ -178,8 +130,8 @@ export default function PortfolioPage() {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-purple-600/20 to-indigo-600/20 rounded-full blur-3xl"></div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <div className="text-center mb-12">
+        <div className="relative py-16 sm:py-20">
+          <div className="text-center mb-12 px-4">
             <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-purple-300 text-sm font-semibold mb-6 border border-white/20">
               <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
               Real Client Content
@@ -197,66 +149,13 @@ export default function PortfolioPage() {
             </p>
           </div>
 
-          {/* Featured Phone Showcase */}
-          <div className="flex justify-center items-end gap-4 sm:gap-8 pb-8">
-            {featuredVideos.slice(0, 3).map((video, index) => (
-              <div
-                key={video.id}
-                className={`relative transition-all duration-500 cursor-pointer ${
-                  index === 1 ? 'z-20 scale-110' : 'z-10 opacity-80 hover:opacity-100'
-                } ${hoveredVideo === video.id ? 'scale-115 z-30' : ''}`}
-                onMouseEnter={() => setHoveredVideo(video.id)}
-                onMouseLeave={() => setHoveredVideo(null)}
-                onClick={() => setSelectedVideo(video)}
-              >
-                {/* Phone Frame */}
-                <div className={`relative bg-black rounded-[2.5rem] p-2 shadow-2xl ${
-                  index === 1 ? 'w-48 sm:w-56' : 'w-36 sm:w-44 hidden sm:block'
-                }`}>
-                  {/* Phone Notch */}
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 bg-black rounded-b-2xl z-10"></div>
-
-                  {/* Screen */}
-                  <div className="relative rounded-[2rem] overflow-hidden bg-gray-900 aspect-[9/19.5]">
-                    {video.videoUrl ? (
-                      <video
-                        className="w-full h-full object-cover"
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                      >
-                        <source src={video.videoUrl} type="video/mp4" />
-                      </video>
-                    ) : (
-                      <div className={`w-full h-full bg-gradient-to-br ${video.thumbnail}`}></div>
-                    )}
-
-                    {/* Overlay on hover */}
-                    <div className={`absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity ${
-                      hoveredVideo === video.id ? 'opacity-100' : 'opacity-0'
-                    }`}>
-                      <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-xl">
-                        <svg className="w-6 h-6 text-purple-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M8 5v14l11-7z"/>
-                        </svg>
-                      </div>
-                    </div>
-
-                    {/* Niche Tag */}
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-purple-600 whitespace-nowrap">
-                      {video.niche}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Glow Effect */}
-                <div className={`absolute -inset-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-[3rem] blur-xl opacity-0 transition-opacity -z-10 ${
-                  hoveredVideo === video.id ? 'opacity-40' : ''
-                }`}></div>
-              </div>
-            ))}
-          </div>
+          {/* Video Carousel */}
+          <VideoCarousel
+            videos={sampleVideos}
+            onVideoClick={(video) => setSelectedVideo(video)}
+            speed={0.5}
+            direction="forward"
+          />
         </div>
       </section>
 

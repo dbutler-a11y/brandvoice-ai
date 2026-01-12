@@ -8,13 +8,56 @@ import { VoicePreviewSection } from "@/components/voice-preview";
 import { TestimonialSection } from "@/components/testimonials/TestimonialSection";
 import { UseCaseCarousel } from "@/components/testimonials/UseCaseCarousel";
 import { HeroAnimation } from "@/components/HeroAnimation";
+import VideoCarousel from "@/components/VideoCarousel";
+
+// Sample videos for carousel
+const sampleVideos = [
+  {
+    id: '10',
+    title: 'Credit Repair - $2 Million in Deleted Debt',
+    niche: 'Credit Repair',
+    duration: '0:45',
+    thumbnail: 'from-emerald-400 to-teal-400',
+    videoUrl: '/videos/samples/credit-repair-2milli.mp4'
+  },
+  {
+    id: '11',
+    title: 'Credit Repair - Client Success Story',
+    niche: 'Credit Repair',
+    duration: '0:40',
+    thumbnail: 'from-teal-400 to-cyan-400',
+    videoUrl: '/videos/samples/credit-repair-results.mp4'
+  },
+  {
+    id: '12',
+    title: 'Tax Services - $2 Million in Client Savings',
+    niche: 'Tax Services',
+    duration: '0:42',
+    thumbnail: 'from-blue-500 to-indigo-500',
+    videoUrl: '/videos/samples/tax-services-2milli.mp4',
+    featured: true
+  },
+  {
+    id: '13',
+    title: 'Therapy - Creating a Calm Space',
+    niche: 'Therapy & Counseling',
+    duration: '0:06',
+    thumbnail: 'from-teal-400 to-emerald-500',
+    videoUrl: '/videos/samples/sofa-showcase.mp4',
+    featured: true
+  },
+  {
+    id: '14',
+    title: 'Lifestyle - Premium Content Creation',
+    niche: 'Lifestyle',
+    duration: '0:08',
+    thumbnail: 'from-pink-400 to-purple-500',
+    videoUrl: '/videos/samples/lifestyle-content.mp4',
+    featured: true
+  }
+];
 
 export default function HomePage() {
-  const [showModal, setShowModal] = useState(false);
-  const [selectedVideo, setSelectedVideo] = useState<{
-    title: string;
-    niche: string;
-  } | null>(null);
   const [isMuted, setIsMuted] = useState(true);
   const promoVideoRef = useRef<HTMLVideoElement>(null);
 
@@ -23,11 +66,6 @@ export default function HomePage() {
       promoVideoRef.current.muted = !promoVideoRef.current.muted;
       setIsMuted(!isMuted);
     }
-  };
-
-  const handleVideoClick = (title: string, niche: string) => {
-    setSelectedVideo({ title, niche });
-    setShowModal(true);
   };
 
   return (
@@ -110,6 +148,34 @@ export default function HomePage() {
               </Link>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Video Showcase Carousel */}
+      <section className="py-16 bg-gradient-to-b from-gray-900 to-gray-800 overflow-hidden">
+        <div className="text-center mb-10 px-4">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+            Real Client Results
+          </h2>
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            See the viral-ready content we create for businesses just like yours
+          </p>
+        </div>
+        <VideoCarousel
+          videos={sampleVideos}
+          speed={0.5}
+          direction="forward"
+        />
+        <div className="text-center mt-8">
+          <Link
+            href="/portfolio"
+            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-full font-semibold hover:bg-white/20 transition-all border border-white/20"
+          >
+            View All Examples
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </Link>
         </div>
       </section>
 
@@ -576,196 +642,6 @@ export default function HomePage() {
 
       {/* Voice Preview Section */}
       <VoicePreviewSection />
-
-      {/* Video Samples Section */}
-      <section className="py-20 bg-gradient-to-br from-purple-50 via-white to-indigo-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              See Our Work in Action
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Sample AI spokesperson videos across different industries
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {[
-              {
-                title: "How Long Does Botox Last?",
-                niche: "Med Spa",
-                duration: "0:28",
-                gradient: "from-pink-400 via-rose-400 to-red-400",
-              },
-              {
-                title: "Top 3 Home Staging Tips",
-                niche: "Real Estate",
-                duration: "0:35",
-                gradient: "from-blue-400 via-cyan-400 to-teal-400",
-              },
-              {
-                title: "5 Min Morning Stretch Routine",
-                niche: "Fitness",
-                duration: "0:42",
-                gradient: "from-orange-400 via-amber-400 to-yellow-400",
-              },
-              {
-                title: "Overcome Imposter Syndrome",
-                niche: "Coaching",
-                duration: "0:31",
-                gradient: "from-purple-400 via-violet-400 to-indigo-400",
-              },
-              {
-                title: "Why Choose Us for Your Plumbing",
-                niche: "Local Service",
-                duration: "0:26",
-                gradient: "from-emerald-400 via-green-400 to-lime-400",
-              },
-              {
-                title: "Our Chef's Special This Week",
-                niche: "Restaurant",
-                duration: "0:33",
-                gradient: "from-red-400 via-pink-400 to-fuchsia-400",
-              },
-            ].map((video, index) => (
-              <div
-                key={index}
-                onClick={() => handleVideoClick(video.title, video.niche)}
-                className="group cursor-pointer bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
-              >
-                {/* Video Thumbnail */}
-                <div className="relative aspect-[9/16] overflow-hidden">
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-br ${video.gradient} opacity-80 group-hover:opacity-90 transition-opacity`}
-                  ></div>
-
-                  {/* Duration Badge */}
-                  <div className="absolute top-3 right-3 bg-black/70 backdrop-blur-sm text-white text-xs font-semibold px-2 py-1 rounded">
-                    {video.duration}
-                  </div>
-
-                  {/* Play Button Overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-16 h-16 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-xl group-hover:scale-110 group-hover:bg-white transition-all duration-300">
-                      <svg
-                        className="w-8 h-8 text-purple-600 ml-1"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </div>
-                  </div>
-
-                  {/* Gradient Overlay Bottom */}
-                  <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/60 to-transparent"></div>
-                </div>
-
-                {/* Video Info */}
-                <div className="p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="inline-block px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
-                      {video.niche}
-                    </span>
-                  </div>
-                  <h3 className="text-gray-900 font-bold text-lg group-hover:text-purple-600 transition-colors">
-                    {video.title}
-                  </h3>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* View All Button */}
-          <div className="text-center">
-            <Link
-              href="/portfolio"
-              className="inline-flex items-center bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:from-purple-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl"
-            >
-              View All Samples
-              <svg
-                className="w-5 h-5 ml-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 8l4 4m0 0l-4 4m4-4H3"
-                />
-              </svg>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Video Preview Modal */}
-      {showModal && (
-        <div
-          className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-          onClick={() => setShowModal(false)}
-        >
-          <div
-            className="bg-white rounded-2xl max-w-md w-full p-8 shadow-2xl transform transition-all"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="text-center">
-              {/* Icon */}
-              <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg
-                  className="w-10 h-10 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                  />
-                </svg>
-              </div>
-
-              {/* Content */}
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                Video Preview Coming Soon
-              </h3>
-              <p className="text-gray-600 mb-2">
-                <span className="font-semibold text-purple-600">
-                  {selectedVideo?.title}
-                </span>
-              </p>
-              <p className="text-gray-500 mb-6">
-                {selectedVideo?.niche} Industry
-              </p>
-              <p className="text-gray-600 mb-8">
-                Full video samples will be available soon. Book a call to see
-                complete examples of our work!
-              </p>
-
-              {/* Buttons */}
-              <div className="space-y-3">
-                <Link
-                  href="#book-call"
-                  onClick={() => setShowModal(false)}
-                  className="block w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-lg font-bold hover:from-purple-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl"
-                >
-                  Book a Call to See More
-                </Link>
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="block w-full bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Who It's For Section */}
       <section className="py-20 bg-gray-50">
