@@ -34,6 +34,7 @@ type SampleVideo = {
   thumbnail: string
   videoUrl?: string
   featured?: boolean
+  aspectRatio?: 'vertical' | 'square'
 }
 
 // Only videos with actual content
@@ -80,6 +81,43 @@ const sampleVideos: SampleVideo[] = [
     thumbnail: 'from-pink-400 to-purple-500',
     videoUrl: '/videos/samples/lifestyle-content.mp4',
     featured: true
+  },
+  {
+    id: '6',
+    title: 'Credit Repair - Full Meta Ad',
+    niche: 'Credit Repair',
+    duration: '1:15',
+    thumbnail: 'from-green-400 to-emerald-500',
+    videoUrl: '/videos/samples/credit-repair-meta-ad.mp4',
+    featured: true
+  },
+  {
+    id: '7',
+    title: 'Facebook Micro Ad - Quick Hook',
+    niche: 'Facebook Ads',
+    duration: '0:08',
+    thumbnail: 'from-blue-500 to-indigo-600',
+    videoUrl: '/videos/samples/facebook-micro-ad-1.mp4',
+    featured: true
+  },
+  {
+    id: '8',
+    title: 'Facebook Micro Ad - Call to Action',
+    niche: 'Facebook Ads',
+    duration: '0:08',
+    thumbnail: 'from-indigo-500 to-purple-600',
+    videoUrl: '/videos/samples/facebook-micro-ad-2.mp4',
+    featured: true
+  },
+  {
+    id: '9',
+    title: 'Product Sale - Harley Davidson',
+    niche: 'Product Sales',
+    duration: '0:44',
+    thumbnail: 'from-orange-500 to-red-600',
+    videoUrl: '/videos/samples/product-sale-harley.mp4',
+    featured: true,
+    aspectRatio: 'square'
   }
 ]
 
@@ -88,6 +126,8 @@ const filterCategories = [
   'All',
   'Credit Repair',
   'Tax Services',
+  'Facebook Ads',
+  'Product Sales',
   'Therapy & Counseling',
   'Lifestyle'
 ]

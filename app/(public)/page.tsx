@@ -54,6 +54,43 @@ const sampleVideos = [
     thumbnail: 'from-pink-400 to-purple-500',
     videoUrl: '/videos/samples/lifestyle-content.mp4',
     featured: true
+  },
+  {
+    id: '15',
+    title: 'Credit Repair - Full Meta Ad',
+    niche: 'Credit Repair',
+    duration: '1:15',
+    thumbnail: 'from-green-400 to-emerald-500',
+    videoUrl: '/videos/samples/credit-repair-meta-ad.mp4',
+    featured: true
+  },
+  {
+    id: '16',
+    title: 'Facebook Micro Ad - Quick Hook',
+    niche: 'Facebook Ads',
+    duration: '0:08',
+    thumbnail: 'from-blue-500 to-indigo-600',
+    videoUrl: '/videos/samples/facebook-micro-ad-1.mp4',
+    featured: true
+  },
+  {
+    id: '17',
+    title: 'Facebook Micro Ad - Call to Action',
+    niche: 'Facebook Ads',
+    duration: '0:08',
+    thumbnail: 'from-indigo-500 to-purple-600',
+    videoUrl: '/videos/samples/facebook-micro-ad-2.mp4',
+    featured: true
+  },
+  {
+    id: '18',
+    title: 'Product Sale - Harley Davidson',
+    niche: 'Product Sales',
+    duration: '0:44',
+    thumbnail: 'from-orange-500 to-red-600',
+    videoUrl: '/videos/samples/product-sale-harley.mp4',
+    featured: true,
+    aspectRatio: 'square'
   }
 ];
 

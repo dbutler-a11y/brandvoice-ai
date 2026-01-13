@@ -12,6 +12,7 @@ type VideoItem = {
   thumbnail: string
   videoUrl?: string
   featured?: boolean
+  aspectRatio?: 'vertical' | 'square'
 }
 
 type VideoCarouselProps = {
@@ -102,13 +103,23 @@ export default function VideoCarousel({
               onMouseLeave={() => setHoveredVideo(null)}
               onClick={() => onVideoClick?.(video)}
             >
-              {/* Phone Frame */}
-              <div className="relative bg-black rounded-[2rem] sm:rounded-[2.5rem] p-1.5 sm:p-2 shadow-2xl w-40 sm:w-52 transition-transform duration-300 hover:scale-105">
-                {/* Phone Notch */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 sm:w-20 h-4 sm:h-5 bg-black rounded-b-xl z-10" />
+              {/* Phone/Device Frame - adapts to aspect ratio */}
+              <div className={`relative bg-black shadow-2xl transition-transform duration-300 hover:scale-105 ${
+                video.aspectRatio === 'square'
+                  ? 'rounded-2xl sm:rounded-3xl p-1.5 sm:p-2 w-40 sm:w-52'
+                  : 'rounded-[2rem] sm:rounded-[2.5rem] p-1.5 sm:p-2 w-40 sm:w-52'
+              }`}>
+                {/* Phone Notch - only for vertical */}
+                {video.aspectRatio !== 'square' && (
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 sm:w-20 h-4 sm:h-5 bg-black rounded-b-xl z-10" />
+                )}
 
                 {/* Screen */}
-                <div className="relative rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden bg-gray-900 aspect-[9/19.5]">
+                <div className={`relative overflow-hidden bg-gray-900 ${
+                  video.aspectRatio === 'square'
+                    ? 'rounded-xl sm:rounded-2xl aspect-square'
+                    : 'rounded-[1.5rem] sm:rounded-[2rem] aspect-[9/19.5]'
+                }`}>
                   <video
                     className="w-full h-full object-cover"
                     autoPlay
@@ -144,9 +155,11 @@ export default function VideoCarousel({
 
                 {/* Glow Effect */}
                 <div
-                  className={`absolute -inset-3 sm:-inset-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-[2.5rem] sm:rounded-[3rem] blur-xl transition-opacity duration-300 -z-10 ${
-                    hoveredVideo === video.id ? 'opacity-40' : 'opacity-0'
-                  }`}
+                  className={`absolute -inset-3 sm:-inset-4 blur-xl transition-opacity duration-300 -z-10 ${
+                    video.aspectRatio === 'square'
+                      ? 'bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl sm:rounded-3xl'
+                      : 'bg-gradient-to-r from-purple-600 to-pink-600 rounded-[2.5rem] sm:rounded-[3rem]'
+                  } ${hoveredVideo === video.id ? 'opacity-40' : 'opacity-0'}`}
                 />
               </div>
             </div>
