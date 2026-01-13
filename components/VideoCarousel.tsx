@@ -31,7 +31,9 @@ export default function VideoCarousel({
   className = ''
 }: VideoCarouselProps) {
   const [hoveredVideo, setHoveredVideo] = useState<string | null>(null)
+  const [tappedVideo, setTappedVideo] = useState<string | null>(null)
   const [isPlaying, setIsPlaying] = useState(true)
+  const [hasDragged, setHasDragged] = useState(false)
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
@@ -52,6 +54,7 @@ export default function VideoCarousel({
   )
 
   const onPointerDown = useCallback(() => {
+    setHasDragged(false)
     const autoScroll = emblaApi?.plugins()?.autoScroll
     if (autoScroll) {
       setIsPlaying(false)
@@ -68,17 +71,31 @@ export default function VideoCarousel({
     }
   }, [emblaApi])
 
+  // Track if user is dragging (moved more than 5px)
+  const onScroll = useCallback(() => {
+    setHasDragged(true)
+  }, [])
+
   useEffect(() => {
     if (!emblaApi) return
 
     emblaApi.on('pointerDown', onPointerDown)
     emblaApi.on('pointerUp', onPointerUp)
+    emblaApi.on('scroll', onScroll)
 
     return () => {
       emblaApi.off('pointerDown', onPointerDown)
       emblaApi.off('pointerUp', onPointerUp)
+      emblaApi.off('scroll', onScroll)
     }
-  }, [emblaApi, onPointerDown, onPointerUp])
+  }, [emblaApi, onPointerDown, onPointerUp, onScroll])
+
+  // Handle video click - only trigger if not dragging
+  const handleVideoClick = useCallback((video: VideoItem) => {
+    if (!hasDragged && onVideoClick) {
+      onVideoClick(video)
+    }
+  }, [hasDragged, onVideoClick])
 
   // Filter to only show videos with actual video URLs
   const videosWithContent = videos.filter(v => v.videoUrl)
@@ -101,10 +118,14 @@ export default function VideoCarousel({
               className="flex-none"
               onMouseEnter={() => setHoveredVideo(video.id)}
               onMouseLeave={() => setHoveredVideo(null)}
-              onClick={() => onVideoClick?.(video)}
+              onTouchStart={() => setTappedVideo(video.id)}
+              onTouchEnd={() => setTimeout(() => setTappedVideo(null), 150)}
+              onClick={() => handleVideoClick(video)}
             >
               {/* Phone/Device Frame - adapts to aspect ratio */}
-              <div className={`relative bg-black shadow-2xl transition-transform duration-300 hover:scale-105 ${
+              <div className={`relative bg-black shadow-2xl transition-all duration-300 ${
+                hoveredVideo === video.id || tappedVideo === video.id ? 'scale-105' : ''
+              } ${
                 video.aspectRatio === 'square'
                   ? 'rounded-2xl sm:rounded-3xl p-1.5 sm:p-2 w-40 sm:w-52'
                   : 'rounded-[2rem] sm:rounded-[2.5rem] p-1.5 sm:p-2 w-40 sm:w-52'
@@ -130,13 +151,17 @@ export default function VideoCarousel({
                     <source src={video.videoUrl} type="video/mp4" />
                   </video>
 
-                  {/* Hover Overlay */}
+                  {/* Play Button Overlay - Always visible on mobile, hover on desktop */}
                   <div
-                    className={`absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity duration-300 ${
-                      hoveredVideo === video.id ? 'opacity-100' : 'opacity-0'
+                    className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${
+                      hoveredVideo === video.id || tappedVideo === video.id
+                        ? 'bg-black/40 opacity-100'
+                        : 'bg-black/20 opacity-100 sm:opacity-0'
                     }`}
                   >
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white rounded-full flex items-center justify-center shadow-xl transform transition-transform hover:scale-110">
+                    <div className={`w-12 h-12 sm:w-14 sm:h-14 bg-white/90 sm:bg-white rounded-full flex items-center justify-center shadow-xl transition-all duration-300 ${
+                      hoveredVideo === video.id || tappedVideo === video.id ? 'scale-110' : 'scale-100'
+                    }`}>
                       <svg
                         className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 ml-0.5"
                         fill="currentColor"
@@ -159,7 +184,7 @@ export default function VideoCarousel({
                     video.aspectRatio === 'square'
                       ? 'bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl sm:rounded-3xl'
                       : 'bg-gradient-to-r from-purple-600 to-pink-600 rounded-[2.5rem] sm:rounded-[3rem]'
-                  } ${hoveredVideo === video.id ? 'opacity-40' : 'opacity-0'}`}
+                  } ${hoveredVideo === video.id || tappedVideo === video.id ? 'opacity-40' : 'opacity-0'}`}
                 />
               </div>
             </div>
