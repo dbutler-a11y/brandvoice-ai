@@ -94,8 +94,20 @@ const sampleVideos = [
   }
 ];
 
+type VideoItem = {
+  id: string
+  title: string
+  niche: string
+  duration: string
+  thumbnail: string
+  videoUrl?: string
+  featured?: boolean
+  aspectRatio?: 'vertical' | 'square'
+}
+
 export default function HomePage() {
   const [isMuted, setIsMuted] = useState(true);
+  const [selectedVideo, setSelectedVideo] = useState<VideoItem | null>(null);
   const promoVideoRef = useRef<HTMLVideoElement>(null);
 
   const toggleMute = () => {
@@ -200,6 +212,7 @@ export default function HomePage() {
         </div>
         <VideoCarousel
           videos={sampleVideos}
+          onVideoClick={(video) => setSelectedVideo(video)}
           speed={0.5}
           direction="forward"
         />
@@ -987,6 +1000,69 @@ export default function HomePage() {
         title="Ready to Stop Filming Yourself?"
         subtitle="Book your free strategy call now and get 30 days of content delivered in just 7 days."
       />
+
+      {/* Video Modal */}
+      {selectedVideo && (
+        <div
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setSelectedVideo(null)}
+        >
+          <div
+            className="bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-8 relative max-h-[90vh] overflow-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setSelectedVideo(null)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors z-10"
+            >
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            <div className="text-center">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">
+                {selectedVideo.title}
+              </h3>
+              {selectedVideo.videoUrl ? (
+                <div className={`rounded-lg mb-4 mx-auto overflow-hidden bg-black ${
+                  selectedVideo.aspectRatio === 'square'
+                    ? 'aspect-square max-w-md'
+                    : 'aspect-[9/16] max-h-[60vh]'
+                }`}>
+                  <video
+                    className="w-full h-full object-contain"
+                    controls
+                    autoPlay
+                    playsInline
+                  >
+                    <source src={selectedVideo.videoUrl} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              ) : (
+                <div className={`aspect-[9/16] bg-gradient-to-br ${selectedVideo.thumbnail} rounded-lg mb-4 flex items-center justify-center max-h-[60vh] mx-auto`}>
+                  <div className="text-white text-lg font-semibold">Video Coming Soon</div>
+                </div>
+              )}
+              <div className="flex items-center justify-center gap-4 text-gray-600 text-sm">
+                <span className="flex items-center gap-1">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                  </svg>
+                  {selectedVideo.niche}
+                </span>
+                <span className="flex items-center gap-1">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  {selectedVideo.duration}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Add animation styles */}
       <style jsx>{`
